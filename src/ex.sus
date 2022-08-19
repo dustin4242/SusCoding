@@ -1,0 +1,14 @@
+function helloWorld()
+	const hello = "hello world"
+	let world = "Hello World"
+	if(hello == "hello world")
+		print(hello)
+		if(hello == world)
+			print(world)
+		end
+		world = "But Reassignable"
+		print(world)
+	end
+end
+
+call(helloWorld)
