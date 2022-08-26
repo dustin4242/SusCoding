@@ -4,8 +4,8 @@ class Token {
 }
 
 export default function letKey(tokens: Token[], pos: number): [number, string] {
-	const isVariable =
-		tokens[pos + 1] && tokens[pos + 1].type === "keyword-unknown";
+	let curInstruction = "";
+	const isVariable = tokens[pos + 1] && tokens[pos + 1].type === "word";
 	if (!isVariable) {
 		if (!tokens[pos + 1]) {
 			throw "Unexpected end of line, expected a variable name";
@@ -23,14 +23,17 @@ export default function letKey(tokens: Token[], pos: number): [number, string] {
 		}
 		throw `Unexpected token ${tokens[pos + 2].type}, expected a equals sign`;
 	}
-	let isString = tokens[pos + 3] && tokens[pos + 3].type === "string";
-	if (!isString) {
-		if (!tokens[pos + 3]) {
-			throw "Unexpected end of line, expected a string";
-		}
-		throw `Unexpected token ${tokens[pos + 3].type}, expected string`;
+	if (!tokens[pos + 3]) {
+		throw "Unexpected end of line, expected a string";
 	}
-	let instruction = `let mut ${varName} = "${tokens[pos + 3].value}";`;
+	switch (tokens[pos + 3].type) {
+		case "string":
+			curInstruction = `let mut ${varName} = "${tokens[pos + 3].value}";`;
+			break;
+		default:
+			curInstruction = `let mut ${varName} = ${tokens[pos + 3].value};`;
+			break;
+	}
 	pos += 3;
-	return [pos, instruction];
+	return [pos, curInstruction];
 }

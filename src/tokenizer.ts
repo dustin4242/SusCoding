@@ -6,6 +6,7 @@ class Token {
 export default function tokenizer(
 	fileString: string,
 	viableChars: string,
+	viableNums: string,
 	defKeywords: string[]
 ): Token[] {
 	let line = 1;
@@ -32,6 +33,14 @@ export default function tokenizer(
 					type: "operator",
 					value: "equals",
 				});
+				continue;
+			case ",":
+				column++;
+				tokens.push({ type: "comma", value: "," });
+				continue;
+			case ":":
+				column++;
+				tokens.push({ type: "type-assignment", value: ":" });
 				continue;
 			case "(":
 				column++;
@@ -70,9 +79,6 @@ export default function tokenizer(
 				if (viableChars.includes(char)) {
 					//Make a string to put the token value into
 					let tokenValue = char;
-					pos++;
-					column++;
-					tokenValue += fileString[pos];
 					//*Iterate until the entire token is built
 					while (
 						viableChars.includes(fileString[pos + 1]) &&
@@ -83,9 +89,21 @@ export default function tokenizer(
 						tokenValue += fileString[pos];
 					}
 					tokens.push({
-						type: defKeywords.includes(tokenValue)
-							? "keyword"
-							: "keyword-unknown",
+						type: defKeywords.includes(tokenValue) ? "keyword" : "word",
+						value: tokenValue,
+					});
+				} else if (viableNums.includes(char)) {
+					let tokenValue = char;
+					while (
+						viableNums.includes(fileString[pos + 1]) &&
+						pos < fileString.length
+					) {
+						pos++;
+						column++;
+						tokenValue += fileString[pos];
+					}
+					tokens.push({
+						type: "number",
 						value: tokenValue,
 					});
 				} else {

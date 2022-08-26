@@ -1,14 +1,13 @@
-function helloWorld()
+function helloWorld(world: string)
 	const hello = "hello world"
-	let world = "Hello World"
-	if(hello == "hello world")
-		print(hello)
-		if(hello == world)
-			print(world)
-		end
-		world = "But Reassignable"
+	const num = 0
+	if(num == 0)
+		print("numbers work!")
+	end
+	if(hello == world)
+		world = "This passes test"
 		print(world)
 	end
 end
 
-call(helloWorld)
+call(helloWorld, "hello world")

@@ -3,9 +3,12 @@ class Token {
 	value: string;
 }
 
-export default function doubleAssign(tokens: Token[], pos: number): [number, string] {
+export default function doubleAssign(
+	tokens: Token[],
+	pos: number
+): [number, string] {
 	let instruction = "";
-	const isVar = tokens[pos + 2].type === "keyword-unknown";
+	const isVar = tokens[pos + 2].type === "word";
 	const isString = tokens[pos + 2].type === "string";
 	if (!isVar && !isString) {
 		throw console.error(

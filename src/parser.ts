@@ -28,13 +28,15 @@ export default async function parser(tokens: Token[]) {
 				}
 				break;
 			}
-			case "keyword-unknown": {
-				if (
-					tokens[pos + 1].type == "operator" &&
-					tokens[pos + 1].value == "equals"
-				) {
-					[pos, curInstruction] = doubleAssign(tokens, pos);
-				}
+			case "word": {
+				if (tokens[pos + 1].type == "operator") {
+					switch (tokens[pos + 1].value) {
+						case "equals":
+							[pos, curInstruction] = doubleAssign(tokens, pos);
+							break;
+					}
+				} else
+					throw `Expected operator, got ${tokens[pos + 1].type} at pos: ${pos}`;
 				break;
 			}
 		}

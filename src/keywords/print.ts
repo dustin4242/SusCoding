@@ -14,7 +14,7 @@ export default function printKey(
 			"Unexpected end of line, expected a variable or string"
 		);
 	}
-	const isVar = tokens[pos + 2].type === "keyword-unknown";
+	const isVar = tokens[pos + 2].type === "word";
 	const isString = tokens[pos + 2].type === "string";
 	if (tokens[pos + 1].type == "paren_open") {
 		if (!isVar && !isString) {
@@ -27,7 +27,7 @@ export default function printKey(
 			tokens[pos + 1].type
 		} at ${pos}, expected a open parenthesis`;
 	if (isVar) {
-		instruction = `println!("{}", ${tokens[pos + 2].value});`;
+		instruction = `println!("{:?}", ${tokens[pos + 2].value});`;
 	} else instruction = `println!("${tokens[pos + 2].value}");`;
 	pos += 3;
 	return [pos, instruction];

@@ -4,7 +4,7 @@ class Token {
 }
 
 export default function ifKey(tokens: Token[], pos: number): [number, string] {
-	let instruction = "";
+	let curInstruction = "";
 	if (tokens[pos + 1].type == "paren_open") pos++;
 	else {
 		throw `Unexpected token ${
@@ -15,8 +15,7 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 		throw `Unexpected token ${
 			tokens[pos + 5].type
 		}, expected a close parenthesis`;
-	const isFirstVariable =
-		tokens[pos + 1] && tokens[pos + 1].type === "keyword-unknown";
+	const isFirstVariable = tokens[pos + 1] && tokens[pos + 1].type === "word";
 	const isFirstString = tokens[pos + 1] && tokens[pos + 1].type === "string";
 	if (!isFirstVariable && !isFirstString) {
 		if (!tokens[pos + 1]) {
@@ -42,7 +41,8 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 		);
 	}
 	const isSecondVariable =
-		tokens[pos + 4] && tokens[pos + 4].type === "keyword-unknown";
+		(tokens[pos + 4] && tokens[pos + 4].type === "word") ||
+		tokens[pos + 4].type === "number";
 	const isSecondString = tokens[pos + 4] && tokens[pos + 4].type === "string";
 	if (!isSecondVariable && !isSecondString) {
 		if (!tokens[pos + 4]) {
@@ -60,12 +60,12 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 		case isFirstVariable:
 			switch (true) {
 				case isSecondVariable:
-					instruction = `if ${tokens[pos + 1].value} == ${
+					curInstruction = `if ${tokens[pos + 1].value} == ${
 						tokens[pos + 4].value
 					} {`;
 					break;
 				case isSecondString:
-					instruction = `if ${tokens[pos + 1].value} == "${
+					curInstruction = `if ${tokens[pos + 1].value} == "${
 						tokens[pos + 4].value
 					}" {`;
 					break;
@@ -74,12 +74,12 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 		case isFirstString:
 			switch (true) {
 				case isSecondVariable:
-					instruction = `if "${tokens[pos + 1].value}" == ${
+					curInstruction = `if "${tokens[pos + 1].value}" == ${
 						tokens[pos + 4].value
 					} {`;
 					break;
 				case isSecondString:
-					instruction = `if "${tokens[pos + 1].value}" == "${
+					curInstruction = `if "${tokens[pos + 1].value}" == "${
 						tokens[pos + 4].value
 					}" {`;
 					break;
@@ -87,5 +87,5 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 			break;
 	}
 	pos = pos + 5;
-	return [pos, instruction];
+	return [pos, curInstruction];
 }
