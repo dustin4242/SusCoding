@@ -5,7 +5,7 @@
 - keywords (your main words "if", "let", "print", etc.)
 - unknown-keywords (possible variables)
 - strings (ex: "example")
-- numbers (ex: 0, 1, 1.1)
+- int numbers (ex: 0, 1)
 - parenthesis (ex: `()`)
 
 ## Parser (takes the tokens and executes them, along with identifing errors)
@@ -52,10 +52,11 @@ call(exampleName,"hello world")
 - [x] add double assignment (for const and let)
 - [x] add function
 - [x] passing variables into functions
-- [x] add numbers
+- [x] add int numbers
 - [ ] add arithmatic
 - [ ] add arrays
 - [ ] add for loop? (could just recursive function)
+- [ ] add float numbers (optional)
 - [ ] bootstrap compiler
 
 `(end of initial features for scope reasons)`

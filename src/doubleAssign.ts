@@ -8,12 +8,13 @@ export default function doubleAssign(
 	pos: number
 ): [number, string] {
 	let instruction = "";
-	const isVar = tokens[pos + 2].type === "word";
+	const isVar =
+		tokens[pos + 2].type === "word" || tokens[pos + 2].type === "number";
 	const isString = tokens[pos + 2].type === "string";
 	if (!isVar && !isString) {
-		throw console.error(
-			`Unexpected token ${tokens[pos + 2].type}, expected a variable or string`
-		);
+		throw `Unexpected token ${
+			tokens[pos + 2].type
+		}, expected a variable or string`;
 	}
 	if (isVar) instruction = `${tokens[pos].value} = ${tokens[pos + 2].value};`;
 	else instruction = `${tokens[pos].value} = "${tokens[pos + 2].value}";`;

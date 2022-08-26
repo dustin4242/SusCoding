@@ -1,13 +1,8 @@
-function helloWorld(world: string)
-	const hello = "hello world"
-	const num = 0
-	if(num == 0)
-		print("numbers work!")
-	end
+function helloWorld(world: number)
+	const hello = 0
 	if(hello == world)
-		world = "This passes test"
-		print(world)
+		print("numbers work!")
 	end
 end
 
-call(helloWorld, "hello world")
+call(helloWorld, 0)

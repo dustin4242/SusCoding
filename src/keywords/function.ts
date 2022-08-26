@@ -21,6 +21,10 @@ export default function functionKey(
 					parseArgs.push(`mut ${tokens[pos].value}: &str`);
 					pos += 4;
 					break;
+				case "number":
+					parseArgs.push(`mut ${tokens[pos].value}: usize`);
+					pos += 4;
+					break;
 			}
 		}
 		pos -= 1;
@@ -46,6 +50,10 @@ function typeCheck(tokens: Token[], pos: number): string[] {
 										case "string":
 											pos += 2;
 											args.push("string");
+											break;
+										case "number":
+											pos += 2;
+											args.push("number");
 											break;
 										default:
 											throw `Unknown assignment of type ${
