@@ -2,10 +2,10 @@
 
 ## Tokenizer (iterator through every char and identify tokens)
 
-- keywords (your main words "if", "let", "print", etc.)
-- unknown-keywords (possible variables)
-- strings (ex: "example")
-- int numbers (ex: 0, 1)
+- keywords (your main words `if`, `let`, `print`, etc.)
+- words (possible variables)
+- strings (ex: `"example"`)
+- int numbers (ex: `0`, `1`)
 - parenthesis (ex: `()`)
 
 ## Parser (takes the tokens and executes them, along with identifing errors)
@@ -21,7 +21,7 @@ if (hello == "world")
 end
 ```
 
-- double assigning (assigning a variable after initial assignment) ex: hello = "reassignment"
+- double assigning (assigning a variable after initial assignment) ex: `hello = "reassignment"`
 - dynamic import of keywords (so I dont have to rewrite case statements)
 - dynamic import of keyword functions (same as above)
 - add functions ex:
@@ -43,6 +43,24 @@ end
 call(exampleName,"hello world")
 ```
 
+- added arithmetic within double assigning and initial assignment ex:
+```SusCoding
+function exampleFunc(world: number)
+  world = 69
+  print(world)
+  world = world + 351
+  print(world)
+
+  let hello = "Hello, " + "world!"
+  print(hello)
+  let extra = " And more!"
+  hello = hello + extra
+  print(hello)
+end
+
+call(exampleFunc, 0)
+```
+
 # TODO:
 
 - [x] add print
@@ -53,7 +71,8 @@ call(exampleName,"hello world")
 - [x] add function
 - [x] passing variables into functions
 - [x] add int numbers
-- [ ] add arithmatic
+- [x] add arithmetic within assignments
+- [ ] add arithmetic within if statements
 - [ ] add arrays
 - [ ] add for loop? (could just recursive function)
 - [ ] add float numbers (optional)
