@@ -17,6 +17,7 @@ if (process.argv[2] != undefined) {
 	);
 	const tokens = tokenizer(fileString, viableChars, viableNums, defKeywords);
 	// Compile To Rust So It Can Go To Binary
+	finalFile.push("#[allow(unused_assignments)]");
 	finalFile.push("#[allow(unused_mut)]");
 	finalFile.push("#[allow(non_snake_case)]");
 	finalFile.push("fn main() {");

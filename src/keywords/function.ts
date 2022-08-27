@@ -18,7 +18,7 @@ export default function functionKey(
 		for (let i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "string":
-					parseArgs.push(`mut ${tokens[pos].value}: &str`);
+					parseArgs.push(`mut ${tokens[pos].value}: String`);
 					pos += 4;
 					break;
 				case "number":

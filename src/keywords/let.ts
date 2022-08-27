@@ -28,7 +28,9 @@ export default function letKey(tokens: Token[], pos: number): [number, string] {
 	}
 	switch (tokens[pos + 3].type) {
 		case "string":
-			curInstruction = `let mut ${varName} = "${tokens[pos + 3].value}";`;
+			curInstruction = `let mut ${varName} = "${
+				tokens[pos + 3].value
+			}".to_owned();`;
 			break;
 		default:
 			curInstruction = `let mut ${varName} = ${tokens[pos + 3].value};`;

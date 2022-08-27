@@ -7,17 +7,38 @@ export default function doubleAssign(
 	tokens: Token[],
 	pos: number
 ): [number, string] {
-	let instruction = "";
-	const isVar =
-		tokens[pos + 2].type === "word" || tokens[pos + 2].type === "number";
-	const isString = tokens[pos + 2].type === "string";
-	if (!isVar && !isString) {
-		throw `Unexpected token ${
-			tokens[pos + 2].type
-		}, expected a variable or string`;
+	let curInstruction = `${tokens[pos].value} = `;
+	let assignment = [];
+	pos++;
+	while (tokens[pos + 1].type != "newline") {
+		pos++;
+		assignment.push(tokens[pos]);
 	}
-	if (isVar) instruction = `${tokens[pos].value} = ${tokens[pos + 2].value};`;
-	else instruction = `${tokens[pos].value} = "${tokens[pos + 2].value}";`;
-	pos += 2;
-	return [pos, instruction];
+	for (let i = 0; i < assignment.length; i++) {
+		switch (assignment[i].type) {
+			case "string":
+				assignment[i] = `"${assignment[i].value}".to_owned()`;
+				break;
+			case "operator":
+				if (assignment[i].value == "+") {
+					if (assignment[i + 1] && assignment[i + 1].type == "string") {
+						assignment[i - 1] =
+							assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
+						assignment.splice(i, 2);
+						i -= 1;
+					} else if (assignment[i + 1]) {
+						assignment[i - 1] =
+							assignment[i - 1] + ` + &${assignment[i + 1].value}`;
+						assignment.splice(i, 2);
+						i -= 1;
+					}
+				}
+				break;
+			default:
+				assignment[i] = `${assignment[i].value}`;
+				break;
+		}
+	}
+	curInstruction = curInstruction + assignment.join("") + ";";
+	return [pos, curInstruction];
 }

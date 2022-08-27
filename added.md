@@ -15,7 +15,7 @@
 - const assignment ex: `const hello = "world"`
 - if statement (come on, you know what this is.) ex:
 
-```
+```SusCoding
 if (hello == "world")
 		print(hello)
 end
@@ -26,7 +26,7 @@ end
 - dynamic import of keyword functions (same as above)
 - add functions ex:
 
-```
+```SusCoding
 function exampleName()
 		print("Example")
 end
@@ -35,7 +35,7 @@ end
 - fixed parenthesis via string assignment and keyword assignment so ya
 - added passing of variables into functions via strict typing ex:
 
-```
+```SusCoding
 function exampleName(world: string)
 		print(world)
 end

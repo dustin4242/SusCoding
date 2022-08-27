@@ -1,8 +1,16 @@
 function helloWorld(world: number)
-	const hello = 0
-	if(hello == world)
-		print("numbers work!")
-	end
+	let hello = "Hello, "
+	print(hello)
+	hello = hello + "world!"
+	print(hello)
+	const extra = " And more!"
+	hello = hello + extra
+	print(hello)
+
+	world = 69
+	print(world)
+	world = world + 351
+	print(world)
 end
 
-call(helloWorld, 0)
+call(helloWorld,0)

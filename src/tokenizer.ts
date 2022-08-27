@@ -30,6 +30,7 @@ export default function tokenizer(
 			case "\n":
 				line++;
 				column = 0;
+				tokens.push(new Token("newline", "\n"));
 				continue;
 			case "=":
 				column++;
@@ -51,6 +52,10 @@ export default function tokenizer(
 				column++;
 				tokens.push(new Token("paren_close", ")"));
 				continue;
+			case "+":
+				column++;
+				tokens.push(new Token("operator", "+"));
+				break;
 			case `"`:
 				//Make a string to put the token value into
 				let tokenValue = "";
