@@ -23,5 +23,8 @@ if (process.argv[2] != undefined) {
 	finalFile.push("fn main() {");
 	finalFile.push(...(await parser(tokens)));
 	finalFile.push("}");
-	writeFileSync(`./main.rs`, finalFile.join("\n"));
+	writeFileSync(
+		`./${process.argv[2].split("/").pop().replace(".sus", "")}.rs`,
+		finalFile.join("\n")
+	);
 }
