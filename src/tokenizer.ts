@@ -1,6 +1,10 @@
 class Token {
 	type: string;
 	value: string;
+	constructor(type: string, value: string) {
+		this.type = type;
+		this.value = value;
+	}
 }
 
 export default function tokenizer(
@@ -29,32 +33,23 @@ export default function tokenizer(
 				continue;
 			case "=":
 				column++;
-				tokens.push({
-					type: "operator",
-					value: "equals",
-				});
+				tokens.push(new Token("operator", "equals"));
 				continue;
 			case ",":
 				column++;
-				tokens.push({ type: "comma", value: "," });
+				tokens.push(new Token("comma", ","));
 				continue;
 			case ":":
 				column++;
-				tokens.push({ type: "type-assignment", value: ":" });
+				tokens.push(new Token("type-assignment", ":"));
 				continue;
 			case "(":
 				column++;
-				tokens.push({
-					type: "paren_open",
-					value: "(",
-				});
+				tokens.push(new Token("paren_open", "("));
 				continue;
 			case ")":
 				column++;
-				tokens.push({
-					type: "paren_close",
-					value: ")",
-				});
+				tokens.push(new Token("paren_close", ")"));
 				continue;
 			case `"`:
 				//Make a string to put the token value into
@@ -70,10 +65,7 @@ export default function tokenizer(
 				}
 				pos++;
 				column++;
-				tokens.push({
-					type: "string",
-					value: tokenValue,
-				});
+				tokens.push(new Token("string", tokenValue));
 				continue;
 			default:
 				if (viableChars.includes(char)) {
@@ -88,10 +80,12 @@ export default function tokenizer(
 						column++;
 						tokenValue += fileString[pos];
 					}
-					tokens.push({
-						type: defKeywords.includes(tokenValue) ? "keyword" : "word",
-						value: tokenValue,
-					});
+					tokens.push(
+						new Token(
+							defKeywords.includes(tokenValue) ? "keyword" : "word",
+							tokenValue
+						)
+					);
 				} else if (viableNums.includes(char)) {
 					let tokenValue = char;
 					while (
@@ -102,10 +96,7 @@ export default function tokenizer(
 						column++;
 						tokenValue += fileString[pos];
 					}
-					tokens.push({
-						type: "number",
-						value: tokenValue,
-					});
+					tokens.push(new Token("number", tokenValue));
 				} else {
 					throw `Unknown character ${char} at line ${line}, column ${column}`;
 				}
