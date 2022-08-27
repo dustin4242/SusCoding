@@ -4,38 +4,38 @@ class Token {
 }
 
 export default function letKey(tokens: Token[], pos: number): [number, string] {
-	let curInstruction = "";
-	const isVariable = tokens[pos + 1] && tokens[pos + 1].type === "word";
-	if (!isVariable) {
-		if (!tokens[pos + 1]) {
-			throw "Unexpected end of line, expected a variable name";
+	let curInstruction = `let mut ${tokens[pos + 1].value} = `;
+	let assignment = [];
+	pos += 2;
+	while (tokens[pos + 1].type != "newline") {
+		pos++;
+		assignment.push(tokens[pos]);
+	}
+	for (let i = 0; i < assignment.length; i++) {
+		switch (assignment[i].type) {
+			case "string":
+				assignment[i] = `"${assignment[i].value}".to_owned()`;
+				break;
+			case "operator":
+				if (assignment[i].value == "+") {
+					if (assignment[i + 1] && assignment[i + 1].type == "string") {
+						assignment[i - 1] =
+							assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
+						assignment.splice(i, 2);
+						i -= 1;
+					} else if (assignment[i + 1]) {
+						assignment[i - 1] =
+							assignment[i - 1] + ` + &${assignment[i + 1].value}`;
+						assignment.splice(i, 2);
+						i -= 1;
+					}
+				}
+				break;
+			default:
+				assignment[i] = `${assignment[i].value}`;
+				break;
 		}
-		throw `Unexpected token ${tokens[pos + 1].type}, expected a variable name`;
 	}
-	const varName = tokens[pos + 1].value;
-	const isEquals =
-		tokens[pos + 2] &&
-		tokens[pos + 2].type === "operator" &&
-		tokens[pos + 2].value === "equals";
-	if (!isEquals) {
-		if (!tokens[pos + 2]) {
-			throw "Unexpected end of line, expected a equals sign";
-		}
-		throw `Unexpected token ${tokens[pos + 2].type}, expected a equals sign`;
-	}
-	if (!tokens[pos + 3]) {
-		throw "Unexpected end of line, expected a string";
-	}
-	switch (tokens[pos + 3].type) {
-		case "string":
-			curInstruction = `let mut ${varName} = "${
-				tokens[pos + 3].value
-			}".to_owned();`;
-			break;
-		default:
-			curInstruction = `let mut ${varName} = ${tokens[pos + 3].value};`;
-			break;
-	}
-	pos += 3;
+	curInstruction = curInstruction + assignment.join("") + ";";
 	return [pos, curInstruction];
 }

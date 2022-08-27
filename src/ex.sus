@@ -1,7 +1,5 @@
 function helloWorld(world: number)
-	let hello = "Hello, "
-	print(hello)
-	hello = hello + "world!"
+	let hello = "Hello, " + "world!"
 	print(hello)
 	const extra = " And more!"
 	hello = hello + extra

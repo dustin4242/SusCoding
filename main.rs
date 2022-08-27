@@ -4,15 +4,11 @@
 fn main() {
 fn helloWorld(mut world: usize) {
 
-let mut hello = "Hello, ".to_owned();
+let mut hello = "Hello, ".to_owned() + "world!";
 
 println!("{}", hello);
 
-hello = hello + "world!";
-
-println!("{}", hello);
-
-let extra = " And more!";
+let extra = " And more!".to_owned();
 
 hello = hello + &extra;
 
