@@ -39,7 +39,7 @@ export default function tokenizer(
 			case "+":
 				column++;
 				tokens.push(new Token("operator", "+"));
-				break;
+				continue;
 			case ",":
 				column++;
 				tokens.push(new Token("comma", ","));

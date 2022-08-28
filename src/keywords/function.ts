@@ -60,23 +60,13 @@ function typeCheck(tokens: Token[], pos: number): string[] {
 												tokens[pos + 2].value
 											} at pos: ${pos}`;
 									}
-								} else
-									throw `Expected type found ${
-										tokens[pos + 2].type
-									} at pos: ${pos}`;
-							} else
-								throw `Expected type-assignment found ${
-									tokens[pos + 1].type
-								} at pos: ${pos}`;
+								}
+							}
 						}
 						pos++;
 					}
 					return args;
 			}
-		} else
-			throw `Expected Open Parenthesis found ${tokens[pos + 2].type} at pos: ${
-				pos + 2
-			}`;
-	} else
-		throw `Expected function name got ${tokens[pos + 1].type} at ${pos + 1}`;
+		}
+	}
 }

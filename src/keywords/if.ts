@@ -5,10 +5,8 @@ class Token {
 
 export default function ifKey(tokens: Token[], pos: number): [number, string] {
 	let curInstruction = "if ";
-	if (tokens[pos + 1] && tokens[pos + 1].type == "paren_open") {
-		pos++;
-	} else throw `Expected paren_open at pos: ${pos}`;
 	let assignment = [];
+	pos++;
 	while (tokens[pos + 1].type != "newline") {
 		pos++;
 		assignment.push(tokens[pos]);
