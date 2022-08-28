@@ -7,35 +7,65 @@ export default function callKey(
 	tokens: Token[],
 	pos: number
 ): [number, string] {
-	let curInstruction = "";
-	if (tokens[pos + 1].type == "paren_open") {
-		if (tokens[pos + 2].type == "word") {
-			if (tokens[pos + 3].type == "comma") {
-				let envVars = [];
-				curInstruction = `${tokens[pos + 2].value}(`;
-				pos += 4;
-				while (tokens[pos].type != "paren_close") {
-					if (tokens[pos] != null)
-						switch (tokens[pos].type) {
-							case "string":
-								envVars.push(`"${tokens[pos].value}"`);
-								break;
-							case "number":
-								envVars.push(`${tokens[pos].value} as f32`);
-								break;
-							default:
-								envVars.push(tokens[pos].value);
-								break;
+	let curInstruction = `${tokens[pos + 2].value}(`;
+	pos += 3;
+	let assignment = [];
+	while (tokens[pos + 1].type != "newline") {
+		pos++;
+		assignment.push(tokens[pos]);
+	}
+	for (let i = 0; i < assignment.length; i++) {
+		switch (assignment[i].type) {
+			case "string":
+				assignment[i] = `"${assignment[i].value}".to_owned()`;
+				break;
+			case "operator":
+				switch (assignment[i].value) {
+					case "+":
+						if (assignment[i + 1]) {
+							switch (assignment[i + 1].type) {
+								case "string": {
+									assignment[i - 1] =
+										assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
+									assignment.splice(i, 2);
+									i -= 1;
+									break;
+								}
+								case "number": {
+									assignment[i - 1] =
+										assignment[i - 1] + ` + ${assignment[i + 1].value} as f32`;
+									assignment.splice(i, 2);
+									i -= 1;
+									break;
+								}
+								default: {
+									assignment[i - 1] =
+										assignment[i - 1] + ` + &${assignment[i + 1].value}`;
+									assignment.splice(i, 2);
+									i -= 1;
+									break;
+								}
+							}
 						}
-					else throw `Missing a Closed Parenthesis at pos: ${pos}`;
-					pos++;
+						break;
 				}
-				curInstruction = curInstruction + envVars.join("") + ");";
-			} else if (tokens[pos + 3].type == "paren_close") {
-				curInstruction = `${tokens[pos + 2].value}();`;
-				pos += 3;
-			} else throw `Missing a Closed Parenthesis at pos: ${pos}`;
-		} else throw `Missing a Function at pos: ${pos + 3}`;
-	} else throw `Missing a Open Parenthesis at pos: ${pos + 3}`;
+				break;
+			case "number":
+				assignment[i] = `${assignment[i].value} as f32`;
+				break;
+			case "paren_close":
+				assignment.splice(i, 1);
+				i -= 1;
+				break;
+			case "comma":
+				assignment.splice(i, 1);
+				i -= 1;
+				break;
+			default:
+				assignment[i] = `${assignment[i].value}`;
+				break;
+		}
+	}
+	curInstruction = `${curInstruction}${assignment.join(", ")});`;
 	return [pos, curInstruction];
 }

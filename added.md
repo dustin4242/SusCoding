@@ -44,7 +44,7 @@ end
 call(exampleName,"hello world")
 ```
 
-- added "adding" arithmetic within double assigning and initial assignment ex:
+- added "adding" arithmetic within initial assignment and double assigning ex:
 
 ```SusCoding
 function exampleFunc(world: number)
@@ -62,6 +62,22 @@ end
 
 call(exampleFunc, 0)
 ```
+- added arithmetic within if, call, and print statements ex:
+```SusCoding
+function exampleFunc(hello: string, world: number)
+	if(world + 35.1 == 42.0)
+		print(hello + ".")
+	end
+end
+
+call(exampleFunc, "nice", 4.20 + 2.7)
+```
+- added passing multiple variables into print function ex:
+```SusCoding
+let hello = 6.9
+let world = "nice"
+print(hello, world)
+```
 
 # TODO:
 
@@ -74,7 +90,10 @@ call(exampleFunc, 0)
 - [x] passing variables into functions
 - [x] add int numbers
 - [x] add arithmetic within assignments
-- [ ] add arithmetic within if statements
+- [x] add arithmetic within if statements
+- [x] add arithmetic within print statements
+- [x] add arithmetic within call statements
+- [x] add passing multiple variables into print statements
 - [ ] add arrays
 - [ ] add for loop? (could just recursive function)
 - [x] add float numbers (optional)

@@ -4,88 +4,73 @@ class Token {
 }
 
 export default function ifKey(tokens: Token[], pos: number): [number, string] {
-	let curInstruction = "";
-	if (tokens[pos + 1].type == "paren_open") pos++;
-	else {
-		throw `Unexpected token ${
-			tokens[pos + 1].type
-		}, expected a open parenthesis`;
+	let curInstruction = "if ";
+	if (tokens[pos + 1] && tokens[pos + 1].type == "paren_open") {
+		pos++;
+	} else throw `Expected paren_open at pos: ${pos}`;
+	let assignment = [];
+	while (tokens[pos + 1].type != "newline") {
+		pos++;
+		assignment.push(tokens[pos]);
 	}
-	if (tokens[pos + 5].type != "paren_close")
-		throw `Unexpected token ${
-			tokens[pos + 5].type
-		}, expected a close parenthesis`;
-	const isFirstVariable = tokens[pos + 1] && tokens[pos + 1].type === "word";
-	const isFirstString = tokens[pos + 1] && tokens[pos + 1].type === "string";
-	if (!isFirstVariable && !isFirstString) {
-		if (!tokens[pos + 1]) {
-			throw "Unexpected end of line, expected a variable name or string";
+	for (let i = 0; i < assignment.length; i++) {
+		switch (assignment[i].type) {
+			case "string":
+				assignment[i] = `"${assignment[i].value}".to_owned()`;
+				break;
+			case "operator":
+				switch (assignment[i].value) {
+					case "+":
+						if (assignment[i + 1]) {
+							switch (assignment[i + 1].type) {
+								case "string": {
+									assignment[i - 1] =
+										assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
+									assignment.splice(i, 2);
+									i -= 1;
+									break;
+								}
+								case "number": {
+									assignment[i - 1] =
+										assignment[i - 1] + ` + ${assignment[i + 1].value} as f32`;
+									assignment.splice(i, 2);
+									i -= 1;
+									break;
+								}
+								default: {
+									assignment[i - 1] =
+										assignment[i - 1] + ` + &${assignment[i + 1].value}`;
+									assignment.splice(i, 2);
+									i -= 1;
+									break;
+								}
+							}
+						}
+						break;
+					case "=":
+						if (
+							assignment[i + 1] &&
+							assignment[i + 1].type == "operator" &&
+							assignment[i + 1].value == "="
+						) {
+							assignment[i] = "==";
+							assignment.splice(i + 1, 1);
+						}
+						break;
+				}
+				break;
+			case "number":
+				assignment[i] = `${assignment[i].value} as f32`;
+				break;
+			case "paren_close":
+				assignment.splice(i, 1);
+				i -= 1;
+				break;
+			default:
+				assignment[i] = `${assignment[i].value}`;
+				break;
 		}
-		throw `Unexpected token ${
-			tokens[pos + 1].type
-		}, expected a variable name or string`;
 	}
-	const isEqualTo =
-		tokens[pos + 2] &&
-		tokens[pos + 3] &&
-		tokens[pos + 2].type === "operator" &&
-		tokens[pos + 2].value === "equals" &&
-		tokens[pos + 3].type === "operator" &&
-		tokens[pos + 3].value === "equals";
-	if (!isEqualTo) {
-		if (!tokens[pos + 3]) {
-			throw console.error("Unexpected end of line, expected '==' sign");
-		}
-		throw console.error(
-			`Unexpected token ${tokens[pos + 3].type}, expected '==' sign`
-		);
-	}
-	const isSecondVariable =
-		(tokens[pos + 4] && tokens[pos + 4].type === "word") ||
-		tokens[pos + 4].type === "number";
-	const isSecondString = tokens[pos + 4] && tokens[pos + 4].type === "string";
-	if (!isSecondVariable && !isSecondString) {
-		if (!tokens[pos + 4]) {
-			throw console.error(
-				"Unexpected end of line, expected a variable name or string"
-			);
-		}
-		throw console.error(
-			`Unexpected token ${
-				tokens[pos + 4].type
-			}, expected a variable name or string`
-		);
-	}
-	switch (true) {
-		case isFirstVariable:
-			switch (true) {
-				case isSecondVariable:
-					curInstruction = `if ${tokens[pos + 1].value} == ${
-						tokens[pos + 4].value
-					} {`;
-					break;
-				case isSecondString:
-					curInstruction = `if ${tokens[pos + 1].value} == "${
-						tokens[pos + 4].value
-					}" {`;
-					break;
-			}
-			break;
-		case isFirstString:
-			switch (true) {
-				case isSecondVariable:
-					curInstruction = `if "${tokens[pos + 1].value}" == ${
-						tokens[pos + 4].value
-					} {`;
-					break;
-				case isSecondString:
-					curInstruction = `if "${tokens[pos + 1].value}" == "${
-						tokens[pos + 4].value
-					}" {`;
-					break;
-			}
-			break;
-	}
-	pos = pos + 5;
+	curInstruction = `${curInstruction}${assignment.join(" ")} {`;
 	return [pos, curInstruction];
 }

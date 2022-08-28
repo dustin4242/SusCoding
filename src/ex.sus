@@ -1,14 +1,7 @@
-function helloWorld(world: number)
-	let hello = "Hello, " + "world!"
-	print(hello)
-	const extra = " And more!"
-	hello = hello + extra
-	print(hello)
-
-	world = 69.0
-	print(world)
-	world = world + 351
-	print(world)
+function exampleFunc(hello: string, world: number)
+	if(world + 35.1 == 42.0)
+		print(world + 35.1, hello + ".")
+	end
 end
 
-call(helloWorld,0)
+call(exampleFunc, "nice", 4.20 + 2.70)

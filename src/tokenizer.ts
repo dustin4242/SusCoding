@@ -34,8 +34,12 @@ export default function tokenizer(
 				continue;
 			case "=":
 				column++;
-				tokens.push(new Token("operator", "equals"));
+				tokens.push(new Token("operator", "="));
 				continue;
+			case "+":
+				column++;
+				tokens.push(new Token("operator", "+"));
+				break;
 			case ",":
 				column++;
 				tokens.push(new Token("comma", ","));
@@ -52,10 +56,6 @@ export default function tokenizer(
 				column++;
 				tokens.push(new Token("paren_close", ")"));
 				continue;
-			case "+":
-				column++;
-				tokens.push(new Token("operator", "+"));
-				break;
 			case `"`:
 				//Make a string to put the token value into
 				let tokenValue = "";

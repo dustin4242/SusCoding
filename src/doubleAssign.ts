@@ -5,7 +5,8 @@ class Token {
 
 export default function doubleAssign(
 	tokens: Token[],
-	pos: number
+	pos: number,
+	line: number
 ): [number, string] {
 	let curInstruction = `${tokens[pos].value} = `;
 	let assignment = [];
