@@ -22,7 +22,7 @@ export default function functionKey(
 					pos += 4;
 					break;
 				case "number":
-					parseArgs.push(`mut ${tokens[pos].value}: usize`);
+					parseArgs.push(`mut ${tokens[pos].value}: f32`);
 					pos += 4;
 					break;
 			}

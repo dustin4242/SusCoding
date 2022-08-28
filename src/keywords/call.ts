@@ -16,10 +16,16 @@ export default function callKey(
 				pos += 4;
 				while (tokens[pos].type != "paren_close") {
 					if (tokens[pos] != null)
-						if (tokens[pos].type == "string") {
-							envVars.push(`"${tokens[pos].value}"`);
-						} else {
-							envVars.push(tokens[pos].value);
+						switch (tokens[pos].type) {
+							case "string":
+								envVars.push(`"${tokens[pos].value}"`);
+								break;
+							case "number":
+								envVars.push(`${tokens[pos].value} as f32`);
+								break;
+							default:
+								envVars.push(tokens[pos].value);
+								break;
 						}
 					else throw `Missing a Closed Parenthesis at pos: ${pos}`;
 					pos++;

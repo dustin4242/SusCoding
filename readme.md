@@ -1,2 +1,4 @@
 # SusCoding
-Quick Description
+
+dependencies: rustc
+

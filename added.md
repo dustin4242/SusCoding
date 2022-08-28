@@ -6,6 +6,7 @@
 - words (possible variables)
 - strings (ex: `"example"`)
 - int numbers (ex: `0`, `1`)
+- float numbers (ex: `0.0`, `0.1`, `1.0`)
 - parenthesis (ex: `()`)
 
 ## Parser (takes the tokens and executes them, along with identifing errors)
@@ -43,7 +44,8 @@ end
 call(exampleName,"hello world")
 ```
 
-- added arithmetic within double assigning and initial assignment ex:
+- added "adding" arithmetic within double assigning and initial assignment ex:
+
 ```SusCoding
 function exampleFunc(world: number)
   world = 69
@@ -75,7 +77,7 @@ call(exampleFunc, 0)
 - [ ] add arithmetic within if statements
 - [ ] add arrays
 - [ ] add for loop? (could just recursive function)
-- [ ] add float numbers (optional)
+- [x] add float numbers (optional)
 - [ ] bootstrap compiler
 
 `(end of initial features for scope reasons)`

@@ -5,7 +5,7 @@ function helloWorld(world: number)
 	hello = hello + extra
 	print(hello)
 
-	world = 69
+	world = 69.0
 	print(world)
 	world = world + 351
 	print(world)
