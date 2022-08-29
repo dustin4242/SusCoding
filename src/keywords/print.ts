@@ -65,7 +65,7 @@ export default function printKey(
 		}
 	}
 	curInstruction = `${curInstruction}"${new Array(assignment.length)
-		.fill("{}")
+		.fill("{:?}")
 		.join(", ")}", ${assignment.join(", ")});`;
 	return [pos, curInstruction];
 }

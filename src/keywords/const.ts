@@ -51,6 +51,9 @@ export default function constKey(
 			case "number":
 				assignment[i] = `${assignment[i].value} as f32`;
 				break;
+			case "array_open":
+				assignment[i] = `vec!${assignment[i].value}`;
+				break;
 			default:
 				assignment[i] = `${assignment[i].value}`;
 				break;

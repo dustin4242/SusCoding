@@ -1,7 +1,7 @@
-function exampleFunc(hello: string, world: number)
-	if(world + 35.1 == 42.0)
-		print(world + 35.1, hello + ".")
-	end
+let extra = [6, 6, 6]
+function exampleFunc(world: number)
+	extra = [6.9, world]
+	print(extra)
 end
 
-call(exampleFunc, "nice", 4.20 + 2.70)
+call(exampleFunc, 4.20)

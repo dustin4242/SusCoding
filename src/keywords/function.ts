@@ -5,14 +5,16 @@ class Token {
 
 export default function functionKey(
 	tokens: Token[],
-	pos: number
+	pos: number,
+	line: number
 ): [number, string] {
 	let curInstruction = "";
-	let args = typeCheck(tokens, pos);
+	let args = typeCheck(tokens, pos, line);
 	if (args.length == 0) {
-		curInstruction = `fn ${tokens[pos + 1].value}() {`;
+		curInstruction = `let mut ${tokens[pos + 1].value} = || {`;
+		pos += 3;
 	} else {
-		curInstruction = `fn ${tokens[pos + 1].value}(`;
+		curInstruction = `let mut ${tokens[pos + 1].value} = |`;
 		let parseArgs = [];
 		pos += 3;
 		for (let i = 0; i < args.length; i++) {
@@ -28,12 +30,12 @@ export default function functionKey(
 			}
 		}
 		pos -= 1;
-		curInstruction = curInstruction + parseArgs.join(", ") + ") {";
+		curInstruction = curInstruction + parseArgs.join(", ") + "| {";
 	}
 	return [pos, curInstruction];
 }
 
-function typeCheck(tokens: Token[], pos: number): string[] {
+function typeCheck(tokens: Token[], pos: number, line: number): string[] {
 	if (tokens[pos + 1].type == "word") {
 		if (tokens[pos + 2].type == "paren_open") {
 			switch (tokens[pos + 3].type) {
@@ -58,7 +60,7 @@ function typeCheck(tokens: Token[], pos: number): string[] {
 										default:
 											throw `Unknown assignment of type ${
 												tokens[pos + 2].value
-											} at pos: ${pos}`;
+											} at line: ${line}, pos: ${pos}`;
 									}
 								}
 							}

@@ -48,11 +48,14 @@ export default function letKey(tokens: Token[], pos: number): [number, string] {
 			case "number":
 				assignment[i] = `${assignment[i].value} as f32`;
 				break;
+			case "array_open":
+				assignment[i] = `vec!${assignment[i].value}`;
+				break;
 			default:
 				assignment[i] = `${assignment[i].value}`;
 				break;
 		}
 	}
-	curInstruction = curInstruction + assignment.join("") + ";";
+	curInstruction = `${curInstruction}${assignment.join("")};`;
 	return [pos, curInstruction];
 }

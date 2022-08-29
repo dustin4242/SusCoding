@@ -30,12 +30,11 @@ export default async function parser(tokens: Token[]) {
 				break;
 			}
 			case "word": {
-				if (tokens[pos + 1].type == "operator") {
-					switch (tokens[pos + 1].value) {
-						case "equals":
-							[pos, curInstruction] = doubleAssign(tokens, pos, line);
-							break;
-					}
+				if (
+					tokens[pos + 1].type == "operator" &&
+					tokens[pos + 1].value == "="
+				) {
+					[pos, curInstruction] = doubleAssign(tokens, pos, line);
 				} else
 					throw `Expected operator, got ${tokens[pos + 1].type} at pos: ${pos}`;
 				break;

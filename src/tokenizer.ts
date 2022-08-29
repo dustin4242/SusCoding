@@ -56,6 +56,14 @@ export default function tokenizer(
 				column++;
 				tokens.push(new Token("paren_close", ")"));
 				continue;
+			case "[":
+				column++;
+				tokens.push(new Token("array_open", "["));
+				continue;
+			case "]":
+				column++;
+				tokens.push(new Token("array_close", "]"));
+				continue;
 			case `"`:
 				//Make a string to put the token value into
 				let tokenValue = "";
