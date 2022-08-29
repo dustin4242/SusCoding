@@ -1,7 +1,5 @@
-let extra = [6, 6, 6]
-function exampleFunc(world: number)
-	extra = [6.9, world]
-	print(extra)
+function exampleFunc(hello: string[], world: number[])
+	print(hello, world)
 end
 
-call(exampleFunc, 4.20)
+call(exampleFunc, ["this is", "nice"], [6.9, 4.20])

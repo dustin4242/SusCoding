@@ -1,6 +1,10 @@
 class Token {
 	type: string;
 	value: string;
+	constructor(type: string, value: string) {
+		this.type = type;
+		this.value = value;
+	}
 }
 
 export default function functionKey(
@@ -8,8 +12,8 @@ export default function functionKey(
 	pos: number,
 	line: number
 ): [number, string] {
-	let curInstruction = "";
-	let args = typeCheck(tokens, pos, line);
+	let curInstruction = ``;
+	let [args, newPos] = typeCheck(tokens, pos, line);
 	if (args.length == 0) {
 		curInstruction = `let mut ${tokens[pos + 1].value} = || {`;
 		pos += 3;
@@ -18,57 +22,109 @@ export default function functionKey(
 		let parseArgs = [];
 		pos += 3;
 		for (let i = 0; i < args.length; i++) {
-			switch (args[i]) {
-				case "string":
-					parseArgs.push(`mut ${tokens[pos].value}: String`);
-					pos += 4;
+			switch (args[i].type) {
+				case "comma":
+					parseArgs.push(", ");
 					break;
-				case "number":
-					parseArgs.push(`mut ${tokens[pos].value}: f32`);
-					pos += 4;
+				default:
+					parseArgs.push(`mut ${args[i].value}: ${args[i].type}`);
 					break;
 			}
 		}
-		pos -= 1;
-		curInstruction = curInstruction + parseArgs.join(", ") + "| {";
+		pos = newPos;
+		curInstruction = curInstruction + parseArgs.join("") + "| {";
 	}
 	return [pos, curInstruction];
 }
 
-function typeCheck(tokens: Token[], pos: number, line: number): string[] {
+function typeCheck(
+	tokens: Token[],
+	pos: number,
+	line: number
+): [Token[], number] {
 	if (tokens[pos + 1].type == "word") {
 		if (tokens[pos + 2].type == "paren_open") {
-			switch (tokens[pos + 3].type) {
-				case "paren_close":
-					return [];
-				case "word":
-					let args = [];
-					pos += 3;
-					while (tokens[pos].type != "paren_close") {
-						if (tokens[pos] && tokens[pos].type != "comma") {
-							if (tokens[pos + 1].type == "type-assignment") {
-								if (tokens[pos + 2] && tokens[pos + 2].type == "word") {
-									switch (tokens[pos + 2].value) {
-										case "string":
-											pos += 2;
-											args.push("string");
-											break;
-										case "number":
-											pos += 2;
-											args.push("number");
-											break;
-										default:
-											throw `Unknown assignment of type ${
-												tokens[pos + 2].value
-											} at line: ${line}, pos: ${pos}`;
-									}
+			let assignment = [];
+			let args = [];
+			pos += 2;
+			while (tokens[pos + 1].type != "paren_close") {
+				pos++;
+				assignment.push(tokens[pos]);
+			}
+			for (let i = 0; i < assignment.length; i++) {
+				switch (assignment[i].type) {
+					case "word":
+						if (
+							assignment[i + 1] &&
+							assignment[i + 1].type == "type-assignment"
+						) {
+							if (
+								assignment[i + 2] &&
+								assignment[i + 2].type == "word"
+							) {
+								switch (assignment[i + 2].value) {
+									case "string":
+										if (
+											assignment[i + 3] &&
+											assignment[i + 3].type ==
+												"array_open" &&
+											assignment[i + 4] &&
+											assignment[i + 4].type ==
+												"array_close"
+										) {
+											args.push(
+												new Token(
+													"Vec<String>",
+													assignment[i].value
+												)
+											);
+											i += 2;
+										} else {
+											args.push(
+												new Token(
+													"String",
+													assignment[i].value
+												)
+											);
+										}
+										break;
+									case "number":
+										if (
+											assignment[i + 3] &&
+											assignment[i + 3].type ==
+												"array_open" &&
+											assignment[i + 4] &&
+											assignment[i + 4].type ==
+												"array_close"
+										) {
+											args.push(
+												new Token(
+													"Vec<f32>",
+													assignment[i].value
+												)
+											);
+											i += 2;
+										} else {
+											args.push(
+												new Token(
+													"f32",
+													assignment[i].value
+												)
+											);
+										}
+										break;
 								}
+								i += 2;
 							}
 						}
-						pos++;
-					}
-					return args;
+						break;
+					case "comma":
+						args.push(assignment[i]);
+						break;
+				}
 			}
+			pos += 2;
+			return [args, pos];
 		}
 	}
 }

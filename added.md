@@ -95,9 +95,10 @@ print(hello, world)
 - [x] add arithmetic within call statements
 - [x] add passing multiple variables into print statements
 - [x] add arrays in initial and double assignment
-- [ ] add arrays in call statement
+- [x] add arrays to types to pass into functions
+- [x] add arrays in call statement
 - [ ] add arrays in if statement
-- [ ] add arrays in print statement
+- [x] add arrays in print statement
 - [ ] add type checking
 - [ ] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)

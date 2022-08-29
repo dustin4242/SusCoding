@@ -26,21 +26,24 @@ export default function callKey(
 							switch (assignment[i + 1].type) {
 								case "string": {
 									assignment[i - 1] =
-										assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
+										assignment[i - 1] +
+										` + "${assignment[i + 1].value}"`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
 								}
 								case "number": {
 									assignment[i - 1] =
-										assignment[i - 1] + ` + ${assignment[i + 1].value} as f32`;
+										assignment[i - 1] +
+										` + ${assignment[i + 1].value} as f32`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
 								}
 								default: {
 									assignment[i - 1] =
-										assignment[i - 1] + ` + &${assignment[i + 1].value}`;
+										assignment[i - 1] +
+										` + &${assignment[i + 1].value}`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
@@ -57,15 +60,17 @@ export default function callKey(
 				assignment.splice(i, 1);
 				i -= 1;
 				break;
+			case "array_open":
+				assignment[i] = "vec![";
+				break;
 			case "comma":
-				assignment.splice(i, 1);
-				i -= 1;
+				assignment[i] = ", ";
 				break;
 			default:
 				assignment[i] = `${assignment[i].value}`;
 				break;
 		}
 	}
-	curInstruction = `${curInstruction}${assignment.join(", ")});`;
+	curInstruction = `${curInstruction}${assignment.join("")});`;
 	return [pos, curInstruction];
 }
