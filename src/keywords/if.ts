@@ -7,7 +7,7 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 	let curInstruction = "if ";
 	let assignment = [];
 	pos++;
-	while (tokens[pos + 1].type != "newline") {
+	while (tokens[pos + 1].type != "paren_close") {
 		pos++;
 		assignment.push(tokens[pos]);
 	}
@@ -23,21 +23,24 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 							switch (assignment[i + 1].type) {
 								case "string": {
 									assignment[i - 1] =
-										assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
+										assignment[i - 1] +
+										` + "${assignment[i + 1].value}"`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
 								}
 								case "number": {
 									assignment[i - 1] =
-										assignment[i - 1] + ` + ${assignment[i + 1].value} as f32`;
+										assignment[i - 1] +
+										` + ${assignment[i + 1].value} as f32`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
 								}
 								default: {
 									assignment[i - 1] =
-										assignment[i - 1] + ` + &${assignment[i + 1].value}`;
+										assignment[i - 1] +
+										` + &${assignment[i + 1].value}`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
@@ -60,15 +63,14 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 			case "number":
 				assignment[i] = `${assignment[i].value} as f32`;
 				break;
-			case "paren_close":
-				assignment.splice(i, 1);
-				i -= 1;
+			case "array_open":
+				assignment[i] = `vec![`;
 				break;
 			default:
 				assignment[i] = `${assignment[i].value}`;
 				break;
 		}
 	}
-	curInstruction = `${curInstruction}${assignment.join(" ")} {`;
+	curInstruction = `${curInstruction}${assignment.join("")} {`;
 	return [pos, curInstruction];
 }

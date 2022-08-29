@@ -1,5 +1,7 @@
 function exampleFunc(hello: string[], world: number[])
-	print(hello, world)
+	if(world == [6.9, 4.20])
+		print(hello, world)
+	end
 end
 
 call(exampleFunc, ["this is", "nice"], [6.9, 4.20])
