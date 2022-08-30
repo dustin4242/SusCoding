@@ -12,19 +12,19 @@ Currently these are all the things that are currently implemented:
 - Numbers (f32) ex: `0`,`1`,`6.9`
 - Arrays (Vec) ex: `[ 6.9, 4.20 ]`
 - Const ex: `const hello = "world"`
-- Let (change-able variable) ex: ```
+- Let (change-able variable) ex:
 ```SusCoding
 let hello = "DONT CHANGE ME"
 hello = "haha let go BRRRRR"
 ```
 - Print ex: `print(6.9, "nice.")`
-- Functions ex:```
+- Functions ex:
 ```SusCoding
 function exampleFunc(hello: number, world: string[])
 	print(hello, world)
 end
 ```
-- If Statements```
+- If Statements ex:
 ```SisCoding
 const hello = 69
 const world = 420
