@@ -7,7 +7,7 @@ dependencies: `rustc`, `bun`
 >*(when I bootstrap I wont need bun)*
 
 usage:
-edit the src/ex.sus file and afterwards run:
+edit the [src/ex.sus](src/ex.sus) file and afterwards run:
 ```console
 ./compilerun.sh src/ex.sus
 ```
