@@ -6,6 +6,14 @@ SusCoding is a programming language for people that are kind of dumb and smart a
 dependencies: `rustc`, `bun`
 >*(when I bootstrap I wont need bun)*
 
+usage:
+edit the src/ex.sus file and afterwards run:
+```console
+./compilerun.sh src/ex.sus
+```
+and it will automatically run the code for you.
+>*Note: this only works on linux atm because linux gang*
+
 Currently these are all the things that are currently implemented:
 >*For full list check out [the added page](added.md).*
 - Strings ex: `"Example"`
