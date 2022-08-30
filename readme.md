@@ -17,7 +17,7 @@ and it will automatically run the code for you.
 Currently these are all the things that are currently implemented:
 >*For full list check out [the added page](added.md).*
 - Strings ex: `"Example"`
-- Numbers (f32) ex: `0`,`1`,`6.9`
+- Numbers (f32) ex: `0`, `1`, `6.9`
 - Arrays (Vec) ex: `[ 6.9, 4.20 ]`
 - Const ex: `const hello = "world"`
 - Let (change-able variable) ex:
