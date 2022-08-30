@@ -8,6 +8,7 @@
 - int numbers (ex: `0`, `1`)
 - float numbers (ex: `0.0`, `0.1`, `1.0`)
 - parenthesis (ex: `()`)
+- arrays (ex: `[ "thing", "other thing" ]`)
 
 ## Parser (takes the tokens and executes them, along with identifing errors)
 
@@ -17,6 +18,8 @@
 - if statement (come on, you know what this is.) ex:
 
 ```SusCoding
+let hello = "world"
+
 if (hello == "world")
 		print(hello)
 end
@@ -49,12 +52,10 @@ call(exampleName,"hello world")
 ```SusCoding
 function exampleFunc(world: number)
   world = 69
-  print(world)
   world = world + 351
   print(world)
 
   let hello = "Hello, " + "world!"
-  print(hello)
   let extra = " And more!"
   hello = hello + extra
   print(hello)
@@ -76,7 +77,24 @@ call(exampleFunc, "nice", 4.20 + 2.7)
 ```SusCoding
 let hello = 6.9
 let world = "nice"
+
 print(hello, world)
+```
+- added arrays
+- added arrays within intial assignment and double assignment ex:```
+```SusCoding
+let hello = [ "thing", "other thing" ]
+hello = [ "possibly", "some other stuff" ]
+```
+- added arrays within if, call, and function statments ex:
+```SusCoding
+function exampleFunc(hello: number, world: string[])
+	if(hello == 69)
+		print(world)
+	end
+end
+
+call(exampleFunc, 69, [ "this is so", "nice." ])
 ```
 
 # TODO:
@@ -97,7 +115,7 @@ print(hello, world)
 - [x] add arrays in initial and double assignment
 - [x] add arrays to types to pass into functions
 - [x] add arrays in call statement
-- [ ] add arrays in if statement
+- [x] add arrays in if statement
 - [x] add arrays in print statement
 - [ ] add type checking
 - [ ] add for loop? (could just recursive function so optional)
