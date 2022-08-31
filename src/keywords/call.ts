@@ -1,7 +1,4 @@
-class Token {
-	type: string;
-	value: string;
-}
+import { Token } from "../tokenClass";
 
 export default function callKey(
 	tokens: Token[],
@@ -26,24 +23,21 @@ export default function callKey(
 							switch (assignment[i + 1].type) {
 								case "string": {
 									assignment[i - 1] =
-										assignment[i - 1] +
-										` + "${assignment[i + 1].value}"`;
+										assignment[i - 1] + ` + "${assignment[i + 1].value}"`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
 								}
 								case "number": {
 									assignment[i - 1] =
-										assignment[i - 1] +
-										` + ${assignment[i + 1].value} as f32`;
+										assignment[i - 1] + ` + ${assignment[i + 1].value} as f32`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;
 								}
 								default: {
 									assignment[i - 1] =
-										assignment[i - 1] +
-										` + &${assignment[i + 1].value}`;
+										assignment[i - 1] + ` + &${assignment[i + 1].value}`;
 									assignment.splice(i, 2);
 									i -= 1;
 									break;

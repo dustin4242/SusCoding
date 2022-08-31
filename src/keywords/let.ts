@@ -1,7 +1,4 @@
-class Token {
-	type: string;
-	value: string;
-}
+import { Token } from "../tokenClass";
 
 export default function letKey(tokens: Token[], pos: number): [number, string] {
 	let curInstruction = `let mut ${tokens[pos + 1].value} = `;

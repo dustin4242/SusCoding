@@ -1,13 +1,5 @@
-import typeCheck from "../typecheck";
-
-class Token {
-	type: string;
-	value: string;
-	constructor(type: string, value: string) {
-		this.type = type;
-		this.value = value;
-	}
-}
+import { Token } from "../tokenClass";
+import typeCheck from "../typechecks/typecheck";
 
 export default function functionKey(
 	tokens: Token[],

@@ -1,11 +1,4 @@
-class Token {
-	type: string;
-	value: string;
-	constructor(type: string, value: string) {
-		this.type = type;
-		this.value = value;
-	}
-}
+import { Token } from "./tokenClass";
 
 export default function tokenizer(
 	fileString: string,

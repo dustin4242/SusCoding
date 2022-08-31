@@ -1,7 +1,4 @@
-class Token {
-	type: string;
-	value: string;
-}
+import { Token } from "./tokenClass";
 
 export default function doubleAssign(
 	tokens: Token[],

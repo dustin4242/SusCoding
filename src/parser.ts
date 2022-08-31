@@ -1,11 +1,7 @@
 import { readdirSync } from "fs";
 import path from "path";
 import doubleAssign from "./doubleAssign";
-
-class Token {
-	type: string;
-	value: string;
-}
+import { Token } from "./tokenClass";
 
 export default async function parser(tokens: Token[]) {
 	let parsedInstructions: string[] = [];
