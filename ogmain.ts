@@ -4,12 +4,18 @@ import { readFileSync } from "fs";
 if (process.argv[2] != undefined) {
 	let fileString = "";
 	!process.argv[2].startsWith("/")
-		? (fileString = readFileSync(`${process.cwd()}/${process.argv[2]}`, `utf8`))
+		? (fileString = readFileSync(
+				`${process.cwd()}/${process.argv[2]}`,
+				`utf8`
+		  ))
 		: (fileString = readFileSync(`${process.argv[2]}`, `utf8`));
 	const codeLines = fileString.split("\n");
 	let segmentedLines: string[][] = [];
 	for (const line in codeLines) {
-		switch (codeLines[line].includes("(") && codeLines[line].includes(")")) {
+		switch (
+			codeLines[line].includes("(") &&
+			codeLines[line].includes(")")
+		) {
 			case true:
 				segmentedLines[line] = codeLines[line]
 					.split(/([()\ ])/)
@@ -47,7 +53,9 @@ if (process.argv[2] != undefined) {
 				}
 				break;
 			default:
-				throw console.error("Unknown Keyword: " + keywords.split(" ")[0]);
+				throw console.error(
+					"Unknown Keyword: " + keywords.split(" ")[0]
+				);
 		}
 	}
 }

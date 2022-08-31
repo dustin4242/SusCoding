@@ -1,6 +1,6 @@
 function exampleFunc(hello: string[], world: number)
 	if(world == 69)
-		print(hello, world)
+		print(hello, world + 351)
 	end
 end
 
