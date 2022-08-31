@@ -4,11 +4,11 @@ I have no idea how to write documentation so i'm just gonna wing it:
 
 SusCoding is a programming language for people that are kind of dumb and smart at the same time, Sus stands for sustainable and this is because instead of my stupid code compiling to asm (im too dumb to implement that) it compiles to rust.
 
-## dependencies: `rustc`, `bun`
+## Dependencies: `rustc`, `bun`
 
 > _(when I bootstrap I wont need bun)_
 
-## usage:
+## Usage:
 
 edit the [ex.sus](ex.sus) file and afterwards run:
 
@@ -20,7 +20,7 @@ and it will automatically run the code for you.
 
 > _Note: this only works on linux atm because linux gang_
 
-## Currently implemented features:
+## Currently Implemented Features:
 
 > _For full list check out [the added page](added.md)._
 
