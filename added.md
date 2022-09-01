@@ -117,7 +117,7 @@ call(exampleFunc, 69, [ "this is so", "nice." ])
 - [x] add arrays in call statement
 - [x] add arrays in if statement
 - [x] add arrays in print statement
-- [ ] add type checking for initial and double assignment
+- [x] add type checking for initial and double assignment
 - [ ] add type checking for call statement
 - [ ] add type checking for print statement
 - [x] add type checking for functions

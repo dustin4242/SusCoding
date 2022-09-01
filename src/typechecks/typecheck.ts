@@ -23,6 +23,9 @@ export default function typeCheck(
 					case "let":
 						i = varTypeCheck(lineTokens, i);
 						break;
+					case "doubleAssign":
+						i = varTypeCheck(lineTokens, i - 1);
+						break;
 					case "print":
 						i = printTypeCheck(lineTokens, i);
 						break;

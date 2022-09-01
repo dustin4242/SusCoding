@@ -4,4 +4,4 @@ function exampleFunc(hello: string[], world: number)
 	end
 end
 
-call(exampleFunc, ["this is", "nice"], 69)
+call(exampleFunc, ["yo", "nice"], 69)
