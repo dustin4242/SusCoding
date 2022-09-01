@@ -120,7 +120,7 @@ call(exampleFunc, 69, [ "this is so", "nice." ])
 - [x] add type checking for initial and double assignment
 - [x] add type checking for print statement
 - [x] add type checking for functions
-- [ ] add type checking for call statement
+- [x] add type checking for call statement
 - [ ] add type checking for if statement
 - [ ] add subtraction, multiplying, and division
 - [ ] add for loop? (could just recursive function so optional)

@@ -20,6 +20,5 @@ export function printTypeCheck(lineTokens: Token[], i: number): number {
 					break;
 			}
 	}
-	console.log("here");
 	return i;
 }
