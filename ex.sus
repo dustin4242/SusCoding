@@ -1,7 +1,8 @@
+// This function outputs '69.0, "nice"' when executed
 function exampleFunc(hello: number, world: string)
-	if(hello == 69)
-		print(hello, world)
+	if(hello * 3 == 69)
+		print(hello * 3, world)
 	end
 end
 
-call(exampleFunc, 12 * 4/2 - 1, "not nice")
+call(exampleFunc, 12 * 4/2 - 1, "nice")
