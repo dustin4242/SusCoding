@@ -21,7 +21,9 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 							case "string": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`;
+									` ${lineTokens[i].value} "${
+										lineTokens[i + 1].value
+									}"`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -29,7 +31,9 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 							case "number": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`;
+									` ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									} as f32`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -37,7 +41,9 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 							default: {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`;
+									` ${lineTokens[i].value} &${
+										lineTokens[i + 1].value
+									}`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -46,6 +52,10 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 						break;
 					case "=":
 						assignment[i] = "==";
+						lineTokens.splice(i + 1, 1);
+						break;
+					case "!":
+						assignment[i] = "!=";
 						lineTokens.splice(i + 1, 1);
 						break;
 				}

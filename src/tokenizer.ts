@@ -35,6 +35,7 @@ export default function tokenizer(
 					continue;
 				}
 				break;
+			case "!":
 			case "=":
 			case "+":
 			case "-":
@@ -97,7 +98,9 @@ export default function tokenizer(
 					}
 					tokens.push(
 						new Token(
-							defKeywords.includes(tokenValue) ? "keyword" : "word",
+							defKeywords.includes(tokenValue)
+								? "keyword"
+								: "word",
 							tokenValue
 						)
 					);

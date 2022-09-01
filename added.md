@@ -147,6 +147,7 @@ print("ayyy lmao")
 - [x] add type checking for if statement
 - [x] add subtraction, multiplying, and division
 - [x] add comments
+- [x] add not equal to for if statements
 - [ ] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)
 - [ ] bootstrap compiler

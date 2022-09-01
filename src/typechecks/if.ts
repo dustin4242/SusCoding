@@ -14,11 +14,17 @@ export function ifTypeCheck(lineTokens: Token[], i: number): number {
 						case "+":
 							if (lineTokens[i + 1].value != "paren_close") {
 								if (lineTokens[i - 1].type == "word") i += 2;
-								else if (lineTokens[i - 1].type == lineTokens[i + 1].type)
+								else if (
+									lineTokens[i - 1].type ==
+									lineTokens[i + 1].type
+								)
 									i += 2;
 							}
 							break;
 						case "=":
+							if (lineTokens[i + 1].value == "=") i += 2;
+							break;
+						case "!":
 							if (lineTokens[i + 1].value == "=") i += 2;
 							break;
 					}
