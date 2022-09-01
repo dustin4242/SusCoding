@@ -63,7 +63,9 @@ end
 
 call(exampleFunc, 0)
 ```
+
 - added arithmetic within if, call, and print statements ex:
+
 ```SusCoding
 function exampleFunc(hello: string, world: number)
 	if(world + 35.1 == 42.0)
@@ -73,20 +75,26 @@ end
 
 call(exampleFunc, "nice", 4.20 + 2.7)
 ```
+
 - added passing multiple variables into print function ex:
+
 ```SusCoding
 let hello = 6.9
 let world = "nice"
 
 print(hello, world)
 ```
+
 - added arrays
 - added arrays within intial assignment and double assignment ex:```
+
 ```SusCoding
 let hello = [ "thing", "other thing" ]
 hello = [ "possibly", "some other stuff" ]
 ```
+
 - added arrays within if, call, and function statments ex:
+
 ```SusCoding
 function exampleFunc(hello: number, world: string[])
 	if(hello == 69)
@@ -95,6 +103,21 @@ function exampleFunc(hello: number, world: string[])
 end
 
 call(exampleFunc, 69, [ "this is so", "nice." ])
+```
+
+- added subtraction, multiplication, and division in all statements ex:
+
+```SusCoding
+print(420 - 351, "nice")
+print(7 * 60, "blazin")
+print(207 / 3, "nice")
+```
+
+- added comments ex:
+
+```SusCoding
+// Funny haha
+print("ayyy lmao")
 ```
 
 # TODO:
@@ -123,7 +146,7 @@ call(exampleFunc, 69, [ "this is so", "nice." ])
 - [x] add type checking for call statement
 - [x] add type checking for if statement
 - [x] add subtraction, multiplying, and division
-- [ ] add comments
+- [x] add comments
 - [ ] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)
 - [ ] bootstrap compiler
