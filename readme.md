@@ -94,6 +94,12 @@ print(7 * 60, "blazin")
 print(207 / 3, "is nice")
 ```
 
+- Comment
+```SusCoding
+//This prints haha funny lmao quote
+print("ayyy lmao")
+```
+
 - Type Checking
 > This is currently implemented however i havent really made it so it errors out if there is, in fact, an error so it's a work in progress
 

@@ -25,11 +25,20 @@ export default function tokenizer(
 				column = 0;
 				tokens.push(new Token("newline", char));
 				continue;
+			case "/":
+				if (fileString[pos + 1] == "/") {
+					pos++;
+					while (fileString[pos] != "\n") pos++;
+				} else {
+					column++;
+					tokens.push(new Token("operator", char));
+					continue;
+				}
+				break;
 			case "=":
 			case "+":
 			case "-":
 			case "*":
-			case "/":
 				column++;
 				tokens.push(new Token("operator", char));
 				continue;
