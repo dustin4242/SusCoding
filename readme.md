@@ -60,7 +60,7 @@ if(hello + 351 == world)
 end
 ```
 
-- Call Statements (yes this is a feature)
+- Call Statements (yes this is a feature) ex:
 
 ```SusCoding
 function exampleFunc(hello: number, world: string[])
@@ -70,41 +70,43 @@ end
 call(exampleFunc, 69, [ "haha", "nice." ])
 ```
 
-- Addition (Whether it be adding numbers or concatinating strings)
+- Addition (Whether it be adding numbers or concatinating strings) ex:
 
 ```SusCoding
 print(69 + 351, "bla" + " zin")
 ```
 
-- Subtraction
+- Subtraction ex:
 
 ```SusCoding
 print(420 - 351, "is nice")
 ```
 
-- Multiplication
+- Multiplication ex:
 
 ```SusCoding
 print(7 * 60, "blazin")
 ```
 
-- Division
+- Division ex:
 
 ```SusCoding
 print(207 / 3, "is nice")
 ```
 
-- Comment
+- Comments ex:
+
 ```SusCoding
 //This prints haha funny lmao quote
 print("ayyy lmao")
 ```
 
-- Type Checking
-> This is currently implemented however i havent really made it so it errors out if there is, in fact, an error so it's a work in progress
+- Type Checking ex:
+  > This is currently implemented however i havent really made it so it errors out if there is, in fact, an error so it's a work in progress
 
 ```SusCoding
 function exampleFunc(hello: number,)
 //                                ^
 // Error at comma because there's no parameter declared after it
 ```
+
