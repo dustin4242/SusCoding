@@ -1,7 +1,7 @@
 if [ $1 ] && [ -r $1 ]
 then
 	bun src/main.ts $1 &&
-	rustc -C opt-level=s -C lto=fat ex.rs &&
+	rustc -C opt-level=3 ex.rs &&
 	rm -rf ex.rs &&
 	chmod +x ./ex &&
 	./ex
