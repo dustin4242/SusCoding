@@ -69,3 +69,12 @@ end
 
 call(exampleFunc, 69, [ "haha", "nice." ])
 ```
+
+- Addition (Whether it be adding numbers or concatinating strings)
+
+```SusCoding
+const hello = "stuff" + " and more!"
+const world = 69 + 351
+
+print(hello, world)
+```
