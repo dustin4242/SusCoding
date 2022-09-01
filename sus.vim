@@ -6,7 +6,7 @@ let b:current_syntax = "sus"
 
 hi def link assignmentKeywords Keyword
 hi def link keywords Keyword
-hi def link types Constant
+hi def link types Type
 hi def link word Identifier
 
 syn keyword assignmentKeywords const let function nextgroup=word skipwhite
