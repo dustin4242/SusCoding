@@ -122,7 +122,8 @@ call(exampleFunc, 69, [ "this is so", "nice." ])
 - [x] add type checking for functions
 - [x] add type checking for call statement
 - [x] add type checking for if statement
-- [ ] add subtraction, multiplying, and division
+- [x] add subtraction, multiplying, and division
+- [ ] add comments
 - [ ] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)
 - [ ] bootstrap compiler

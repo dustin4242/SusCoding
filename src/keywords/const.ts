@@ -15,34 +15,39 @@ export default function constKey(
 				assignment[i] = `"${lineTokens[i].value}".to_owned()`;
 				break;
 			case "operator":
-				if (lineTokens[i].value == "+") {
-					switch (lineTokens[i + 1].type) {
-						case "string": {
-							assignment[i - 1] =
-								assignment[i - 1] + ` + "${lineTokens[i + 1].value}"`;
-							lineTokens.splice(i, 2);
-							i -= 1;
-							break;
+				switch (lineTokens[i].value) {
+					case "/":
+					case "*":
+					case "-":
+					case "+":
+						switch (lineTokens[i + 1].type) {
+							case "string": {
+								assignment[i - 1] =
+									assignment[i - 1] +
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`;
+								lineTokens.splice(i, 2);
+								i -= 1;
+								break;
+							}
+							case "number": {
+								assignment[i - 1] =
+									assignment[i - 1] +
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`;
+								lineTokens.splice(i, 2);
+								i -= 1;
+								break;
+							}
+							default: {
+								assignment[i - 1] =
+									assignment[i - 1] +
+									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`;
+								lineTokens.splice(i, 2);
+								i -= 1;
+								break;
+							}
 						}
-						case "number": {
-							assignment[i - 1] =
-								assignment[i - 1] + ` + ${lineTokens[i + 1].value} as f32`;
-							lineTokens.splice(i, 2);
-							i -= 1;
-							break;
-						}
-						default: {
-							assignment[i - 1] =
-								assignment[i - 1] + ` + &${lineTokens[i + 1].value}`;
-							lineTokens.splice(i, 2);
-							i -= 1;
-							break;
-						}
-					}
+						break;
 				}
-				break;
-			case "number":
-				assignment[i] = `${lineTokens[i].value} as f32`;
 				break;
 			case "array_open":
 				assignment[i] = `vec![`;

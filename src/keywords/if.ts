@@ -13,25 +13,31 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 				break;
 			case "operator":
 				switch (lineTokens[i].value) {
+					case "/":
+					case "*":
+					case "-":
 					case "+":
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment[i - 1] =
-									assignment[i - 1] + ` + "${lineTokens[i + 1].value}"`;
+									assignment[i - 1] +
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
 							}
 							case "number": {
 								assignment[i - 1] =
-									assignment[i - 1] + ` + ${lineTokens[i + 1].value} as f32`;
+									assignment[i - 1] +
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
 							}
 							default: {
 								assignment[i - 1] =
-									assignment[i - 1] + ` + &${lineTokens[i + 1].value}`;
+									assignment[i - 1] +
+									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;

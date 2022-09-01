@@ -73,8 +73,32 @@ call(exampleFunc, 69, [ "haha", "nice." ])
 - Addition (Whether it be adding numbers or concatinating strings)
 
 ```SusCoding
-const hello = "stuff" + " and more!"
-const world = 69 + 351
+print(69 + 351, "bla" + " zin")
+```
 
-print(hello, world)
+- Subtraction
+
+```SusCoding
+print(420 - 351, "is nice")
+```
+
+- Multiplication
+
+```SusCoding
+print(7 * 60, "blazin")
+```
+
+- Division
+
+```SusCoding
+print(207 / 3, "is nice")
+```
+
+- Type Checking
+> This is currently implemented however i havent really made it so it errors out if there is, in fact, an error so it's a work in progress
+
+```SusCoding
+function exampleFunc(hello: number,)
+//                                ^
+// Error at comma because there's no parameter declared after it
 ```

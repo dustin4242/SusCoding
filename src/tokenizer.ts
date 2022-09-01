@@ -23,39 +23,39 @@ export default function tokenizer(
 			case "\n":
 				line++;
 				column = 0;
-				tokens.push(new Token("newline", "\n"));
+				tokens.push(new Token("newline", char));
 				continue;
 			case "=":
-				column++;
-				tokens.push(new Token("operator", "="));
-				continue;
 			case "+":
+			case "-":
+			case "*":
+			case "/":
 				column++;
-				tokens.push(new Token("operator", "+"));
+				tokens.push(new Token("operator", char));
 				continue;
 			case ",":
 				column++;
-				tokens.push(new Token("comma", ","));
+				tokens.push(new Token("comma", char));
 				continue;
 			case ":":
 				column++;
-				tokens.push(new Token("type-assignment", ":"));
+				tokens.push(new Token("type-assignment", char));
 				continue;
 			case "(":
 				column++;
-				tokens.push(new Token("paren_open", "("));
+				tokens.push(new Token("paren_open", char));
 				continue;
 			case ")":
 				column++;
-				tokens.push(new Token("paren_close", ")"));
+				tokens.push(new Token("paren_close", char));
 				continue;
 			case "[":
 				column++;
-				tokens.push(new Token("array_open", "["));
+				tokens.push(new Token("array_open", char));
 				continue;
 			case "]":
 				column++;
-				tokens.push(new Token("array_close", "]"));
+				tokens.push(new Token("array_close", char));
 				continue;
 			case `"`:
 				//Make a string to put the token value into
