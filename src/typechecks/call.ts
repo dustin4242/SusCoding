@@ -17,9 +17,15 @@ export function callTypeCheck(lineTokens: Token[], i: number): number {
 								case "/":
 								case "-":
 								case "+":
-									if (lineTokens[i + 1].value != "paren_close") {
-										if (lineTokens[i - 1].type == "word") i += 2;
-										else if (lineTokens[i - 1].type == lineTokens[i + 1].type)
+									if (
+										lineTokens[i + 1].value != "paren_close"
+									) {
+										if (lineTokens[i - 1].type == "word")
+											i += 2;
+										else if (
+											lineTokens[i - 1].type ==
+											lineTokens[i + 1].type
+										)
 											i += 2;
 									}
 									break;

@@ -1,7 +1,9 @@
 // This function outputs '69.0, "nice"' when executed
 function exampleFunc(hello: number, world: string)
 	if(hello * 3 == 69)
-		print(hello * 3, world)
+		for(let i = 0, 5)
+			print(hello * 3, world)
+		end
 	end
 end
 
