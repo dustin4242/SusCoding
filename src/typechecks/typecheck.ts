@@ -1,5 +1,6 @@
 import { Token } from "../tokenClass";
 import { callTypeCheck } from "./call";
+import { forTypeCheck } from "./for";
 import { functionTypeCheck } from "./function";
 import { ifTypeCheck } from "./if";
 import { printTypeCheck } from "./print";
@@ -36,6 +37,9 @@ export default function typeCheck(
 						i = functionTypeCheck(lineTokens, i);
 					case "call":
 						i = callTypeCheck(lineTokens, i);
+						break;
+					case "for":
+						i = forTypeCheck(lineTokens, i);
 						break;
 				}
 				break;
