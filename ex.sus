@@ -3,5 +3,3 @@ if (["yo", "nice"] == ["yo", "nice"])
 		print("ayy" + "lmao", 1+2+3)
 	end
 end
-
-function a

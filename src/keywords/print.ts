@@ -77,7 +77,6 @@ export default function printKey(
 				break;
 		}
 	}
-	console.log(assignment);
 	curInstruction = `${curInstruction}"${new Array(assignment.length)
 		.fill("{:?}")
 		.join(", ")}", ${assignment.join("")});`;
