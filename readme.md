@@ -73,7 +73,7 @@ call(exampleFunc, 69, [ "haha", "nice." ])
 - Addition (Whether it be adding numbers or concatinating strings) ex:
 
 ```SusCoding
-print(69 + 351, "bla" + " zin")
+print(69 + 351, "bla" + "zin")
 ```
 
 - Subtraction ex:
