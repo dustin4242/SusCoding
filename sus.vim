@@ -14,8 +14,8 @@ syn keyword assignmentKeywords let const
 syn keyword functionKeyword function nextgroup=word skipwhite
 syn keyword keywords if end call print for
 syn keyword types string number
-syn match word '[a-zA-Z][a-zA-Z]*' contained
+syn match word '\a\a*' contained
 syn match Number '[0-9]'
 syn match Operator '[\+\-\*\/]'
 syn match Comment '//.*\n'
-syn match String '\".*\"'
+syn match String '\".\{-}\"'
