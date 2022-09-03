@@ -20,34 +20,35 @@ export default function printKey(
 					case "*":
 					case "-":
 					case "+":
+						let length = assignment.length;
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									`${assignment[assignment.length - 1]} ${
-										lineTokens[i].value
-									} "${lineTokens[i + 1].value}"`
+									`${assignment[length - 1]} ${lineTokens[i].value} "${
+										lineTokens[i + 1].value
+									}"`
 								);
-								assignment.splice(assignment.length - 2, 1);
+								assignment.splice(length - 1, 1);
 								i++;
 								break;
 							}
 							case "number": {
 								assignment.push(
-									`${assignment[assignment.length - 1]} ${
-										lineTokens[i].value
-									} ${lineTokens[i + 1].value} as f32`
+									`${assignment[length - 1]} ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									} as f32`
 								);
-								assignment.splice(assignment.length - 2, 1);
+								assignment.splice(length - 1, 1);
 								i++;
 								break;
 							}
 							default: {
 								assignment.push(
-									`${assignment[assignment.length - 1]} ${
-										lineTokens[i].value
-									} ${lineTokens[i + 1].value}`
+									`${assignment[length - 1]} ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									}`
 								);
-								assignment.splice(assignment.length - 2, 1);
+								assignment.splice(length - 1, 1);
 								i++;
 								break;
 							}
@@ -59,8 +60,9 @@ export default function printKey(
 				assignment.push(`${lineTokens[i].value} as f32`);
 				break;
 			case "comma":
-				assignment.push(assignment[assignment.length - 1] + ", ");
-				assignment.splice(assignment.length - 2, 1);
+				let length = assignment.length;
+				assignment.push(assignment[length - 1] + ", ");
+				assignment.splice(length - 1, 1);
 				break;
 			case "array_open":
 				assignment.push(`vec![`);
