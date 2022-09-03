@@ -3,13 +3,13 @@ import typeCheck from "../typechecks/typecheck";
 
 export default function ifKey(tokens: Token[], pos: number): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos);
-	let curInstruction = "if ";
+	let curInstruction = "if (";
 	let assignment = [];
 	pos = newPos;
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
 			case "string":
-				assignment[i] = `"${lineTokens[i].value}".to_owned()`;
+				assignment.push(`"${lineTokens[i].value}".to_owned()`);
 				break;
 			case "operator":
 				switch (lineTokens[i].value) {
@@ -19,58 +19,52 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 					case "+":
 						switch (lineTokens[i + 1].type) {
 							case "string": {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} "${
-										lineTokens[i + 1].value
-									}"`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`
+								);
+								i++;
 								break;
 							}
 							case "number": {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
-									} as f32`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`
+								);
+								i++;
 								break;
 							}
 							default: {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} &${
-										lineTokens[i + 1].value
-									}`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`
+								);
+								i++;
 								break;
 							}
 						}
 						break;
 					case "=":
-						assignment[i] = "==";
-						lineTokens.splice(i + 1, 1);
+						assignment.push(") == (");
+						i++;
 						break;
 					case "!":
-						assignment[i] = "!=";
-						lineTokens.splice(i + 1, 1);
+						assignment.push(") != (");
+						i++;
 						break;
 				}
 				break;
+			case "comma":
+				assignment.push(", ");
+				break;
 			case "number":
-				assignment[i] = `${lineTokens[i].value} as f32`;
+				assignment.push(`${lineTokens[i].value} as f32`);
 				break;
 			case "array_open":
-				assignment[i] = `vec![`;
+				assignment.push(`vec![`);
 				break;
 			default:
-				assignment[i] = `${lineTokens[i].value}`;
+				assignment.push(`${lineTokens[i].value}`);
 				break;
 		}
 	}
-	curInstruction = `${curInstruction}${assignment.join("")} {`;
+	curInstruction = `${curInstruction}${assignment.join("")}) {`;
 	return [pos, curInstruction];
 }

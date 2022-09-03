@@ -12,7 +12,7 @@ export default function printKey(
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
 			case "string":
-				assignment[i] = `"${lineTokens[i].value}".to_owned()`;
+				assignment.push(`"${lineTokens[i].value}".to_owned()`);
 				break;
 			case "operator":
 				switch (lineTokens[i].value) {
@@ -22,27 +22,33 @@ export default function printKey(
 					case "+":
 						switch (lineTokens[i + 1].type) {
 							case "string": {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									`${assignment[assignment.length - 1]} ${
+										lineTokens[i].value
+									} "${lineTokens[i + 1].value}"`
+								);
+								assignment.splice(assignment.length - 2, 1);
+								i++;
 								break;
 							}
 							case "number": {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									`${assignment[assignment.length - 1]} ${
+										lineTokens[i].value
+									} ${lineTokens[i + 1].value} as f32`
+								);
+								assignment.splice(assignment.length - 2, 1);
+								i++;
 								break;
 							}
 							default: {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									`${assignment[assignment.length - 1]} ${
+										lineTokens[i].value
+									} ${lineTokens[i + 1].value}`
+								);
+								assignment.splice(assignment.length - 2, 1);
+								i++;
 								break;
 							}
 						}
@@ -50,22 +56,30 @@ export default function printKey(
 				}
 				break;
 			case "number":
-				assignment[i] = `${lineTokens[i].value} as f32`;
-				break;
-			case "paren_close":
-				lineTokens.splice(i, 1);
+				assignment.push(`${lineTokens[i].value} as f32`);
 				break;
 			case "comma":
-				lineTokens.splice(i, 1);
-				i -= 1;
+				assignment.push(assignment[assignment.length - 1] + ", ");
+				assignment.splice(assignment.length - 2, 1);
+				break;
+			case "array_open":
+				assignment.push(`vec![`);
+				break;
+			case "array_close":
+				let arrayOpenIndex = assignment.findIndex(
+					(array_open) => array_open == "vec!["
+				);
+				let array = assignment.splice(arrayOpenIndex, i - arrayOpenIndex);
+				assignment.push(array.join("") + "]");
 				break;
 			default:
-				assignment[i] = `${lineTokens[i].value}`;
+				assignment.push(`&${lineTokens[i].value}`);
 				break;
 		}
 	}
+	console.log(assignment);
 	curInstruction = `${curInstruction}"${new Array(assignment.length)
 		.fill("{:?}")
-		.join(", ")}", ${assignment.join(", ")});`;
+		.join(", ")}", ${assignment.join("")});`;
 	return [pos, curInstruction];
 }

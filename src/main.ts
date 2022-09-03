@@ -26,6 +26,6 @@ if (process.argv[2] != undefined) {
 	finalFile.push("}");
 	writeFileSync(
 		`./${process.argv[2].split("/").pop().replace(".sus", "")}.rs`,
-		finalFile.join("\n")
+		finalFile.filter((i) => i != "").join("\n")
 	);
 }

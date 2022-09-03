@@ -3,7 +3,8 @@ import { Token } from "../tokenClass";
 export function printTypeCheck(lineTokens: Token[], i: number): number {
 	if (lineTokens[i + 1].type == "paren_open") {
 		lineTokens.splice(0, 2);
-		if (lineTokens[lineTokens.length - 1].type == "paren_close")
+		if (lineTokens[lineTokens.length - 1].type == "paren_close") {
+			lineTokens.splice(lineTokens.length - 1, 1);
 			switch (lineTokens[i].type) {
 				case "comma":
 					if (lineTokens[i + 1].type != "paren_close") i += 2;
@@ -19,6 +20,7 @@ export function printTypeCheck(lineTokens: Token[], i: number): number {
 					i++;
 					break;
 			}
+		}
 	}
 	return i;
 }
