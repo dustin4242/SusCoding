@@ -101,6 +101,16 @@ print(207 / 3, "is nice")
 print("ayyy lmao")
 ```
 
+- For Loop ex:
+```SusCoding
+let hello = 0
+for(i = 0, 5)
+	hello = hello + 1
+end
+// This will print 5.0
+print(hello)
+```
+
 - Type Checking ex:
   > This is currently implemented however i havent really made it so it errors out if there is, in fact, an error so it's a work in progress
 

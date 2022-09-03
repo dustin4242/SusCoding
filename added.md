@@ -120,6 +120,24 @@ print(207 / 3, "nice")
 print("ayyy lmao")
 ```
 
+- added for loop ex:
+
+```SusCoding
+for(i = 0, 5)
+	print("Hello", i)
+end
+```
+
+output:
+
+```console
+"Hello", 0
+"Hello", 1
+"Hello", 2
+"Hello", 3
+"Hello", 4
+```
+
 # TODO:
 
 - [x] add print
@@ -148,7 +166,7 @@ print("ayyy lmao")
 - [x] add subtraction, multiplying, and division
 - [x] add comments
 - [x] add not equal to for if statements
-- [ ] add for loop? (could just recursive function so optional)
+- [x] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)
 - [ ] bootstrap compiler
 
