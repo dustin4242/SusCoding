@@ -19,6 +19,7 @@ if (process.argv[2] != undefined) {
 	// Compile To Rust So It Can Go To Binary
 	finalFile.push("#[allow(non_snake_case)]");
 	finalFile.push("#[allow(unused_assignments)]");
+	finalFile.push("#[allow(unused_variables)]");
 	finalFile.push("#[allow(unused_mut)]");
 	finalFile.push("fn main() {");
 	finalFile.push(...(await parser(tokens)));

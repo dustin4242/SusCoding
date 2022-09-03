@@ -3,18 +3,18 @@ import typeCheck from "../typechecks/typecheck";
 
 export default function ifKey(tokens: Token[], pos: number): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos);
-	let curInstruction = `for ${lineTokens[3].value} in ${lineTokens[5].value}`;
-	lineTokens.splice(0, 4);
+	let curInstruction = `for `;
 	let assignment = [];
 	pos = newPos;
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
 			case "number":
-				assignment.push(`${lineTokens[i].value} as f32`);
+				assignment.push(`${lineTokens[i].value}`);
 				break;
 			case "operator":
-				assignment.push(` + ${lineTokens[i].value}`);
-				i++;
+				if (lineTokens[i].type == "+")
+					assignment.push(` + ${lineTokens[i].value}`);
+				else assignment.push(" in ");
 				break;
 			case "comma":
 				assignment.push("..");

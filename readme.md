@@ -13,7 +13,7 @@ SusCoding is a programming language for people that are kind of dumb and smart a
 edit the [ex.sus](ex.sus) file and afterwards run:
 
 ```console
-./compilerun.sh src/ex.sus
+./compilerun.sh ex.sus
 ```
 
 and it will automatically run the code for you.
@@ -109,4 +109,3 @@ function exampleFunc(hello: number,)
 //                                ^
 // Error at comma because there's no parameter declared after it
 ```
-
