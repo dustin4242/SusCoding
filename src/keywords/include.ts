@@ -3,14 +3,17 @@ import { Token } from "../tokenClass";
 import tokenizer from "../tokenizer";
 import path from "path";
 import parser from "../parser";
+import typeCheck from "../typechecks/typecheck";
 
 export default async function includeKey(
 	tokens: Token[],
 	pos: number
 ): Promise<[number, string]> {
+	let [lineTokens, newPos] = typeCheck(tokens, pos);
+	pos = newPos;
 	let currentPath = process.argv[2].split("/");
 	currentPath.pop();
-	let fileName = tokens[pos + 1].value;
+	let fileName = lineTokens[0].value;
 	let fileString = readFileSync(
 		`${process.cwd()}/${currentPath.join("/")}/${fileName}`,
 		"utf8"

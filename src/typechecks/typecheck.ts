@@ -3,6 +3,7 @@ import { callTypeCheck } from "./call";
 import { forTypeCheck } from "./for";
 import { functionTypeCheck } from "./function";
 import { ifTypeCheck } from "./if";
+import { includeTypeCheck } from "./include";
 import { printTypeCheck } from "./print";
 import { varTypeCheck } from "./var";
 
@@ -24,9 +25,6 @@ export default function typeCheck(
 					case "let":
 						i = varTypeCheck(lineTokens, i);
 						break;
-					case "doubleAssign":
-						i = varTypeCheck(lineTokens, i - 1);
-						break;
 					case "print":
 						i = printTypeCheck(lineTokens, i);
 						break;
@@ -41,10 +39,12 @@ export default function typeCheck(
 					case "for":
 						i = forTypeCheck(lineTokens, i);
 						break;
+					case "include":
+						i = includeTypeCheck(lineTokens, i);
+						break;
 				}
 				break;
 		}
 	}
-
 	return [lineTokens, pos];
 }
