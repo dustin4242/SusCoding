@@ -1,0 +1,6 @@
+function exampleFunc(hello: string, world: number)
+	print(hello, world)
+	if (hello == "this should work")
+		print("if statements work too")
+	end
+end

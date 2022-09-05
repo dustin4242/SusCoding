@@ -138,6 +138,30 @@ output:
 "Hello", 4
 ```
 
+- added include statement ex:
+
+**ex.sus:**
+
+```SusCoding
+include "extra.sus"
+
+call(exampleFunc, 69, "nice")
+```
+
+**extra.sus:**
+
+```SusCoding
+function exampleFunc(hello: number, world: string)
+	print(hello, world)
+end
+```
+
+output when running ex.sus:
+
+```console
+69, "nice"
+```
+
 # TODO:
 
 - [x] add print
@@ -168,6 +192,7 @@ output:
 - [x] add not equal to for if statements
 - [x] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)
+- [x] add include statement (optional)
 - [ ] bootstrap compiler
 
 `(end of initial features for scope reasons)`

@@ -17,7 +17,7 @@ export default async function parser(tokens: Token[]) {
 				switch (defKeywords.includes(tokens[pos].value)) {
 					case true:
 						const tokenKey = await import(`./keywords/${tokens[pos].value}.ts`);
-						[pos, curInstruction] = tokenKey.default(tokens, pos, line);
+						[pos, curInstruction] = await tokenKey.default(tokens, pos, line);
 						break;
 					default: {
 						throw `Unexpected token ${tokens[pos].type} at pos: ${pos}`;

@@ -102,6 +102,7 @@ print("ayyy lmao")
 ```
 
 - For Loop ex:
+
 ```SusCoding
 let hello = 0
 for(i = 0, 5)
@@ -109,6 +110,30 @@ for(i = 0, 5)
 end
 // This will print 5.0
 print(hello)
+```
+
+- Include Statements ex:
+
+**ex.sus:**
+
+```SusCoding
+include "extra.sus"
+
+call(exampleFunc, 69, "nice")
+```
+
+**extra.sus:**
+
+```SusCoding
+function exampleFunc(hello: number, world: string)
+	print(hello, world)
+end
+```
+
+output when running ex.sus:
+
+```console
+69, "nice"
 ```
 
 - Type Checking ex:
