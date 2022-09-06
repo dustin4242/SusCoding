@@ -19,27 +19,30 @@ export default function letKey(tokens: Token[], pos: number): [number, string] {
 					case "+":
 						switch (lineTokens[i + 1].type) {
 							case "string": {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									` ${lineTokens[i].value} "${
+										lineTokens[i + 1].value
+									}"`
+								);
+								i++;
 								break;
 							}
 							case "number": {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									` ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									} as f32`
+								);
+								i++;
 								break;
 							}
 							default: {
-								assignment[i - 1] =
-									assignment[i - 1] +
-									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`;
-								lineTokens.splice(i, 2);
-								i -= 1;
+								assignment.push(
+									` ${lineTokens[i].value} &${
+										lineTokens[i + 1].value
+									}`
+								);
+								i++;
 								break;
 							}
 						}
