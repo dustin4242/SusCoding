@@ -28,6 +28,7 @@ export default function typeCheck(
 					case "print":
 						i = printTypeCheck(lineTokens, i);
 						break;
+					case "elif":
 					case "if":
 						i = ifTypeCheck(lineTokens, i);
 						break;

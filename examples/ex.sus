@@ -11,29 +11,22 @@ for(i = 0, automataLength - 2)
 	let newArray = createArray(automataLength)
 	// Width
 	for(pos = 0, automataLength - 1)
-		let analyze = initArray[pos] * 100 + initArray[pos + 1] * 10 + initArray[pos + 2]
+		let analyze = initArray[pos]*100 + initArray[pos + 1]*10 + initArray[pos + 2]
 		if(analyze == 0)
 			newArray[pos + 1] = 0
-		end
-		if(analyze == 1)
+		elif(analyze == 1)
 			newArray[pos + 1] = 1
-		end
-		if(analyze == 10)
+		elif(analyze == 10)
 			newArray[pos + 1] = 1
-		end
-		if(analyze == 11)
+		elif(analyze == 11)
 			newArray[pos + 1] = 1
-		end
-		if(analyze == 100)
+		elif(analyze == 100)
 			newArray[pos + 1] = 0
-		end
-		if(analyze == 101)
+		elif(analyze == 101)
 			newArray[pos + 1] = 1
-		end
-		if(analyze == 110)
+		elif(analyze == 110)
 			newArray[pos + 1] = 1
-		end
-		if(analyze == 111)
+		elif(analyze == 111)
 			newArray[pos + 1] = 0
 		end
 	end

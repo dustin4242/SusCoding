@@ -195,6 +195,8 @@ output when running ex.sus:
 - [x] add include statement (optional)
 - [x] add array indexing (optional)
 - [x] Implement rule 110 in sus
+- [x] add elif statements
+- [x] add else statements
 - [ ] bootstrap compiler
 
 `(end of initial features for scope reasons)`

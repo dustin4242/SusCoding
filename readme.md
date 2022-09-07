@@ -49,14 +49,18 @@ function exampleFunc(hello: number, world: string[])
 end
 ```
 
-- If Statements ex:
+- If, Elif, and Else ex:
 
 ```SusCoding
 const hello = 69
 const world = 420
 
-if(hello + 351 == world)
+if(hello + 350 == world)
+	print("blazin")
+elif(hello + 0 == 69)
 	print("nice")
+else
+	print("how did we get here")
 end
 ```
 
