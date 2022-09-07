@@ -1,10 +1,14 @@
 import { Token } from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
-export default function ifKey(tokens: Token[], pos: number): [number, string] {
+export default function pushKey(
+	tokens: Token[],
+	pos: number
+): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos);
-	let curInstruction = "if (";
+	let curInstruction = `${lineTokens[2].value}.push(`;
 	let assignment = [];
+	lineTokens.splice(0, 4);
 	pos = newPos;
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
@@ -17,45 +21,49 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 					case "*":
 					case "-":
 					case "+":
+						let length = assignment.length;
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`
+									`${assignment[length - 1]} ${lineTokens[i].value} "${
+										lineTokens[i + 1].value
+									}"`
 								);
+								assignment.splice(length - 1, 1);
 								i++;
 								break;
 							}
 							case "number": {
 								assignment.push(
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value}`
+									`${assignment[length - 1]} ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									}`
 								);
+								assignment.splice(length - 1, 1);
 								i++;
 								break;
 							}
 							default: {
 								assignment.push(
-									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`
+									`${assignment[length - 1]} ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									}`
 								);
+								assignment.splice(length - 1, 1);
 								i++;
 								break;
 							}
 						}
 						break;
-					case "=":
-						assignment.push(") == (");
-						i++;
-						break;
-					case "!":
-						assignment.push(") != (");
-						i++;
-						break;
 				}
-				break;
-			case "comma":
-				assignment.push(", ");
 				break;
 			case "number":
 				assignment.push(`${lineTokens[i].value}`);
+				break;
+			case "comma":
+				let length = assignment.length;
+				assignment.push(assignment[length - 1] + ", ");
+				assignment.splice(length - 1, 1);
 				break;
 			case "array_open":
 				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
@@ -63,11 +71,18 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 					i += 2;
 				} else assignment[i] = `vec![`;
 				break;
+			case "array_close":
+				let arrayOpenIndex = assignment.findIndex(
+					(array_open) => array_open == "vec!["
+				);
+				let array = assignment.splice(arrayOpenIndex, i - arrayOpenIndex);
+				assignment.push(array.join("") + "]");
+				break;
 			default:
 				assignment.push(`${lineTokens[i].value}`);
 				break;
 		}
 	}
-	curInstruction = `${curInstruction}${assignment.join("")}) {`;
+	curInstruction = curInstruction + assignment.join("") + ";";
 	return [pos, curInstruction];
 }

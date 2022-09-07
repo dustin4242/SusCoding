@@ -26,7 +26,7 @@ export default function functionKey(
 							break;
 						case "number":
 							assignment.push(`${lineTokens[i].value}:`);
-							assignment.push(`f32`);
+							assignment.push(`usize`);
 							i += 2;
 							break;
 					}

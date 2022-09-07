@@ -9,7 +9,7 @@ if (process.argv[2] != undefined) {
 	!process.argv[2].startsWith("/")
 		? (fileString = readFileSync(`${process.cwd()}/${process.argv[2]}`, `utf8`))
 		: (fileString = readFileSync(`${process.argv[2]}`, `utf8`));
-	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_";
+	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
 	let viableNums = "0123456789.";
 	let finalFile: string[] = [];
 	let defKeywords = readdirSync(path.resolve(__dirname, "./keywords")).map(

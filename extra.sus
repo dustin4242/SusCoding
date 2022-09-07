@@ -1,6 +1,7 @@
-function exampleFunc(hello: string, world: number)
-	print(hello, world)
-	if (hello == "this should work")
-		print("if statements work too")
+function createArray(length: number)
+	let newArray = [0]
+	for(i = 0, length)
+		push(newArray, 0)
 	end
+	return newArray
 end

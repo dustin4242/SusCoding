@@ -26,13 +26,7 @@ export default async function parser(tokens: Token[]) {
 				break;
 			}
 			case "word": {
-				if (
-					tokens[pos + 1].type == "operator" &&
-					tokens[pos + 1].value == "="
-				) {
-					[pos, curInstruction] = doubleAssign(tokens, pos, line);
-				} else
-					throw `Expected operator, got ${tokens[pos + 1].type} at pos: ${pos}`;
+				[pos, curInstruction] = doubleAssign(tokens, pos, line);
 				break;
 			}
 			case "newline": {
