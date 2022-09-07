@@ -58,7 +58,10 @@ export default function callKey(
 				i -= 1;
 				break;
 			case "array_open":
-				assignment[i] = "vec![";
+				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+					assignment[i] = `[${lineTokens[i + 1].value}]`;
+					i += 2;
+				} else assignment[i] = `vec![`;
 				break;
 			case "comma":
 				assignment[i] = ", ";

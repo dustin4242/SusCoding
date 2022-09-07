@@ -65,7 +65,11 @@ export default function printKey(
 				assignment.splice(length - 1, 1);
 				break;
 			case "array_open":
-				assignment.push(`vec![`);
+				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+					assignment.push(`${assignment[i - 1]}[${lineTokens[i + 1].value}]`);
+					assignment.splice(i - 1, 1);
+					i += 2;
+				} else assignment.push(`vec![`);
 				break;
 			case "array_close":
 				let arrayOpenIndex = assignment.findIndex(

@@ -1,3 +1,8 @@
-include "extra.sus"
+function exampleFunc(hello: number[])
+	let world = hello[1]
+	if(hello[1] == world)
+		print(hello[1], world)
+	end
+end
 
-call(exampleFunc, "this should work", 69)
+call(exampleFunc, [ 0, 69, 420 ])

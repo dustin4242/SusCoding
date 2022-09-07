@@ -26,7 +26,7 @@ and it will automatically run the code for you.
 
 - Strings ex: `"Example"`
 - Numbers (f32) ex: `0`, `1`, `6.9`
-- Arrays (Vec) ex: `[ 6.9, 4.20 ]`
+- Arrays (Vec) ex: `[ 6.9, 4.20 ]` and `hello[1] = world[0]`
 - Const (constant variable) ex:
 
 ```SusCoding

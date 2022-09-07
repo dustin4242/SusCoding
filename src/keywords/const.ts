@@ -23,27 +23,21 @@ export default function constKey(
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									` ${lineTokens[i].value} "${
-										lineTokens[i + 1].value
-									}"`
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`
 								);
 								i++;
 								break;
 							}
 							case "number": {
 								assignment.push(
-									` ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
-									} as f32`
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`
 								);
 								i++;
 								break;
 							}
 							default: {
 								assignment.push(
-									` ${lineTokens[i].value} &${
-										lineTokens[i + 1].value
-									}`
+									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`
 								);
 								i++;
 								break;
@@ -55,7 +49,10 @@ export default function constKey(
 				assignment[i] = `${lineTokens[i].value} as f32`;
 				break;
 			case "array_open":
-				assignment[i] = `vec![`;
+				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+					assignment[i] = `[${lineTokens[i + 1].value}]`;
+					i += 2;
+				} else assignment[i] = `vec![`;
 				break;
 			default:
 				assignment[i] = `${lineTokens[i].value}`;

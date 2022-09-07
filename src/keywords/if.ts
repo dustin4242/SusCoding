@@ -58,7 +58,10 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 				assignment.push(`${lineTokens[i].value} as f32`);
 				break;
 			case "array_open":
-				assignment.push(`vec![`);
+				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+					assignment[i] = `[${lineTokens[i + 1].value}]`;
+					i += 2;
+				} else assignment[i] = `vec![`;
 				break;
 			default:
 				assignment.push(`${lineTokens[i].value}`);

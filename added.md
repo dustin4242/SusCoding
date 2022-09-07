@@ -8,7 +8,7 @@
 - int numbers (ex: `0`, `1`)
 - float numbers (ex: `0.0`, `0.1`, `1.0`)
 - parenthesis (ex: `()`)
-- arrays (ex: `[ "thing", "other thing" ]`)
+- arrays (ex: `[ "thing", "other thing" ]` and indexing via `hello[1] = world[0]`)
 
 ## Parser (takes the tokens and executes them, along with identifing errors)
 
@@ -193,6 +193,7 @@ output when running ex.sus:
 - [x] add for loop? (could just recursive function so optional)
 - [x] add float numbers (optional)
 - [x] add include statement (optional)
+- [x] add array indexing (optional)
 - [ ] bootstrap compiler
 
 `(end of initial features for scope reasons)`

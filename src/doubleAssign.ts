@@ -7,7 +7,7 @@ export default function doubleAssign(
 	line: number
 ): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos);
-	let curInstruction = `${lineTokens.splice(0, 2)[0].value} = `;
+	let curInstruction = ``;
 	let assignment = [];
 	pos = newPos;
 	for (let i = 0; i < lineTokens.length; i++) {
@@ -17,6 +17,9 @@ export default function doubleAssign(
 				break;
 			case "operator":
 				switch (lineTokens[i].value) {
+					case "=":
+						assignment.push(" = ");
+						break;
 					case "/":
 					case "*":
 					case "-":
@@ -54,7 +57,10 @@ export default function doubleAssign(
 				assignment[i] = `${lineTokens[i].value} as f32`;
 				break;
 			case "array_open":
-				assignment[i] = `vec![`;
+				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+					assignment[i] = `[${lineTokens[i + 1].value}]`;
+					i += 2;
+				} else assignment[i] = `vec![`;
 				break;
 			default:
 				assignment[i] = `${lineTokens[i].value}`;
