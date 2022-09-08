@@ -1,6 +1,0 @@
-let hello = 69
-if(hello == 420)
-	print("how")
-else
-	print("nice")
-end

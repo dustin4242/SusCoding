@@ -7,7 +7,10 @@ import path from "path";
 if (process.argv[2] != undefined) {
 	let fileString = "";
 	!process.argv[2].startsWith("/")
-		? (fileString = readFileSync(`${process.cwd()}/${process.argv[2]}`, `utf8`))
+		? (fileString = readFileSync(
+				`${process.cwd()}/${process.argv[2]}`,
+				`utf8`
+		  ))
 		: (fileString = readFileSync(`${process.argv[2]}`, `utf8`));
 	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
 	let viableNums = "0123456789.";
@@ -25,7 +28,7 @@ if (process.argv[2] != undefined) {
 	finalFile.push(...(await parser(tokens)));
 	finalFile.push("}");
 	writeFileSync(
-		`./${process.argv[2].split("/").pop().replace(".sus", "")}.rs`,
+		`./${process.argv[2].replace(".sus", "")}.rs`,
 		finalFile.filter((i) => i != "").join("\n")
 	);
 }
