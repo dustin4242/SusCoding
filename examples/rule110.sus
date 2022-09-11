@@ -8,7 +8,7 @@ print(initArray)
 
 // Height
 for(i = 0, automataLength - 2)
-	let newArray = createArray(automataLength)
+	let newArray = call(createArray,automataLength)
 	// Width
 	for(pos = 0, automataLength - 1)
 		let analyze = initArray[pos]*100 + initArray[pos + 1]*10 + initArray[pos + 2]
@@ -33,4 +33,3 @@ for(i = 0, automataLength - 2)
 	initArray = newArray
 	print(initArray)
 end
-

@@ -1,6 +1,10 @@
 import { Token } from "../tokenClass";
 
-export function functionTypeCheck(lineTokens: Token[], i: number): number {
+export function functionTypeCheck(
+	lineTokens: Token[],
+	i: number,
+	line: number
+): number {
 	if (lineTokens[i + 1].type == "word")
 		if (lineTokens[i + 2].type == "paren_open")
 			if (lineTokens[lineTokens.length - 1].type == "paren_close")

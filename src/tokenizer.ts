@@ -27,6 +27,7 @@ export default function tokenizer(
 				continue;
 			case "/":
 				if (fileString[pos + 1] == "/") {
+					tokens.push(new Token("newline", char));
 					pos++;
 					while (fileString[pos] != "\n") pos++;
 				} else {

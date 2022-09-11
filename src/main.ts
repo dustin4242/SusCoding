@@ -24,8 +24,9 @@ if (process.argv[2] != undefined) {
 	finalFile.push("#[allow(unused_assignments)]");
 	finalFile.push("#[allow(unused_variables)]");
 	finalFile.push("#[allow(unused_mut)]");
-	finalFile.push("fn main() {");
+	finalFile.push("fn main() -> std::io::Result<()> {");
 	finalFile.push(...(await parser(tokens)));
+	finalFile.push("Ok(())");
 	finalFile.push("}");
 	writeFileSync(
 		`./${process.argv[2].replace(".sus", "")}.rs`,

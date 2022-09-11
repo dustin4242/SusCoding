@@ -1,18 +1,22 @@
 import { Token } from "../tokenClass";
 
-export function varTypeCheck(lineTokens: Token[], i: number): number {
+export function varTypeCheck(
+	lineTokens: Token[],
+	i: number,
+	line: number
+): number {
 	if (lineTokens[i + 1].type == "word")
 		if (
 			lineTokens[i + 2].type == "operator" &&
 			lineTokens[i + 2].value == "="
 		) {
 			i += 2;
-			i = checkLoop(lineTokens, i);
+			i = checkLoop(lineTokens, i, line);
 		}
 	return i;
 }
 
-function checkLoop(lineTokens: Token[], i: number): number {
+function checkLoop(lineTokens: Token[], i: number, line: number): number {
 	switch (lineTokens[i + 1].type) {
 		case "string":
 			i++;
@@ -35,10 +39,17 @@ function checkLoop(lineTokens: Token[], i: number): number {
 							switch (lineTokens[i].type) {
 								case "comma":
 									if (lineTokens[i + 1].type == "word") {
-										if (lineTokens[i + 2].type == "array_open") {
+										if (
+											lineTokens[i + 2].type ==
+											"array_open"
+										) {
 											i += 2;
-											i = checkLoop(lineTokens, i);
-											if (lineTokens[i + 2].type == "array_close") i += 3;
+											i = checkLoop(lineTokens, i, line);
+											if (
+												lineTokens[i + 2].type ==
+												"array_close"
+											)
+												i += 3;
 										} else i++;
 									} else if (
 										lineTokens[i + 1].type == "string" ||
@@ -56,7 +67,7 @@ function checkLoop(lineTokens: Token[], i: number): number {
 		case "word":
 			if (lineTokens[i + 1].type == "array_open") {
 				i++;
-				i = checkLoop(lineTokens, i);
+				i = checkLoop(lineTokens, i, line);
 				if (lineTokens[i + 2].type == "array_close") i += 3;
 			} else i++;
 			break;

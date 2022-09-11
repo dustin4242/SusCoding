@@ -141,7 +141,7 @@ output when running ex.sus:
 ```
 
 - Type Checking ex:
-  > This is currently implemented however i havent really made it so it errors out if there is, in fact, an error so it's a work in progress
+> This is currently implemented however I havent really made it so it errors out if there is, in fact, an error so it's a work in progress
 
 ```SusCoding
 function exampleFunc(hello: number,)

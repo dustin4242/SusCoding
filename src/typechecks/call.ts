@@ -1,6 +1,10 @@
 import { Token } from "../tokenClass";
 
-export function callTypeCheck(lineTokens: Token[], i: number): number {
+export function callTypeCheck(
+	lineTokens: Token[],
+	i: number,
+	line: number
+): number {
 	if (lineTokens[i + 1].type == "paren_open") {
 		lineTokens.splice(0, 2);
 		if (lineTokens[lineTokens.length - 1].type == "paren_close")
@@ -20,11 +24,10 @@ export function callTypeCheck(lineTokens: Token[], i: number): number {
 									if (
 										lineTokens[i + 1].value != "paren_close"
 									) {
-										if (lineTokens[i - 1].type == "word")
-											i += 2;
-										else if (
+										if (
+											lineTokens[i - 1].type == "word" ||
 											lineTokens[i - 1].type ==
-											lineTokens[i + 1].type
+												lineTokens[i + 1].type
 										)
 											i += 2;
 									}

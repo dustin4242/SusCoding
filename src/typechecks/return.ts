@@ -1,5 +1,9 @@
 import { Token } from "../tokenClass";
 
-export function printTypeCheck(lineTokens: Token[], i: number): number {
+export function returnTypeCheck(
+	lineTokens: Token[],
+	i: number,
+	line: number
+): number {
 	return i;
 }
