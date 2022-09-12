@@ -1,16 +1,20 @@
-import {Token} from "../tokenClass";
+import { Token } from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 import callKey from "./call";
 
-export default function ifKey(tokens: Token[], pos: number, line: number): [number, string] {
+export default function ifKey(
+	tokens: Token[],
+	pos: number,
+	line: number
+): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
-	let curInstruction = "} else if (";
+	let curInstruction = "} else if ";
 	let assignment = [];
 	pos = newPos;
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
 			case "string":
-				assignment.push(`"${lineTokens[i].value}".to_owned()`);
+				assignment.push(`"${lineTokens[i].value}"`);
 				break;
 			case "operator":
 				switch (lineTokens[i].value) {
@@ -21,7 +25,8 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									` ${lineTokens[i].value} "${lineTokens[i + 1].value
+									` ${lineTokens[i].value} "${
+										lineTokens[i + 1].value
 									}"`
 								);
 								i++;
@@ -29,7 +34,8 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 							}
 							case "number": {
 								assignment.push(
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value
+									` ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
 									}`
 								);
 								i++;
@@ -37,7 +43,8 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 							}
 							default: {
 								assignment.push(
-									` ${lineTokens[i].value} &${lineTokens[i + 1].value
+									` ${lineTokens[i].value} &${
+										lineTokens[i + 1].value
 									}`
 								);
 								i++;
@@ -46,17 +53,16 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 						}
 						break;
 					case "=":
-						assignment.push(") == (");
+						curInstruction = curInstruction + "reflect.DeepEqual(";
+						assignment.push(", ");
 						i++;
 						break;
 					case "!":
-						assignment.push(") != (");
+						curInstruction = curInstruction + "!reflect.DeepEqual(";
+						assignment.push(", ");
 						i++;
 						break;
 				}
-				break;
-			case "comma":
-				assignment.push(", ");
 				break;
 			case "number":
 				assignment.push(`${lineTokens[i].value}`);
@@ -72,19 +78,23 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 					case "call": {
 						let [newI, callInstruction] = callKey(
 							lineTokens.concat([new Token("newline", "\n")]),
-							i
+							i,
+							line
 						);
 						assignment.push(
-							callInstruction.substring(0, callInstruction.length - 1)
+							callInstruction.substring(
+								0,
+								callInstruction.length - 1
+							)
 						);
 						i = newI;
 						break;
 					}
 					case "]":
-						assignment.push("}")
+						assignment.push("}");
 						break;
 					default:
-						assignment.push(lineTokens[i].value)
+						assignment.push(lineTokens[i].value);
 				}
 				break;
 		}

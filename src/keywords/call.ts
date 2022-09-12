@@ -1,11 +1,12 @@
-import {Token} from "../tokenClass";
+import { Token } from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function callKey(
 	tokens: Token[],
-	pos: number
+	pos: number,
+	line: number
 ): [number, string] {
-	let [lineTokens, newPos] = typeCheck(tokens, pos);
+	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
 	let curInstruction = `${lineTokens[0].value}(`;
 	let assignment = [];
 	lineTokens.splice(0, 2);
@@ -13,7 +14,7 @@ export default function callKey(
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
 			case "string":
-				assignment[i] = `"${lineTokens[i].value}".to_owned()`;
+				assignment[i] = `"${lineTokens[i].value}"`;
 				break;
 			case "operator":
 				switch (lineTokens[i].value) {
@@ -25,7 +26,9 @@ export default function callKey(
 							case "string": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`;
+									` ${lineTokens[i].value} "${
+										lineTokens[i + 1].value
+									}"`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -33,7 +36,9 @@ export default function callKey(
 							case "number": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value}`;
+									` ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									}`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -41,7 +46,9 @@ export default function callKey(
 							default: {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} &${lineTokens[i + 1].value}`;
+									` ${lineTokens[i].value} ${
+										lineTokens[i + 1].value
+									}`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -61,7 +68,18 @@ export default function callKey(
 				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
 					assignment[i] = `[${lineTokens[i + 1].value}]`;
 					i += 2;
-				} else assignment[i] = `vec![`;
+				} else
+					switch (lineTokens[i + 1].type) {
+						case "string":
+							assignment[i] = `[]string{`;
+							break;
+						case "number":
+							assignment[i] = `[]int{`;
+							break;
+					}
+				break;
+			case "array_close":
+				assignment.push("}");
 				break;
 			case "comma":
 				assignment[i] = ", ";

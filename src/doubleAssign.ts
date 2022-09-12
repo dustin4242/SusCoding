@@ -1,5 +1,5 @@
 import callKey from "./keywords/call";
-import {Token} from "./tokenClass";
+import { Token } from "./tokenClass";
 import typeCheck from "./typechecks/typecheck";
 
 export default function doubleAssign(
@@ -26,7 +26,7 @@ function assignmentLoop(
 ): [number, string[]] {
 	switch (lineTokens[i].type) {
 		case "string":
-			assignment[i] = `"${lineTokens[i].value}".to_owned()`;
+			assignment[i] = `"${lineTokens[i].value}"`;
 			break;
 		case "operator":
 			switch (lineTokens[i].value) {
@@ -37,7 +37,8 @@ function assignmentLoop(
 					switch (lineTokens[i + 1].type) {
 						case "string": {
 							assignment.push(
-								` ${lineTokens[i].value} "${lineTokens[i + 1].value
+								` ${lineTokens[i].value} "${
+									lineTokens[i + 1].value
 								}"`
 							);
 							i++;
@@ -45,7 +46,8 @@ function assignmentLoop(
 						}
 						case "number": {
 							assignment.push(
-								` ${lineTokens[i].value} ${lineTokens[i + 1].value
+								` ${lineTokens[i].value} ${
+									lineTokens[i + 1].value
 								}`
 							);
 							i++;
@@ -79,13 +81,14 @@ function assignmentLoop(
 				}
 				assignment.push("]");
 				i++;
-			} else assignment[i] = `[]interface{}{`;
+			} else assignment[i] = `[]any{`;
 			break;
 		default:
 			if (lineTokens[i].value == "call") {
 				let [newI, callInstruction] = callKey(
 					lineTokens.concat([new Token("newline", "\n")]),
-					i
+					i,
+					line
 				);
 				assignment.push(
 					callInstruction.substring(0, callInstruction.length - 2)

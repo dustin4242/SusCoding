@@ -1,36 +1,38 @@
 const automataLength = 50
 
-let initArray = [0]
+// for this rule 110 implementation were gonna have 0 as " " just to clean things up 
+let initArray = [" "]
 for(i = 0,automataLength)
-	push(initArray, 0)
+	push(initArray, " ")
 end
-initArray[automataLength - 1] = 1
+initArray[automataLength - 1] = "1"
 print(initArray)
 
 // Height
 for(i = 0, automataLength - 2)
-	let newArray = [0]
+	let newArray = [" "]
 	// Width
 	for(pos = 0, automataLength - 1)
 		let analyze = [initArray[pos], initArray[pos + 1], initArray[pos + 2]]
-		if(analyze == [0,0,0])
-			push(newArray, 0)
-		elif(analyze == [0,0,1])
-			push(newArray, 1)
-		elif(analyze == [0,1,0])
-			push(newArray, 1)
-		elif(analyze == [0,1,1])
-			push(newArray, 1)
-		elif(analyze == [1,0,0])
-			push(newArray, 1)
-		elif(analyze == [1,0,1])
-			push(newArray, 1)
-		elif(analyze == [1,1,0])
-			push(newArray, 1)
-		elif(analyze == [1,1,1])
-			push(newArray, 0)
+		if(analyze == [" "," "," "])
+			push(newArray, " ")
+		elif(analyze == [" "," ","1"])
+			push(newArray, "1")
+		elif(analyze == [" ","1"," "])
+			push(newArray, "1")
+		elif(analyze == [" ","1","1"])
+			push(newArray, "1")
+		elif(analyze == ["1"," "," "])
+			push(newArray, " ")
+		elif(analyze == ["1"," ","1"])
+			push(newArray, "1")
+		elif(analyze == ["1","1"," "])
+			push(newArray, "1")
+		elif(analyze == ["1","1","1"])
+			push(newArray, " ")
 		end
 	end
+	push(newArray, " ")
 	initArray = newArray
 	print(initArray)
 end

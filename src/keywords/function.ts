@@ -1,4 +1,4 @@
-import {Token} from "../tokenClass";
+import { Token } from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function functionKey(
@@ -18,7 +18,7 @@ export default function functionKey(
 					switch (lineTokens[i + 2].value) {
 						case "string":
 							assignment.push(`${lineTokens[i].value}`);
-							assignment.push(`String`);
+							assignment.push(`string`);
 							i += 2;
 							break;
 						case "number":
@@ -36,11 +36,12 @@ export default function functionKey(
 				assignment.push(`(`);
 				break;
 			case "paren_close":
-				assignment.push(`) interface{} {`);
+				assignment.push(`) {`);
 				break;
 			case "array_open":
-				assignment[assignment.length - 1] = `Vec<${assignment[assignment.length - 1]
-					}>`;
+				assignment[assignment.length - 1] = `[]${
+					assignment[assignment.length - 1]
+				}`;
 				i++;
 				break;
 		}

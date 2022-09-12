@@ -1,4 +1,4 @@
-import {Token} from "../tokenClass";
+import { Token } from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 import callKey from "./call";
 
@@ -12,7 +12,7 @@ export default function constKey(
 	let assignment = [];
 	pos = newPos;
 	for (let i = 2; i < lineTokens.length; i++) {
-		[i, assignment] = assignmentLoop(lineTokens, i, assignment);
+		[i, assignment] = assignmentLoop(lineTokens, i, line, assignment);
 	}
 	curInstruction = `${curInstruction}${assignment.join("")};`;
 	return [pos, curInstruction];
@@ -21,6 +21,7 @@ export default function constKey(
 function assignmentLoop(
 	lineTokens: Token[],
 	i: number,
+	line: number,
 	assignment: string[]
 ): [number, string[]] {
 	switch (lineTokens[i].type) {
@@ -36,14 +37,18 @@ function assignmentLoop(
 					switch (lineTokens[i + 1].type) {
 						case "string": {
 							assignment.push(
-								` ${lineTokens[i].value} "${lineTokens[i + 1].value}"`
+								` ${lineTokens[i].value} "${
+									lineTokens[i + 1].value
+								}"`
 							);
 							i++;
 							break;
 						}
 						case "number": {
 							assignment.push(
-								` ${lineTokens[i].value} ${lineTokens[i + 1].value}`
+								` ${lineTokens[i].value} ${
+									lineTokens[i + 1].value
+								}`
 							);
 							i++;
 							break;
@@ -68,13 +73,25 @@ function assignmentLoop(
 				}
 				assignment.push("}");
 				i++;
-			} else assignment[i] = `[]any{`;
+			} else
+				switch (lineTokens[i + 1].type) {
+					case "string":
+						assignment[i] = `[]string{`;
+						break;
+					case "number":
+						assignment[i] = `[]int{`;
+						break;
+					default:
+						assignment[i] = `[]any{`;
+						break;
+				}
 			break;
 		default:
 			if (lineTokens[i].value == "call") {
 				let [newI, callInstruction] = callKey(
 					lineTokens.concat([new Token("newline", "\n")]),
-					i
+					i,
+					line
 				);
 				assignment.push(
 					callInstruction.substring(0, callInstruction.length - 2)

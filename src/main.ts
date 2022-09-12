@@ -1,5 +1,5 @@
 #!/bin/bun
-import {readdirSync, readFileSync, writeFileSync} from "fs";
+import { readdirSync, readFileSync, writeFileSync } from "fs";
 import tokenizer from "./tokenizer";
 import parser from "./parser";
 import path from "path";
@@ -8,9 +8,9 @@ if (process.argv[2] != undefined) {
 	let fileString = "";
 	!process.argv[2].startsWith("/")
 		? (fileString = readFileSync(
-			`${process.cwd()}/${process.argv[2]}`,
-			`utf8`
-		))
+				`${process.cwd()}/${process.argv[2]}`,
+				`utf8`
+		  ))
 		: (fileString = readFileSync(`${process.argv[2]}`, `utf8`));
 	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
 	let viableNums = "0123456789.";
@@ -20,8 +20,8 @@ if (process.argv[2] != undefined) {
 	);
 	const tokens = tokenizer(fileString, viableChars, viableNums, defKeywords);
 	// Compile To Rust So It Can Go To Binary
-	finalFile.push("package main")
-	finalFile.push('import "fmt"')
+	finalFile.push("package main");
+	finalFile.push('import ("fmt"; "reflect")');
 	finalFile.push("func main() {");
 	finalFile.push(...(await parser(tokens)));
 	finalFile.push("}");

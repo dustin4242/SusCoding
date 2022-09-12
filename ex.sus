@@ -1,12 +1,18 @@
-function exampleFunc(hello: string, world: number)
-	if(hello == "nice")
-		if(world == 69)
-			print(world, hello)
+function exampleFunc(hello: string, world: number, extra: string[])
+	if(hello == "nice" + " and more")
+		if(world == 69 + 351)
+			for(i = 0, 5)
+				push(extra, "we uh")
+				print(world, hello, extra, ["cooking?"])
+			end
 		end
 	elif(hello == "blazin")
-		if(world == 420)
-			print(world, hello)
+		if(world == 421 - 1)
+			for(i = 0, 5)
+				print(world, hello)
+			end
 		end
 	end
 end
-call(exampleFunc, "blazin", 420)
+const something = "nice and more"
+call(exampleFunc, something, 420, ["yo", "mr.white"])
