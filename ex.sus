@@ -1,0 +1,12 @@
+function exampleFunc(hello: string, world: number)
+	if(hello == "nice")
+		if(world == 69)
+			print(world, hello)
+		end
+	elif(hello == "blazin")
+		if(world == 420)
+			print(world, hello)
+		end
+	end
+end
+call(exampleFunc, "blazin", 420)

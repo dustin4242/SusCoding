@@ -2,8 +2,8 @@ if [ $1 ] && [ -r $1 ]
 then
 	filename=${1/.sus/}
 	bun src/main.ts $1 &&
-	rustc -C opt-level=3 "$filename.rs" -o $filename &&
-	rm -rf "$filename.rs" &&
+	go build -o $filename $filename.go &&
+	rm -rf "$filename.go" &&
 	chmod +x $filename &&
 	./$filename
 else

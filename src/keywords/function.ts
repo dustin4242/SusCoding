@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function functionKey(
@@ -6,27 +6,24 @@ export default function functionKey(
 	pos: number,
 	line: number
 ): [number, string] {
-	let curInstruction = ``;
-	let [lineTokens, newPos] = typeCheck(tokens, pos);
+	let curInstruction = `var `;
+	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
 	let assignment = [];
 	for (let i = 0; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
-			case "keyword":
-				assignment.push(`let mut`);
-				break;
 			case "word":
 				if (lineTokens[i + 1].type == "paren_open") {
-					assignment.push(lineTokens[i].value);
+					assignment.push(`${lineTokens[i].value} = func`);
 				} else {
 					switch (lineTokens[i + 2].value) {
 						case "string":
-							assignment.push(`${lineTokens[i].value}:`);
+							assignment.push(`${lineTokens[i].value}`);
 							assignment.push(`String`);
 							i += 2;
 							break;
 						case "number":
-							assignment.push(`${lineTokens[i].value}:`);
-							assignment.push(`usize`);
+							assignment.push(`${lineTokens[i].value}`);
+							assignment.push(`int`);
 							i += 2;
 							break;
 					}
@@ -36,20 +33,19 @@ export default function functionKey(
 				assignment.push(`,`);
 				break;
 			case "paren_open":
-				assignment.push(`= |`);
+				assignment.push(`(`);
 				break;
 			case "paren_close":
-				assignment.push(`| {`);
+				assignment.push(`) interface{} {`);
 				break;
 			case "array_open":
-				assignment[assignment.length - 1] = `Vec<${
-					assignment[assignment.length - 1]
-				}>`;
+				assignment[assignment.length - 1] = `Vec<${assignment[assignment.length - 1]
+					}>`;
 				i++;
 				break;
 		}
 	}
 	pos = newPos;
-	curInstruction = assignment.join(" ");
+	curInstruction = curInstruction + assignment.join(" ");
 	return [pos, curInstruction];
 }

@@ -1,12 +1,13 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function pushKey(
 	tokens: Token[],
-	pos: number
+	pos: number,
+	line: number
 ): [number, string] {
-	let [lineTokens, newPos] = typeCheck(tokens, pos);
-	let curInstruction = `${lineTokens[2].value}.push(`;
+	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
+	let curInstruction = `${lineTokens[2].value} = append(${lineTokens[2].value},`;
 	let assignment = [];
 	lineTokens.splice(0, 4);
 	pos = newPos;
@@ -25,8 +26,7 @@ export default function pushKey(
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									`${assignment[length - 1]} ${lineTokens[i].value} "${
-										lineTokens[i + 1].value
+									`${assignment[length - 1]} ${lineTokens[i].value} "${lineTokens[i + 1].value
 									}"`
 								);
 								assignment.splice(length - 1, 1);
@@ -35,8 +35,7 @@ export default function pushKey(
 							}
 							case "number": {
 								assignment.push(
-									`${assignment[length - 1]} ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
+									`${assignment[length - 1]} ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`
 								);
 								assignment.splice(length - 1, 1);
@@ -45,8 +44,7 @@ export default function pushKey(
 							}
 							default: {
 								assignment.push(
-									`${assignment[length - 1]} ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
+									`${assignment[length - 1]} ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`
 								);
 								assignment.splice(length - 1, 1);
@@ -67,7 +65,7 @@ export default function pushKey(
 				break;
 			case "array_open":
 				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
-					assignment[i] = `[${lineTokens[i + 1].value} as i32]`;
+					assignment[i] = `[${lineTokens[i + 1].value}]`;
 					i += 2;
 				} else assignment[i] = `vec![`;
 				break;

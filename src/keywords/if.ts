@@ -1,8 +1,9 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
+import callKey from "./call";
 
-export default function ifKey(tokens: Token[], pos: number): [number, string] {
-	let [lineTokens, newPos] = typeCheck(tokens, pos);
+export default function ifKey(tokens: Token[], pos: number, line: number): [number, string] {
+	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
 	let curInstruction = "if (";
 	let assignment = [];
 	pos = newPos;
@@ -59,12 +60,29 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 				break;
 			case "array_open":
 				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
-					assignment[i] = `[${lineTokens[i + 1].value} as i32]`;
+					assignment[i] = `[${lineTokens[i + 1].value}]`;
 					i += 2;
-				} else assignment[i] = `vec![`;
+				} else assignment[i] = `[]any{`;
 				break;
 			default:
-				assignment.push(`${lineTokens[i].value}`);
+				switch (lineTokens[i].value) {
+					case "call": {
+						let [newI, callInstruction] = callKey(
+							lineTokens.concat([new Token("newline", "\n")]),
+							i
+						);
+						assignment.push(
+							callInstruction.substring(0, callInstruction.length - 1)
+						);
+						i = newI;
+						break;
+					}
+					case "]":
+						assignment.push("}")
+						break;
+					default:
+						assignment.push(lineTokens[i].value)
+				}
 				break;
 		}
 	}

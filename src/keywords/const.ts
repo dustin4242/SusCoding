@@ -1,13 +1,14 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 import callKey from "./call";
 
 export default function constKey(
 	tokens: Token[],
-	pos: number
+	pos: number,
+	line: number
 ): [number, string] {
-	let [lineTokens, newPos] = typeCheck(tokens, pos);
-	let curInstruction = `let ${lineTokens[1].value} = `;
+	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
+	let curInstruction = `const ${lineTokens[1].value} = `;
 	let assignment = [];
 	pos = newPos;
 	for (let i = 2; i < lineTokens.length; i++) {
@@ -24,7 +25,7 @@ function assignmentLoop(
 ): [number, string[]] {
 	switch (lineTokens[i].type) {
 		case "string":
-			assignment[i] = `"${lineTokens[i].value}".to_owned()`;
+			assignment[i] = `"${lineTokens[i].value}"`;
 			break;
 		case "operator":
 			switch (lineTokens[i].value) {
@@ -60,14 +61,14 @@ function assignmentLoop(
 			break;
 		case "array_open":
 			if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
-				assignment[i] = `[(`;
+				assignment[i] = `[]any{`;
 				while (lineTokens[i + 1].type != "array_close") {
 					i++;
 					[i, assignment] = assignmentLoop(lineTokens, i, assignment);
 				}
-				assignment.push(") as usize]");
+				assignment.push("}");
 				i++;
-			} else assignment[i] = `vec![`;
+			} else assignment[i] = `[]any{`;
 			break;
 		default:
 			if (lineTokens[i].value == "call") {

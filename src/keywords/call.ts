@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function callKey(
@@ -33,7 +33,7 @@ export default function callKey(
 							case "number": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} ${lineTokens[i + 1].value} as f32`;
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value}`;
 								lineTokens.splice(i, 2);
 								i -= 1;
 								break;
@@ -51,7 +51,7 @@ export default function callKey(
 				}
 				break;
 			case "number":
-				assignment[i] = `${lineTokens[i].value} as f32`;
+				assignment[i] = `${lineTokens[i].value}`;
 				break;
 			case "paren_close":
 				lineTokens.splice(i, 1);

@@ -1,5 +1,5 @@
 import callKey from "./keywords/call";
-import { Token } from "./tokenClass";
+import {Token} from "./tokenClass";
 import typeCheck from "./typechecks/typecheck";
 
 export default function doubleAssign(
@@ -37,8 +37,7 @@ function assignmentLoop(
 					switch (lineTokens[i + 1].type) {
 						case "string": {
 							assignment.push(
-								` ${lineTokens[i].value} "${
-									lineTokens[i + 1].value
+								` ${lineTokens[i].value} "${lineTokens[i + 1].value
 								}"`
 							);
 							i++;
@@ -46,8 +45,7 @@ function assignmentLoop(
 						}
 						case "number": {
 							assignment.push(
-								` ${lineTokens[i].value} ${
-									lineTokens[i + 1].value
+								` ${lineTokens[i].value} ${lineTokens[i + 1].value
 								}`
 							);
 							i++;
@@ -69,7 +67,7 @@ function assignmentLoop(
 			break;
 		case "array_open":
 			if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
-				assignment[i] = `[(`;
+				assignment[i] = `[`;
 				while (lineTokens[i + 1].type != "array_close") {
 					i++;
 					[i, assignment] = assignmentLoop(
@@ -79,9 +77,9 @@ function assignmentLoop(
 						assignment
 					);
 				}
-				assignment.push(") as usize]");
+				assignment.push("]");
 				i++;
-			} else assignment[i] = `vec![`;
+			} else assignment[i] = `[]interface{}{`;
 			break;
 		default:
 			if (lineTokens[i].value == "call") {

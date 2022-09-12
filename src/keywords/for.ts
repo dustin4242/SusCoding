@@ -1,13 +1,12 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
-export default function ifKey(tokens: Token[], pos: number): [number, string] {
-	let [lineTokens, newPos] = typeCheck(tokens, pos);
+export default function ifKey(tokens: Token[], pos: number, line: number): [number, string] {
+	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
 	let curInstruction = `for ${lineTokens[0].value}`;
-	lineTokens.splice(0, 1);
 	let assignment = [];
 	pos = newPos;
-	for (let i = 0; i < lineTokens.length; i++) {
+	for (let i = 1; i < lineTokens.length; i++) {
 		switch (lineTokens[i].type) {
 			case "number":
 				assignment.push(`${lineTokens[i].value}`);
@@ -40,18 +39,18 @@ export default function ifKey(tokens: Token[], pos: number): [number, string] {
 						}
 						break;
 					case "=":
-						assignment.push(" in ");
+						assignment.push(" := ");
 						break;
 				}
 				break;
 			case "comma":
-				assignment.push("..");
+				assignment.push(`; ${lineTokens[0].value} < `);
 				break;
 			case "word":
-				assignment.push(`${lineTokens[i].value} as i32`);
+				assignment.push(`${lineTokens[i].value}`);
 				break;
 			case "paren_close":
-				assignment.push(" {");
+				assignment.push(`; ${lineTokens[0].value}++ {`);
 		}
 	}
 	curInstruction = curInstruction + assignment.join("");
