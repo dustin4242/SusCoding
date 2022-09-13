@@ -24,20 +24,12 @@ for(i = 0, automataLength - 2)
 		let analyze = [initArray[pos], initArray[pos + 1], initArray[pos + 2]]
 		if(analyze == [dead,dead,dead])
 			push(newArray, dead)
-		elif(analyze == [dead,dead,alive])
-			push(newArray, alive)
-		elif(analyze == [dead,alive,dead])
-			push(newArray, alive)
-		elif(analyze == [dead,alive,alive])
-			push(newArray, alive)
 		elif(analyze == [alive,dead,dead])
 			push(newArray, dead)
-		elif(analyze == [alive,dead,alive])
-			push(newArray, alive)
-		elif(analyze == [alive,alive,dead])
-			push(newArray, alive)
 		elif(analyze == [alive,alive,alive])
 			push(newArray, dead)
+		else
+			push(newArray, alive)
 		end
 	end
 	push(newArray, dead)

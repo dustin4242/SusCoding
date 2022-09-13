@@ -12,7 +12,7 @@ hi def link word Macro
 
 syn keyword assignmentKeywords let const
 syn keyword functionKeyword function nextgroup=word skipwhite
-syn keyword keywords if elif end call print push for include return
+syn keyword keywords if elif else end call print push for include return
 syn keyword types string number
 syn match word '\a\a*' contained
 syn match Number '[0-9]'
