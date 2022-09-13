@@ -14,8 +14,6 @@ end
 initArray[automataLength - 1] = alive
 print(initArray)
 
-// The actual automata part
-
 // Height
 for(i = 0, automataLength - 2)
 	let newArray = [dead]
