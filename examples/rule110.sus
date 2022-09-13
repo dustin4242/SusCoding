@@ -1,38 +1,46 @@
-const automataLength = 50
+const automataLength = 150
 
-// for this rule 110 implementation were gonna have 0 as " " just to clean things up 
-let initArray = [" "]
-for(i = 0,automataLength)
-	push(initArray, " ")
+// In this implementation you can change the numbers to any character
+const dead = " "
+const alive = "1"
+
+// Fill an array with dead cells
+let initArray = [dead]
+for(i = 0, automataLength)
+	push(initArray, dead)
 end
-initArray[automataLength - 1] = "1"
+
+// And leave one alive
+initArray[automataLength - 1] = alive
 print(initArray)
+
+// The actual automata part
 
 // Height
 for(i = 0, automataLength - 2)
-	let newArray = [" "]
+	let newArray = [dead]
 	// Width
 	for(pos = 0, automataLength - 1)
 		let analyze = [initArray[pos], initArray[pos + 1], initArray[pos + 2]]
-		if(analyze == [" "," "," "])
-			push(newArray, " ")
-		elif(analyze == [" "," ","1"])
-			push(newArray, "1")
-		elif(analyze == [" ","1"," "])
-			push(newArray, "1")
-		elif(analyze == [" ","1","1"])
-			push(newArray, "1")
-		elif(analyze == ["1"," "," "])
-			push(newArray, " ")
-		elif(analyze == ["1"," ","1"])
-			push(newArray, "1")
-		elif(analyze == ["1","1"," "])
-			push(newArray, "1")
-		elif(analyze == ["1","1","1"])
-			push(newArray, " ")
+		if(analyze == [dead,dead,dead])
+			push(newArray, dead)
+		elif(analyze == [dead,dead,alive])
+			push(newArray, alive)
+		elif(analyze == [dead,alive,dead])
+			push(newArray, alive)
+		elif(analyze == [dead,alive,alive])
+			push(newArray, alive)
+		elif(analyze == [alive,dead,dead])
+			push(newArray, dead)
+		elif(analyze == [alive,dead,alive])
+			push(newArray, alive)
+		elif(analyze == [alive,alive,dead])
+			push(newArray, alive)
+		elif(analyze == [alive,alive,alive])
+			push(newArray, dead)
 		end
 	end
-	push(newArray, " ")
+	push(newArray, dead)
 	initArray = newArray
 	print(initArray)
 end
