@@ -5,28 +5,28 @@ import parser from "./parser";
 import path from "path";
 
 if (process.argv[2] != undefined) {
-	let fileString = "";
+	let susFile = "";
 	!process.argv[2].startsWith("/")
-		? (fileString = readFileSync(
+		? (susFile = readFileSync(
 				`${process.cwd()}/${process.argv[2]}`,
 				`utf8`
 		  ))
-		: (fileString = readFileSync(`${process.argv[2]}`, `utf8`));
+		: (susFile = readFileSync(`${process.argv[2]}`, `utf8`));
 	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
 	let viableNums = "0123456789.";
-	let finalFile: string[] = [];
+	let goFile: string[] = [];
 	let defKeywords = readdirSync(path.resolve(__dirname, "./keywords")).map(
 		(i) => i.replace(".ts", "")
 	);
-	const tokens = tokenizer(fileString, viableChars, viableNums, defKeywords);
-	// Compile To Rust So It Can Go To Binary
-	finalFile.push("package main");
-	finalFile.push('import ("fmt"; "reflect")');
-	finalFile.push("func main() {");
-	finalFile.push(...(await parser(tokens)));
-	finalFile.push("}");
+	const susTokens = tokenizer(susFile, viableChars, viableNums, defKeywords);
+	// Compile To Go So It Can Go To Binary
+	goFile.push("package main");
+	goFile.push('import ("fmt"; "reflect")');
+	goFile.push("func main() {");
+	goFile.push(...(await parser(susTokens)));
+	goFile.push("}");
 	writeFileSync(
 		`./${process.argv[2].replace(".sus", "")}.go`,
-		finalFile.filter((i) => i != "").join("\n")
+		goFile.filter((i) => i != "").join("\n")
 	);
 }

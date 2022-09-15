@@ -1,34 +1,41 @@
-const automataLength = 150
+const automataLength = 126
 
 // In this implementation you can change the numbers to any character
 const dead = " "
 const alive = "1"
 
-// Fill an array with dead cells
-let initArray = [dead]
-for(i = 0, automataLength)
-	push(initArray, dead)
+// Fill an array with dead cells and stick a alive one in the middle
+let initAut = dead
+for(i = 0, automataLength / 2 - 1)
+	initAut = initAut + dead
+end
+initAut = initAut + alive
+for(i = 0, automataLength / 2 - 1)
+	initAut = initAut + dead
 end
 
-// And leave one alive
-initArray[automataLength / 2] = alive
-print(initArray)
+initAut = initAut + dead
+print(initAut)
+
+// String Jargin
+let deadByte = dead[0]
+let aliveByte = alive[0]
 
 // Height
-for(i = 0, automataLength - 2)
-	let newArray = [dead]
+for(i = 0, automataLength / 2 - 1)
+	let newAut = dead
 	// Width
 	for(pos = 0, automataLength - 1)
-		let analyze = [initArray[pos], initArray[pos + 1], initArray[pos + 2]]
-		if(analyze == [dead,dead,dead])
-			push(newArray, dead)
-		elif(analyze == [alive,alive,alive])
-			push(newArray, dead)
+		let analyze = [initAut[pos], initAut[pos + 1], initAut[pos + 2]]
+		if(analyze == [deadByte, deadByte, deadByte])
+			newAut = newAut + dead
+		elif(analyze == [aliveByte, aliveByte, aliveByte])
+			newAut = newAut + dead
 		else
-			push(newArray, alive)
+			newAut = newAut + alive
 		end
 	end
-	push(newArray, dead)
-	initArray = newArray
-	print(initArray)
+	newAut = newAut + dead
+	initAut = newAut
+	print(initAut)
 end

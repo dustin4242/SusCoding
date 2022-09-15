@@ -66,12 +66,17 @@ function assignmentLoop(
 			break;
 		case "array_open":
 			if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
-				assignment[i] = `[]any{`;
+				assignment[i] = `[`;
 				while (lineTokens[i + 1].type != "array_close") {
 					i++;
-					[i, assignment] = assignmentLoop(lineTokens, i, assignment);
+					[i, assignment] = assignmentLoop(
+						lineTokens,
+						i,
+						line,
+						assignment
+					);
 				}
-				assignment.push("}");
+				assignment.push("]");
 				i++;
 			} else
 				switch (lineTokens[i + 1].type) {
