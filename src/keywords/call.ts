@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function callKey(
@@ -7,6 +7,7 @@ export default function callKey(
 	line: number
 ): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
+	lineTokens.splice(0, 2);
 	let curInstruction = `${lineTokens[0].value}(`;
 	let assignment = [];
 	lineTokens.splice(0, 2);
@@ -26,8 +27,7 @@ export default function callKey(
 							case "string": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} "${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value
 									}"`;
 								lineTokens.splice(i, 2);
 								i -= 1;
@@ -36,8 +36,7 @@ export default function callKey(
 							case "number": {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`;
 								lineTokens.splice(i, 2);
 								i -= 1;
@@ -46,8 +45,7 @@ export default function callKey(
 							default: {
 								assignment[i - 1] =
 									assignment[i - 1] +
-									` ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`;
 								lineTokens.splice(i, 2);
 								i -= 1;

@@ -1,7 +1,8 @@
 import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
+import callKey from "./call";
 
-export default function ifKey(tokens: Token[], pos: number, line: number): [number, string] {
+export default function forKey(tokens: Token[], pos: number, line: number): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
 	let curInstruction = `for ${lineTokens[0].value}`;
 	let assignment = [];
@@ -34,6 +35,7 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 							}
 							default: {
 								assignment.push(` ${lineTokens[i].value} `);
+								i++;
 								break;
 							}
 						}
@@ -46,11 +48,27 @@ export default function ifKey(tokens: Token[], pos: number, line: number): [numb
 			case "comma":
 				assignment.push(`; ${lineTokens[0].value} < `);
 				break;
-			case "word":
-				assignment.push(`${lineTokens[i].value}`);
-				break;
 			case "paren_close":
 				assignment.push(`; ${lineTokens[0].value}++ {`);
+				break;
+			default:
+				switch (lineTokens[i].value) {
+					case "call": {
+						let [newI, callInstruction] = callKey(
+							lineTokens.concat([new Token("newline", "\n")]),
+							i,
+							line
+						);
+						assignment.push(
+							callInstruction.substring(0, callInstruction.length - 1)
+						);
+						i = newI - 1;
+						break;
+					}
+					default:
+						assignment.push(lineTokens[i].value);
+				}
+				break;
 		}
 	}
 	curInstruction = curInstruction + assignment.join("");

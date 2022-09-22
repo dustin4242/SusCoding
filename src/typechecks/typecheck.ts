@@ -1,12 +1,12 @@
-import { Token } from "../tokenClass";
-import { callTypeCheck } from "./call";
-import { forTypeCheck } from "./for";
-import { functionTypeCheck } from "./function";
-import { ifTypeCheck } from "./if";
-import { includeTypeCheck } from "./include";
-import { printTypeCheck } from "./print";
-import { pushTypeCheck } from "./push";
-import { varTypeCheck } from "./var";
+import {Token} from "../tokenClass";
+import {callTypeCheck} from "./call";
+import {forTypeCheck} from "./for";
+import {functionTypeCheck} from "./function";
+import {ifTypeCheck} from "./if";
+import {includeTypeCheck} from "./include";
+import {printTypeCheck} from "./print";
+import {pushTypeCheck} from "./push";
+import {varTypeCheck} from "./var";
 
 export default function typeCheck(
 	tokens: Token[],

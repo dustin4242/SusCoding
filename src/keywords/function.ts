@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 
 export default function functionKey(
@@ -36,12 +36,11 @@ export default function functionKey(
 				assignment.push(`(`);
 				break;
 			case "paren_close":
-				assignment.push(`) {`);
+				assignment.push(`) any {`);
 				break;
 			case "array_open":
-				assignment[assignment.length - 1] = `[]${
-					assignment[assignment.length - 1]
-				}`;
+				assignment[assignment.length - 1] = `[]${assignment[assignment.length - 1]
+					}`;
 				i++;
 				break;
 		}

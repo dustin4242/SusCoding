@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 
 export function forTypeCheck(
 	lineTokens: Token[],

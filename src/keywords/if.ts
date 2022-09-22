@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 import callKey from "./call";
 
@@ -25,8 +25,7 @@ export default function ifKey(
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									` ${lineTokens[i].value} "${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value
 									}"`
 								);
 								i++;
@@ -34,8 +33,7 @@ export default function ifKey(
 							}
 							case "number": {
 								assignment.push(
-									` ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`
 								);
 								i++;
@@ -43,8 +41,7 @@ export default function ifKey(
 							}
 							default: {
 								assignment.push(
-									` ${lineTokens[i].value} &${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`
 								);
 								i++;
@@ -69,10 +66,10 @@ export default function ifKey(
 				break;
 			case "array_open":
 				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
-					assignment[i] = `[${lineTokens[i + 1].value}]`;
+					assignment.push(`[${lineTokens[i + 1].value}]`);
 					i += 2;
-				} else assignment[i] = `[]any{`;
-				break;
+				} else assignment.push(`[]any{`);
+				break
 			default:
 				switch (lineTokens[i].value) {
 					case "call": {
@@ -95,6 +92,7 @@ export default function ifKey(
 						break;
 					default:
 						assignment.push(lineTokens[i].value);
+						break;
 				}
 				break;
 		}

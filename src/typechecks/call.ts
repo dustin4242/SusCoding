@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 
 export function callTypeCheck(
 	lineTokens: Token[],
@@ -6,7 +6,6 @@ export function callTypeCheck(
 	line: number
 ): number {
 	if (lineTokens[i + 1].type == "paren_open") {
-		lineTokens.splice(0, 2);
 		if (lineTokens[lineTokens.length - 1].type == "paren_close")
 			if (lineTokens[i].type == "word")
 				if (lineTokens[i + 1].type == "comma") {
@@ -27,7 +26,7 @@ export function callTypeCheck(
 										if (
 											lineTokens[i - 1].type == "word" ||
 											lineTokens[i - 1].type ==
-												lineTokens[i + 1].type
+											lineTokens[i + 1].type
 										)
 											i += 2;
 									}
