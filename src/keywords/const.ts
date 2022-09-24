@@ -74,7 +74,7 @@ function assignmentLoop(
 						assignment
 					);
 				}
-				assignment.push("}");
+				assignment.push("]");
 				i++;
 			} else
 				switch (lineTokens[i + 1].type) {
@@ -88,6 +88,9 @@ function assignmentLoop(
 						assignment[i] = `[]any{`;
 						break;
 				}
+			break;
+		case "array_close":
+			assignment.push("}")
 			break;
 		default:
 			if (lineTokens[i].value == "call") {

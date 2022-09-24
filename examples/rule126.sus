@@ -18,15 +18,15 @@ initAut = initAut + dead
 print(initAut)
 
 // String Jargin
-const deadByte = dead[0]
-const aliveByte = alive[0]
+let deadByte = dead[0]
+let aliveByte = alive[0]
 
 // Height
 for(i = 0, automataLength / 2 - 1)
 	let newAut = dead
 	// Width
 	for(pos = 0, automataLength - 1)
-		const analyze = [initAut[pos], initAut[pos + 1], initAut[pos + 2]]
+		let analyze = [initAut[pos], initAut[pos + 1], initAut[pos + 2]]
 		if(analyze == [deadByte, deadByte, deadByte])
 			newAut = newAut + dead
 		elif(analyze == [aliveByte, aliveByte, aliveByte])
