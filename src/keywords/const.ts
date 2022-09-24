@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 import callKey from "./call";
 
@@ -37,8 +37,7 @@ function assignmentLoop(
 					switch (lineTokens[i + 1].type) {
 						case "string": {
 							assignment.push(
-								` ${lineTokens[i].value} "${
-									lineTokens[i + 1].value
+								` ${lineTokens[i].value} "${lineTokens[i + 1].value
 								}"`
 							);
 							i++;
@@ -46,8 +45,7 @@ function assignmentLoop(
 						}
 						case "number": {
 							assignment.push(
-								` ${lineTokens[i].value} ${
-									lineTokens[i + 1].value
+								` ${lineTokens[i].value} ${lineTokens[i + 1].value
 								}`
 							);
 							i++;
@@ -76,7 +74,7 @@ function assignmentLoop(
 						assignment
 					);
 				}
-				assignment.push("]");
+				assignment.push("}");
 				i++;
 			} else
 				switch (lineTokens[i + 1].type) {

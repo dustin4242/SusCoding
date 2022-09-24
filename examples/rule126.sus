@@ -4,7 +4,7 @@ const automataLength = 126
 const dead = " "
 const alive = "1"
 
-// Fill an array with dead cells and stick a alive one in the middle
+// Fill a string with dead cells and stick a alive one in the middle
 let initAut = dead
 for(i = 0, automataLength / 2 - 1)
 	initAut = initAut + dead
@@ -18,15 +18,15 @@ initAut = initAut + dead
 print(initAut)
 
 // String Jargin
-let deadByte = dead[0]
-let aliveByte = alive[0]
+const deadByte = dead[0]
+const aliveByte = alive[0]
 
 // Height
 for(i = 0, automataLength / 2 - 1)
 	let newAut = dead
 	// Width
 	for(pos = 0, automataLength - 1)
-		let analyze = [initAut[pos], initAut[pos + 1], initAut[pos + 2]]
+		const analyze = [initAut[pos], initAut[pos + 1], initAut[pos + 2]]
 		if(analyze == [deadByte, deadByte, deadByte])
 			newAut = newAut + dead
 		elif(analyze == [aliveByte, aliveByte, aliveByte])
@@ -36,6 +36,6 @@ for(i = 0, automataLength / 2 - 1)
 		end
 	end
 	newAut = newAut + dead
+	print(newAut)
 	initAut = newAut
-	print(initAut)
 end
