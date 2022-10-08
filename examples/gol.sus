@@ -1,5 +1,5 @@
 const screenWidth = 100
-const screenHeight = 15
+const screenHeight = 25
 
 const aliveString = "#"
 const deadString = " "
@@ -35,7 +35,7 @@ for(iter = 0, 1000)
 for(i = 1, screenHeight)
 	print(lifeArray[i])
 end
-print("\u001b[15A")
+print("\u001b[25A")
 let newLifeArray = ["0"]
 for(y = 1, screenHeight + 1)
 	let newLine = deadString
