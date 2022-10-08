@@ -65,7 +65,7 @@ export default function ifKey(
 				assignment.push(`${lineTokens[i].value}`);
 				break;
 			case "array_open":
-				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+				if (lineTokens[i - 1] && (lineTokens[i - 1].type == "word" || lineTokens[i - 1].type == "array_close")) {
 					assignment.push(`[${lineTokens[i + 1].value}]`);
 					i += 2;
 				} else assignment.push(`[]any{`);

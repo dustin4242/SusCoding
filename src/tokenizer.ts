@@ -1,4 +1,4 @@
-import { Token } from "./tokenClass";
+import {Token} from "./tokenClass";
 
 export default function tokenizer(
 	fileString: string,
@@ -68,7 +68,7 @@ export default function tokenizer(
 				column++;
 				tokens.push(new Token("array_close", char));
 				continue;
-			case `"`:
+			case "\"":
 				//Make a string to put the token value into
 				let tokenValue = "";
 				pos++;

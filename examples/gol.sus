@@ -1,0 +1,97 @@
+const screenWidth = 100
+const screenHeight = 15
+
+const aliveString = "#"
+const deadString = " "
+
+let aliveByte = aliveString[0]
+let deadByte = deadString[0]
+
+let lifeArray = ["0"]
+let placeholder = deadString
+for(i = 0, screenWidth)
+	placeholder = placeholder + deadString
+end
+for(i = 0, screenHeight)
+	push(lifeArray, placeholder)
+end
+
+lifeArray[1] = deadString + deadString + aliveString + deadString
+lifeArray[2] = deadString + deadString + deadString + aliveString
+lifeArray[3] = deadString + aliveString + aliveString + aliveString
+for(i = 1, 4)
+	for(j = 0, screenWidth - 3)
+		lifeArray[i] = lifeArray[i] + deadString
+	end
+end
+
+// 0 1 0 0 0
+// 0 0 1 0 0
+// 1 1 1 0 0
+// 0 0 0 0 0
+// 0 0 0 0 0
+
+for(iter = 0, 1000)
+for(i = 1, screenHeight)
+	print(lifeArray[i])
+end
+print("\u001b[15A")
+let newLifeArray = ["0"]
+for(y = 1, screenHeight + 1)
+	let newLine = deadString
+	for(x = 1, screenWidth + 1)
+		let leftNeighbor = x - 1
+		let rightNeighbor = x + 1
+		let topNeighbor = y - 1
+		let bottomNeighbor = y + 1
+	
+		if(x == 1)
+			leftNeighbor = screenWidth
+		elif(x == screenWidth)
+			rightNeighbor = 1
+		end
+		
+		if(y == 1)
+			topNeighbor = screenHeight
+		elif(y == screenHeight)
+			bottomNeighbor = 1
+		end
+
+		let aliveNeighbors = 0
+		function checkAlive(line: string, x: number)
+			if(line[x] == aliveByte)
+				aliveNeighbors = aliveNeighbors + 1
+			end
+			return 1
+		end
+		
+		call(checkAlive, lifeArray[topNeighbor], leftNeighbor)
+		call(checkAlive, lifeArray[topNeighbor], x)
+		call(checkAlive, lifeArray[topNeighbor], rightNeighbor)
+		call(checkAlive, lifeArray[y], leftNeighbor)
+		call(checkAlive, lifeArray[y], rightNeighbor)
+		call(checkAlive, lifeArray[bottomNeighbor], leftNeighbor)
+		call(checkAlive, lifeArray[bottomNeighbor], x)
+		call(checkAlive, lifeArray[bottomNeighbor], rightNeighbor)
+		
+		if(lifeArray[y][x] == aliveByte)
+			if(aliveNeighbors == 2)
+				newLine = newLine + aliveString
+			elif(aliveNeighbors == 3)
+				newLine = newLine + aliveString
+			else
+				newLine = newLine + deadString
+			end
+		elif(lifeArray[y][x] == deadByte)
+			if(aliveNeighbors == 3)
+				newLine = newLine + aliveString
+			else
+				newLine = newLine + deadString
+			end
+		end
+	end
+	push(newLifeArray, newLine)
+end
+lifeArray = newLifeArray
+time.Sleep(100 * time.Millisecond)
+end

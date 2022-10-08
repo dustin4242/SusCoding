@@ -1,4 +1,4 @@
-import { Token } from "../tokenClass";
+import {Token} from "../tokenClass";
 import typeCheck from "../typechecks/typecheck";
 import callKey from "./call";
 
@@ -25,8 +25,7 @@ export default function ifKey(
 						switch (lineTokens[i + 1].type) {
 							case "string": {
 								assignment.push(
-									` ${lineTokens[i].value} "${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} "${lineTokens[i + 1].value
 									}"`
 								);
 								i++;
@@ -34,8 +33,7 @@ export default function ifKey(
 							}
 							case "number": {
 								assignment.push(
-									` ${lineTokens[i].value} ${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} ${lineTokens[i + 1].value
 									}`
 								);
 								i++;
@@ -43,8 +41,7 @@ export default function ifKey(
 							}
 							default: {
 								assignment.push(
-									` ${lineTokens[i].value} &${
-										lineTokens[i + 1].value
+									` ${lineTokens[i].value} &${lineTokens[i + 1].value
 									}`
 								);
 								i++;
@@ -68,7 +65,7 @@ export default function ifKey(
 				assignment.push(`${lineTokens[i].value}`);
 				break;
 			case "array_open":
-				if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+				if (lineTokens[i - 1] && (lineTokens[i - 1].type == "word" || lineTokens[i - 1].type == "array_close")) {
 					assignment[i] = `[${lineTokens[i + 1].value}]`;
 					i += 2;
 				} else assignment[i] = `[]any{`;

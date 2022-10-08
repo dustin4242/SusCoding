@@ -15,7 +15,7 @@ export default function typeCheck(
 ): [Token[], number] {
 	let lineTokens = []; //All the tokens on this line
 	lineTokens.push(tokens[pos]);
-	while (tokens[pos + 1].type != "newline") {
+	while (tokens[pos + 1] && tokens[pos + 1].type != "newline") {
 		pos++;
 		lineTokens.push(tokens[pos]);
 	}

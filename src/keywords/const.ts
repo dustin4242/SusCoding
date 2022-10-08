@@ -63,7 +63,7 @@ function assignmentLoop(
 			assignment[i] = `${lineTokens[i].value}`;
 			break;
 		case "array_open":
-			if (lineTokens[i - 1] && lineTokens[i - 1].type == "word") {
+			if (lineTokens[i - 1] && (lineTokens[i - 1].type == "word" || lineTokens[i - 1].type == "array_close")) {
 				assignment[i] = `[`;
 				while (lineTokens[i + 1].type != "array_close") {
 					i++;
