@@ -1,5 +1,5 @@
 const screenWidth = 100
-const screenHeight = 25
+const screenHeight = 30
 
 const aliveString = "#"
 const deadString = " "
@@ -16,13 +16,14 @@ for(i = 0, screenHeight)
 	push(lifeArray, placeholder)
 end
 
-lifeArray[1] = deadString + deadString + aliveString + deadString
-lifeArray[2] = deadString + deadString + deadString + aliveString
-lifeArray[3] = deadString + aliveString + aliveString + aliveString
+lifeArray[1] = deadString + deadString + aliveString + deadString + deadString + deadString + deadString + aliveString + deadString
+lifeArray[2] = deadString + deadString + deadString + aliveString + deadString + deadString + deadString + deadString + aliveString
+lifeArray[3] = deadString + aliveString + aliveString + aliveString + deadString + deadString + aliveString + aliveString + aliveString
 for(i = 1, 4)
-	for(j = 0, screenWidth - 3)
+	for(j = 0, screenWidth - 12)
 		lifeArray[i] = lifeArray[i] + deadString
 	end
+	lifeArray[i] = lifeArray[i] + aliveString + aliveString + aliveString + deadString
 end
 
 // 0 1 0 0 0
@@ -35,7 +36,7 @@ for(iter = 0, 1000)
 for(i = 1, screenHeight)
 	print(lifeArray[i])
 end
-print("\u001b[25A")
+print("\u001b[30A")
 let newLifeArray = ["0"]
 for(y = 1, screenHeight + 1)
 	let newLine = deadString

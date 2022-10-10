@@ -4,7 +4,7 @@ I have no idea how to write documentation so i'm just gonna wing it:
 
 SusCoding is a programming language for people that are kind of dumb and smart at the same time, Sus stands for sustainable and this is because instead of my stupid code compiling to asm (im too dumb to implement that) it compiles to go.
 
-## Dependencies: `rustc`, `bun`
+## Dependencies: `go`, `bun`
 
 > _(when I bootstrap I wont need bun)_
 
