@@ -26,12 +26,6 @@ for(i = 1, 4)
 	lifeArray[i] = lifeArray[i] + aliveString + aliveString + aliveString + deadString
 end
 
-// 0 1 0 0 0
-// 0 0 1 0 0
-// 1 1 1 0 0
-// 0 0 0 0 0
-// 0 0 0 0 0
-
 for(iter = 0, 1000)
 for(i = 1, screenHeight)
 	print(lifeArray[i])
@@ -94,5 +88,5 @@ for(y = 1, screenHeight + 1)
 	push(newLifeArray, newLine)
 end
 lifeArray = newLifeArray
-time.Sleep(100 * time.Millisecond)
+call(time.Sleep, 100 * time.Millisecond)
 end
