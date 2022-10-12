@@ -1,0 +1,94 @@
+// Make A Empty 255 Byte RAM module
+const memLength = 255
+let memory = [0]
+for(i = 0, memLength)
+	push(memory, 0)
+end
+
+let A_Register = 0
+let B_Register = 0
+
+// Instruction Set Reference:
+// 0: No Op
+// 1: Jump
+// 2: Jump If Zero In A_Register
+// 3: Add B_Register To A_Register
+// 4: Subtract B_Register From A_Register
+// 5: Set A_Register To Memory Pos
+// 6: Set B_Register To Memory Pos
+// 7: Set Memory Pos To Memory Pos
+// 8: Set Memory Pos To A_Register
+// 9: Print A_Register
+// 10: Print B_Register
+
+// Hello World Program
+memory[0] = 6
+memory[1] = memLength - 1
+memory[2] = 5
+memory[3] = memLength - 2
+memory[4] = 2
+memory[5] = 14
+memory[6] = 9
+memory[7] = 5
+memory[8] = 3
+memory[9] = 4
+memory[10] = 8
+memory[11] = 3
+memory[12] = 1
+memory[13] = 2
+memory[14] = 1
+memory[15] = 14
+// ^ Prints chars at end of memory until it hits 0
+memory[memLength - 1] = 1
+memory[memLength - 2] = 72
+memory[memLength - 3] = 101
+memory[memLength - 4] = 108
+memory[memLength - 5] = 108
+memory[memLength - 6] = 111
+memory[memLength - 7] = 32
+memory[memLength - 8] = 87
+memory[memLength - 9] = 111
+memory[memLength - 10] = 114
+memory[memLength - 11] = 108
+memory[memLength - 12] = 100
+memory[memLength - 13] = 0
+// ^ Hello World Ascii Codes + Misc
+
+
+// Iterates through memory forever
+for(i = 0, memLength)
+	if(memory[i] == 0)
+	elif(memory[i] == 1)
+		i = memory[i + 1] - 1
+	elif(memory[i] == 2)
+		if(A_Register == 0)
+			i = memory[i + 1] - 1
+		end
+	elif(memory[i] == 3)
+		A_Register = A_Register + B_Register
+	elif(memory[i] == 4)
+		A_Register = A_Register - B_Register
+	elif(memory[i] == 5)
+		A_Register = memory[memory[i + 1]]
+		i = i + 1
+	elif(memory[i] == 6)
+		B_Register = memory[memory[i + 1]]
+		i = i + 1
+	elif(memory[i] == 7)
+		memory[memory[i + 1]] = memory[i + 2]
+		i = i + 2
+	elif(memory[i] == 8)
+		memory[memory[i + 1]] = A_Register
+		i = i + 1
+	elif(memory[i] == 9)
+		let char = call(string, A_Register)
+		print(char)
+	elif(memory[i] == 10)
+		let char = call(string, B_Register)
+		print(char)
+	end
+	if(i == memLength - 1)
+		i = 0 - 1
+	end
+	call(time.Sleep, 100 * time.Millisecond)
+end
