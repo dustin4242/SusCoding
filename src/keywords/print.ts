@@ -8,7 +8,7 @@ export default function printKey(
 	line: number
 ): [number, string] {
 	let [lineTokens, newPos] = typeCheck(tokens, pos, line);
-	let curInstruction = `fmt.Println(`;
+	let curInstruction = `fmt.Print(`;
 	let assignment = [];
 	pos = newPos;
 	for (let i = 0; i < lineTokens.length; i++) {
