@@ -13,7 +13,7 @@ if (process.argv[2] != undefined) {
 		))
 		: (susFile = readFileSync(`${process.argv[2]}`, `utf8`));
 	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
-	let viableNums = "0123456789.";
+	let viableNums = "0123456789.:";
 	let goFile: string[] = [];
 	let defKeywords = readdirSync(path.resolve(__dirname, "./keywords")).map(
 		(i) => i.replace(".ts", "")
