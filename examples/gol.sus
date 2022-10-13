@@ -28,9 +28,9 @@ end
 
 for(iter = 0, 1000)
 for(i = 1, screenHeight)
-	print(lifeArray[i])
+	print(lifeArray[i], "\n")
 end
-print("\u001b[30A")
+print("\u001b[29A")
 let newLifeArray = ["0"]
 for(y = 1, screenHeight + 1)
 	let newLine = deadString

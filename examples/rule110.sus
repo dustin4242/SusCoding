@@ -12,7 +12,7 @@ end
 
 initArray = initArray + alive
 initArray = initArray + dead
-print(initArray)
+print(initArray, "\n")
 
 // String Jargin
 let deadByte = dead[0]
@@ -36,5 +36,5 @@ for(i = 0, automataLength - 2)
 	end
 	newArray = newArray + dead
 	initArray = newArray
-	print(initArray)
+	print(initArray, "\n")
 end
