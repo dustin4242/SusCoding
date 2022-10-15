@@ -8,6 +8,10 @@ end
 let A_Register = 0
 let B_Register = 0
 
+// Seperate Memory Into 2 Parts
+// 0 - 127: Program Code
+// 128 - 255: Data
+
 // Instruction Set Reference:
 // 0: No Op
 // 1: Jump
@@ -20,40 +24,47 @@ let B_Register = 0
 // 8: Set Memory Pos To A_Register
 // 9: Print A_Register
 // 10: Print B_Register
+// 11: Stop Emulator
 
 // Hello World Program
 memory[0] = 6
-memory[1] = memLength - 1
+memory[1] = 128
 memory[2] = 5
-memory[3] = memLength - 2
+memory[3] = 129
 memory[4] = 2
 memory[5] = 14
 memory[6] = 9
 memory[7] = 5
 memory[8] = 3
-memory[9] = 4
+memory[9] = 3
 memory[10] = 8
 memory[11] = 3
 memory[12] = 1
 memory[13] = 2
-memory[14] = 1
-memory[15] = 14
+memory[14] = 11
 // ^ Prints chars at end of memory until it hits 0
-memory[memLength - 1] = 1
-memory[memLength - 2] = 72
-memory[memLength - 3] = 101
-memory[memLength - 4] = 108
-memory[memLength - 5] = 108
-memory[memLength - 6] = 111
-memory[memLength - 7] = 32
-memory[memLength - 8] = 87
-memory[memLength - 9] = 111
-memory[memLength - 10] = 114
-memory[memLength - 11] = 108
-memory[memLength - 12] = 100
-memory[memLength - 13] = 0
+memory[128] = 1
+memory[129] = 67
+memory[130] = 104
+memory[131] = 101
+memory[132] = 101
+memory[133] = 115
+memory[134] = 101
+memory[135] = 46
+memory[136] = 10
+memory[137] = 66
+memory[138] = 117
+memory[139] = 114
+memory[140] = 103
+memory[141] = 101
+memory[142] = 114
+memory[143] = 46
+memory[144] = 0
 // ^ Hello World Ascii Codes + Misc
 
+let inputStr = " "
+input(inputStr)
+print(inputStr, "\n")
 
 // Iterates through memory forever
 for(i = 0, memLength)
@@ -86,9 +97,11 @@ for(i = 0, memLength)
 	elif(memory[i] == 10)
 		let char = call(string, B_Register)
 		print(char)
+	elif(memory[i] == 11)
+		return
 	end
 	if(i == memLength - 1)
 		i = 0 - 1
 	end
-	call(time.Sleep, 100 * time.Millisecond)
+	call(time.Sleep, 10 * time.Millisecond)
 end

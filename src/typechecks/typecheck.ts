@@ -36,6 +36,7 @@ export default function typeCheck(
 						break;
 					case "function":
 						i = functionTypeCheck(lineTokens, i, line);
+					case "input":
 					case "call":
 						i = callTypeCheck(lineTokens, i, line);
 						break;
