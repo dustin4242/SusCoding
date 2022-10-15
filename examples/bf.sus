@@ -1,5 +1,5 @@
-// Hello World Example Program (Often Has Bugs)
-let program = ">++++++++[-<+++++++++>]<.>>+>-[+]++>++>+++[>[->+++<<+++>]<<]>-----.>->+++..+++.>-.<<+[>[+>+]>>]<--------------.>>.+++.------.--------.>+.>+."
+// Shortest Hello World Example Program (Often Has Bugs)
+let program = "+[>>>->-[>->----<<<]>>]>.---.>+..+++.>>.<.>>---.<<<.+++.------.<-.>>+."
 
 const arrayLength = 100
 let array = [0]
@@ -32,10 +32,14 @@ for(i = 0, call(len, program))
 	if(char == fuckInstructions[0])
 		if(pointer != arrayLength - 1)
 			pointer = pointer + 1
+		else
+			pointer = 0
 		end
 	elif(char == fuckInstructions[1])
 		if(pointer != 0)
 			pointer = pointer - 1
+		else
+		 pointer = arrayLength - 1
 		end
 	elif(char == fuckInstructions[2])
 		if(array[pointer] == 255)
