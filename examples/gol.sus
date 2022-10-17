@@ -16,8 +16,8 @@ for(i = 0, screenHeight)
 	push(lifeArray, placeholder)
 end
 
-lifeArray[1] = deadString + deadString + aliveString + deadString + deadString + deadString + deadString + aliveString + deadString
-lifeArray[2] = deadString + deadString + deadString + aliveString + deadString + deadString + deadString + deadString + aliveString
+lifeArray[1] = aliveString + deadString + aliveString + deadString + aliveString + deadString + deadString + aliveString + deadString
+lifeArray[2] = deadString + deadString + deadString + aliveString + deadString + aliveString + aliveString + aliveString + aliveString
 lifeArray[3] = deadString + aliveString + aliveString + aliveString + deadString + deadString + aliveString + aliveString + aliveString
 for(i = 1, 4)
 	for(j = 0, screenWidth - 12)
