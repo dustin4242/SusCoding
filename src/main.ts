@@ -1,7 +1,7 @@
 #!/bin/bun
 import {readdirSync, readFileSync, writeFileSync} from "fs";
 import tokenizer from "./tokenizer";
-import typecheck from "./typechecker";
+import typeCheck from "./typechecker";
 import path from "path";
 
 if (process.argv[2] != undefined) {
@@ -19,10 +19,7 @@ if (process.argv[2] != undefined) {
 		(i) => i.replace(".ts", "")
 	);
 	const susTokens = tokenizer(susFile, viableChars, viableNums, defKeywords);
-	let acceptable: boolean;
-	let error: string;
-	[acceptable, error] = await typecheck(susTokens);
-	if (acceptable == false) console.error(error)
+	typeCheck(susTokens);
 	// Compile To Go So It Can Go To Binary
 	goFile.push("package main");
 	goFile.push('import ("fmt"; "reflect"; "time"); var _ = []any{reflect.Int, fmt.Print, time.Second}');
