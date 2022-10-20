@@ -13,4 +13,4 @@ function SayAThing(str: string[])
 	end
 	return 0
 end
-call(SayAThing, helloWorld)
+call(SayAThing, helloWorld[0])

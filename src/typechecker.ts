@@ -1,6 +1,7 @@
 import { Token } from "./tokenClass";
 
 export default async function typeCheck(tokens: Token[]) {
+	let functions: { funcName: string; args: number }[] = [];
 	let insideFunctionAssignment = false;
 	let lookingForParenClose = 0;
 	let lookingForArrayClose = 0;
@@ -13,14 +14,32 @@ export default async function typeCheck(tokens: Token[]) {
 		switch (tokens[i].type) {
 			case "keyword":
 				let keywordData = await import(`./keywords/${tokens[i].value}`);
-				if (tokens[i].value == "function")
-					insideFunctionAssignment = true;
+				if (tokens[i].value == "function") {
+					if (tokens[i + 1]) {
+						functions.push({
+							funcName: tokens[i + 1].value,
+							args: 0,
+						});
+						insideFunctionAssignment = true;
+					} else return [false, errorCode(1, "word")];
+				}
 				minArgs = keywordData.default.minArgs
 					? keywordData.default.minArgs
 					: 0;
 				maxArgs = keywordData.default.maxArgs
 					? keywordData.default.maxArgs
 					: 0;
+				if (tokens[i].value == "call") {
+					minArgs =
+						1 +
+						functions.find((f) => f.funcName == tokens[i + 2].value)
+							.args;
+					maxArgs =
+						1 +
+						functions.find((f) => f.funcName == tokens[i + 2].value)
+							.args;
+					console.log(maxArgs);
+				}
 				for (let j = 0; j < keywordData.default.expect.length; j++) {
 					if (
 						tokens[i + 1].type == keywordData.default.expect[j][0]
@@ -121,28 +140,52 @@ export default async function typeCheck(tokens: Token[]) {
 				if (lookingForArrayClose > 0) lookingForArrayClose--;
 				else return [false, errorCode(4)];
 				switch (tokens[i + 1].type) {
+					case "operator":
+						if (tokens[i + 1].value == "=") {
+							i++;
+							if (tokens[i + 1].value == "=") {
+								i++;
+								continue;
+							} else return [false, errorCode(1, "=")];
+						}
+						if (tokens[i + 1].value == "+") continue;
+						else return [false, errorCode(0, "+")];
+					case "paren_close":
 					case "newline":
 					case "comma":
 						continue;
 					default:
-						return [false, errorCode(0, "+")];
+						return [
+							false,
+							errorCode(
+								1,
+								"Comma, Operator, Paren Close, Or Newline"
+							),
+						];
 				}
 			case "paren_close":
 				if (insideFunctionAssignment) insideFunctionAssignment = false;
 				if (lookingForParenClose > 0) lookingForParenClose--;
-				else return [false, errorCode()];
+				else return [false, errorCode(5)];
 				if (tokens[i - 1].type != "paren_open") args++;
 				if (maxArgs != 0)
 					if (args > maxArgs) return [false, errorCode(12)];
 				if (minArgs != 0)
 					if (args < minArgs) return [false, errorCode(11)];
 				args = 0;
-				continue;
+				switch (tokens[i + 1].type) {
+					case "newline":
+					case undefined:
+						continue;
+					default:
+						return [false, errorCode(1, "Newline Or Empty Space")];
+				}
 			case "type-assignment":
 				if (tokens[i + 1].type == "word")
 					switch (tokens[i + 1].value) {
 						case "string":
 						case "number":
+							functions[functions.length - 1].args++;
 							i++;
 							if (tokens[i + 1].type == "array_open") {
 								i++;
@@ -164,7 +207,7 @@ export default async function typeCheck(tokens: Token[]) {
 				line++;
 				continue;
 			default:
-				return [false, errorCode()];
+				return [false, errorCode(1, "Newline Or Empty Space")];
 		}
 		function errorCode(code?: number, expected?: string) {
 			switch (code) {
