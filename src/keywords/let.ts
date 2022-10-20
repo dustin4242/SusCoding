@@ -1,1 +1,6 @@
-export default [["word", "*"], ["operator", "="]]
+export default {
+	expectations: [
+		["word", "*"],
+		["operator", "="],
+	],
+};

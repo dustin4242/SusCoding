@@ -1,1 +1,7 @@
-export default [["paren_open", "("], ["word", "*"], ["operator", "="]]
+export default {
+	expectations: [
+		["paren_open", "("],
+		["word", "*"],
+		["operator", "="],
+	],
+};

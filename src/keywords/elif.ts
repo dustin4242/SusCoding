@@ -1,1 +1,3 @@
-export default [["paren_open", "("]]
+export default {
+	expectations: [["paren_open", "("]],
+};
