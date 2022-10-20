@@ -12,16 +12,11 @@ export default async function typeCheck(tokens: Token[]) {
 				let keywordData = await import(`./keywords/${tokens[i].value}`);
 				if (tokens[i].value == "function")
 					insideFunctionAssignment = true;
-				for (
-					let j = 0;
-					j < keywordData.default.expectations.length;
-					j++
-				) {
+				for (let j = 0; j < keywordData.default.expect.length; j++) {
 					if (
-						tokens[i + 1].type ==
-						keywordData.default.expectations[j][0]
+						tokens[i + 1].type == keywordData.default.expect[j][0]
 					) {
-						switch (keywordData.default.expectations[j][0]) {
+						switch (keywordData.default.expect[j][0]) {
 							case "paren_open":
 								lookingForParenClose++;
 								i++;
@@ -29,7 +24,7 @@ export default async function typeCheck(tokens: Token[]) {
 							case "operator":
 								if (
 									tokens[i + 1].value ==
-									keywordData.default.expectations[j][1]
+									keywordData.default.expect[j][1]
 								)
 									i++;
 								else
@@ -37,9 +32,7 @@ export default async function typeCheck(tokens: Token[]) {
 										false,
 										errorCode(
 											0,
-											keywordData.default.expectations[
-												j
-											][1]
+											keywordData.default.expect[j][1]
 										),
 									];
 								continue;
@@ -50,10 +43,7 @@ export default async function typeCheck(tokens: Token[]) {
 					} else
 						return [
 							false,
-							errorCode(
-								1,
-								keywordData.default.expectations[j][0]
-							),
+							errorCode(1, keywordData.default.expect[j][0]),
 						];
 				}
 				continue;

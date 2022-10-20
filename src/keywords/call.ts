@@ -1,5 +1,5 @@
 export default {
-	expectations: [
+	expect: [
 		["paren_open", "("],
 		["word", "*"],
 		["comma", ","],

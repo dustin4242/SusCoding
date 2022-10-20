@@ -1,3 +1,3 @@
 export default {
-	expectations: [["paren_open", "("]],
+	expect: [["paren_open", "("]],
 };
