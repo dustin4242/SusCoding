@@ -1,9 +1,12 @@
 import { Token } from "./tokenClass";
 
 export default async function typeCheck(tokens: Token[]) {
+	let insideFunctionAssignment = false;
 	let lookingForParenClose = 0;
 	let lookingForArrayClose = 0;
-	let insideFunctionAssignment = false;
+	let minArgs = 0;
+	let maxArgs = 0;
+	let args = 0;
 	let line = 1;
 	for (let i = 0; i < tokens.length; i++) {
 		console.log(i, tokens[i], tokens[i + 1]);
@@ -12,6 +15,12 @@ export default async function typeCheck(tokens: Token[]) {
 				let keywordData = await import(`./keywords/${tokens[i].value}`);
 				if (tokens[i].value == "function")
 					insideFunctionAssignment = true;
+				minArgs = keywordData.default.minArgs
+					? keywordData.default.minArgs
+					: 0;
+				maxArgs = keywordData.default.maxArgs
+					? keywordData.default.maxArgs
+					: 0;
 				for (let j = 0; j < keywordData.default.expect.length; j++) {
 					if (
 						tokens[i + 1].type == keywordData.default.expect[j][0]
@@ -86,8 +95,10 @@ export default async function typeCheck(tokens: Token[]) {
 						return [false, errorCode(3)];
 				}
 			case "comma":
-				if (lookingForArrayClose == 0 && lookingForParenClose == 0)
-					return [false, errorCode(7)];
+				if (lookingForArrayClose == 0) {
+					if (lookingForParenClose == 0) return [false, errorCode(7)];
+					else args++;
+				}
 				switch (tokens[i + 1].type) {
 					case "word":
 					case "string":
@@ -120,6 +131,12 @@ export default async function typeCheck(tokens: Token[]) {
 				if (insideFunctionAssignment) insideFunctionAssignment = false;
 				if (lookingForParenClose > 0) lookingForParenClose--;
 				else return [false, errorCode()];
+				if (tokens[i - 1].type != "paren_open") args++;
+				if (maxArgs != 0)
+					if (args > maxArgs) return [false, errorCode(12)];
+				if (minArgs != 0)
+					if (args < minArgs) return [false, errorCode(11)];
+				args = 0;
 				continue;
 			case "type-assignment":
 				if (tokens[i + 1].type == "word")
@@ -180,15 +197,19 @@ export default async function typeCheck(tokens: Token[]) {
 				case 5:
 					throw `Used A Paren_Close When It Is Not Needed After ${tokens[i].type} "${tokens[i].value}" On Line ${line}`;
 				case 6:
-					throw `Used A Type-Assignment Outside Of A Function Scope`;
+					throw `Used A Type-Assignment Outside Of A Function Scope On Line ${line}`;
 				case 7:
-					throw `Used A Comma Outside Of Array Or Function Scope`;
+					throw `Used A Comma Outside Of Array Or Function Scope On Line ${line}`;
 				case 8:
-					throw `Used A Comma Inside Of A If Scope`;
+					throw `Used A Comma Inside Of A If Scope On Line ${line}`;
 				case 9:
 					throw `There Are Non-Closed Parenthesis On Line ${line}`;
 				case 10:
 					throw `There Are Non-Closed Arrays On Line ${line}`;
+				case 11:
+					throw `Not Enough Arguments On Line ${line}`;
+				case 12:
+					throw `Too Many Arguments On Line ${line}`;
 				default:
 					throw `Type Not Implemented Yet: "${tokens[i].type}" On Line ${line}, Value: "${tokens[i].value}"`;
 			}
