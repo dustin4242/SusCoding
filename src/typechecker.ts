@@ -6,6 +6,7 @@ export default async function typeCheck(tokens: Token[]) {
 	let insideFunctionAssignment = false;
 	let lookingForParenClose = 0;
 	let lookingForArrayClose = 0;
+	let indexing = false;
 	let minArgs = 0;
 	let maxArgs = 0;
 	let args = 0;
@@ -111,10 +112,10 @@ export default async function typeCheck(tokens: Token[]) {
 						return [false, errorCode(1, "Newline Or Comma")];
 				}
 			case "comma":
-				if (lookingForArrayClose == 0) {
+				if (lookingForArrayClose == 0)
 					if (lookingForParenClose == 0) return [false, errorCode(7)];
 					else args++;
-				}
+				else if (indexing == false) return [false, errorCode(12)];
 				switch (tokens[i + 1].type) {
 					case "word":
 					case "string":
@@ -125,7 +126,8 @@ export default async function typeCheck(tokens: Token[]) {
 				}
 			case "array_open":
 				lookingForArrayClose++;
-				if (tokens[i - 1].type == "word")
+				if (tokens[i - 1].type == "word") {
+					indexing = true;
 					switch (tokens[i + 1].type) {
 						case "number":
 						case "word":
@@ -133,7 +135,7 @@ export default async function typeCheck(tokens: Token[]) {
 						default:
 							return [false, errorCode(1, "Number Or Variable")];
 					}
-				else
+				} else {
 					switch (tokens[i + 1].type) {
 						case "word":
 						case "string":
@@ -142,21 +144,14 @@ export default async function typeCheck(tokens: Token[]) {
 						default:
 							return [false, errorCode(1, "Variable, String, Or Number")];
 					}
+				}
 
 			case "array_close":
+				indexing = false;
 				if (lookingForArrayClose > 0) lookingForArrayClose--;
 				else return [false, errorCode(4)];
 				switch (tokens[i + 1].type) {
 					case "operator":
-						if (tokens[i + 1].value == "=") {
-							i++;
-							if (tokens[i + 1].value == "=") {
-								i++;
-								continue;
-							} else return [false, errorCode(1, "=")];
-						}
-						if (tokens[i + 1].value == "+") continue;
-						else return [false, errorCode(0, "+")];
 					case "paren_close":
 					case "newline":
 					case "comma":
