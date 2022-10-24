@@ -3,7 +3,7 @@ then
 	filename=${1/.sus/}
 	bun src/main.ts $1 &&
 	go build -o $filename $filename.go &&
-	rm -rf "$filename.go" &
+	rm -rf "$filename.go" &&
 	chmod +x $filename &&
 	./$filename
 else
