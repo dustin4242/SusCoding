@@ -5,6 +5,7 @@ export default async function typeCheck(tokens: Token[]) {
 		[];
 	let variableTypes: { varName: string; type: string }[] = [];
 	let insideFunctionAssignment = false;
+	let insideForAssignment = false;
 	let lookingForParenClose = 0;
 	let lookingForArrayClose = 0;
 	let indexing = false;
@@ -27,6 +28,9 @@ export default async function typeCheck(tokens: Token[]) {
 							});
 							insideFunctionAssignment = true;
 						} else return [false, errorCode(1, "word")];
+						break;
+					case "for":
+						insideForAssignment = true;
 						break;
 					case "call":
 						let findFunc = (f: any) =>
@@ -126,6 +130,13 @@ export default async function typeCheck(tokens: Token[]) {
 						return [false, errorCode(1, "Newline Or Comma")];
 				}
 			case "word":
+				if (
+					!insideFunctionAssignment &&
+					!insideForAssignment &&
+					getVarType(tokens[i].value, variableTypes, functions) ==
+						undefined
+				)
+					return [false, errorCode(14)];
 				switch (tokens[i + 1].type) {
 					case "type-assignment":
 						if (insideFunctionAssignment) continue;
@@ -213,6 +224,7 @@ export default async function typeCheck(tokens: Token[]) {
 				}
 			case "paren_close":
 				if (insideFunctionAssignment) insideFunctionAssignment = false;
+				if (insideForAssignment) insideFunctionAssignment = false;
 				if (lookingForParenClose > 0) lookingForParenClose--;
 				else return [false, errorCode(5)];
 				if (tokens[i - 1].type != "paren_open") args++;
@@ -325,6 +337,8 @@ export default async function typeCheck(tokens: Token[]) {
 					throw `Type-Assignment Used Outside Of A Function Scope On Line ${line}`;
 				case 7:
 					throw `Comma Used Outside Of Array Or Function Scope On Line ${line}`;
+				case 14:
+					throw `Undeclared Variable Used On Line ${line}: ${tokens[i].value}`;
 				case 13:
 					throw `Cannot Concat 2 Values Of Different Types On Line ${line}`;
 				case 8:
@@ -353,6 +367,7 @@ function getVarType(
 	functions: { funcName: string; args: string[]; argTypes: string[] }[]
 ): string {
 	let func = functions.find((f: any) => f.args.includes(variable));
+	let Var = variables.find((f: any) => f.varName == variable);
 	if (func) return func.argTypes[func.args.indexOf(variable)];
-	else return variables.find((f: any) => f.varName == variable).type;
+	else return Var ? Var.type : undefined;
 }
