@@ -1,7 +1,7 @@
 import { Token } from "./tokenClass";
 
 export default async function typeCheck(tokens: Token[]) {
-	let functions: { funcName: string; args: number; argTypes: string[] }[] =
+	let functions: { funcName: string; args: string[]; argTypes: string[] }[] =
 		[];
 	let variableTypes: { varName: string; type: string }[] = [];
 	let insideFunctionAssignment = false;
@@ -22,7 +22,7 @@ export default async function typeCheck(tokens: Token[]) {
 						if (tokens[i + 1]) {
 							functions.push({
 								funcName: tokens[i + 1].value,
-								args: 0,
+								args: [],
 								argTypes: [],
 							});
 							insideFunctionAssignment = true;
@@ -31,8 +31,8 @@ export default async function typeCheck(tokens: Token[]) {
 					case "call":
 						let findFunc = (f: any) =>
 							f.funcName == tokens[i + 2].value;
-						minArgs = 1 + functions.find(findFunc).args;
-						maxArgs = 1 + functions.find(findFunc).args;
+						minArgs = 1 + functions.find(findFunc).args.length;
+						maxArgs = 1 + functions.find(findFunc).args.length;
 						break;
 					case "let":
 						switch (tokens[i + 3].type) {
@@ -233,7 +233,9 @@ export default async function typeCheck(tokens: Token[]) {
 					switch (tokens[i + 1].value) {
 						case "string":
 						case "number":
-							functions[functions.length - 1].args++;
+							functions[functions.length - 1].args.push(
+								tokens[i - 1].value
+							);
 							let type = `${tokens[i + 1].value}`;
 							i++;
 							if (tokens[i + 1].type == "array_open") {
@@ -262,36 +264,46 @@ export default async function typeCheck(tokens: Token[]) {
 			case "operator":
 				switch (tokens[i].value) {
 					case "+":
-						if (tokens[i - 1].type == "word") {
-							let findVar = (f: any) =>
-								f.varName == tokens[i - 1].value;
-							if (tokens[i + 1].type == "word") {
-								let findVar2 = (f: any) =>
-									f.varName == tokens[i + 1].value;
-								if (
-									variableTypes.find(findVar).type ==
-									variableTypes.find(findVar2).type
-								)
-									continue;
-								else return [false, errorCode(13)];
-							} else if (
-								variableTypes.find(findVar).type ==
-								tokens[i + 1].type
-							)
-								continue;
-						} else if (tokens[i + 1].type == "word") {
-							if (
-								tokens[i - 1].type ==
-								variableTypes.find(
-									(f) => f.varName == tokens[i - 1].value
-								).type
-							)
-								continue;
-							else return [false, errorCode(13)];
-						} else {
-							if (tokens[i - 1].type == tokens[i + 1].type)
-								continue;
-							else return [false, errorCode(13)];
+						switch (tokens[i - 1].type) {
+							case "word":
+								let varType = getVarType(
+									tokens[i - 1].value,
+									variableTypes,
+									functions
+								);
+								switch (tokens[i + 1].type) {
+									case "word":
+										let var2Type = getVarType(
+											tokens[i + 1].value,
+											variableTypes,
+											functions
+										);
+										if (varType == var2Type) continue;
+										else return [false, errorCode(13)];
+									default:
+										if (varType == tokens[i + 1].type)
+											continue;
+										else return [false, errorCode(13)];
+								}
+							default:
+								switch (tokens[i + 1].type) {
+									case "word":
+										let varType = getVarType(
+											tokens[i + 1].value,
+											variableTypes,
+											functions
+										);
+										if (tokens[i - 1].type == varType)
+											continue;
+										else return [false, errorCode(13)];
+									default:
+										if (
+											tokens[i - 1].type ==
+											tokens[i + 1].type
+										)
+											continue;
+										else return [false, errorCode(13)];
+								}
 						}
 					default:
 						return [false, errorCode()];
@@ -330,6 +342,17 @@ export default async function typeCheck(tokens: Token[]) {
 			}
 		}
 	}
-	console.log(functions, variableTypes);
+	console.log("funcTypes:", functions);
+	console.log("varTypes:", variableTypes);
 	return [true, ""];
+}
+
+function getVarType(
+	variable: string,
+	variables: { varName: string; type: string }[],
+	functions: { funcName: string; args: string[]; argTypes: string[] }[]
+): string {
+	let func = functions.find((f: any) => f.args.includes(variable));
+	if (func) return func.argTypes[func.args.indexOf(variable)];
+	else return variables.find((f: any) => f.varName == variable).type;
 }

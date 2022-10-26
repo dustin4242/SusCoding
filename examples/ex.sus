@@ -4,7 +4,7 @@ input(userinput)
 function SayAThing(str: string[])
 	for(i = 0, 5)
 		if(i == 3)
-			print(str[0], str[1], userinput, "\n")
+			print(str[0], str[0], userinput, "\n")
 		elif(i == 4)
 			return 0
 		else
