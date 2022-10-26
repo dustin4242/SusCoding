@@ -27,48 +27,83 @@ export default async function typeCheck(tokens: Token[]) {
 						} else return [false, errorCode(1, "word")];
 						break;
 					case "call":
-						let findFunc = (f: any) => f.funcName == tokens[i + 2].value;
+						let findFunc = (f: any) =>
+							f.funcName == tokens[i + 2].value;
 						minArgs = 1 + functions.find(findFunc).args;
 						maxArgs = 1 + functions.find(findFunc).args;
 						break;
 					case "let":
-						if (tokens[i + 3].type != "word")
-							variables.push({
-								varName: tokens[i + 1].value,
-								type: tokens[i + 3].type,
-							});
-						else {
-							let findVar = (f: any) => f.varName == tokens[i + 3].value;
-							variables.push({
-								varName: tokens[i + 1].value,
-								type: variables.find(findVar).type,
-							});
+						switch (tokens[i + 3].type) {
+							case "word": {
+								let findVar = (f: any) =>
+									f.varName == tokens[i + 3].value;
+								let Var = variables.find(findVar);
+								if (Var.type.includes("[]"))
+									variables.push({
+										varName: tokens[i + 1].value,
+										type: Var.type.substring(
+											0,
+											Var.type.length - 2
+										),
+									});
+								else
+									variables.push({
+										varName: tokens[i + 1].value,
+										type: Var.type,
+									});
+							}
+							case "array_open":
+								variables.push({
+									varName: tokens[i + 1].value,
+									type: `${tokens[i + 4].type}[]`,
+								});
+							default:
+								variables.push({
+									varName: tokens[i + 1].value,
+									type: `${tokens[i + 3].type}`,
+								});
 						}
 						break;
 				}
-				minArgs = keywordData.default.minArgs ? keywordData.default.minArgs : 0;
-				maxArgs = keywordData.default.maxArgs ? keywordData.default.maxArgs : 0;
+				minArgs = keywordData.default.minArgs
+					? keywordData.default.minArgs
+					: 0;
+				maxArgs = keywordData.default.maxArgs
+					? keywordData.default.maxArgs
+					: 0;
 				for (let j = 0; j < keywordData.default.expect.length; j++) {
-					if (tokens[i + 1].type == keywordData.default.expect[j][0]) {
+					if (
+						tokens[i + 1].type == keywordData.default.expect[j][0]
+					) {
 						switch (keywordData.default.expect[j][0]) {
 							case "paren_open":
 								lookingForParenClose++;
 								i++;
 								continue;
 							case "operator":
-								if (tokens[i + 1].value == keywordData.default.expect[j][1])
+								if (
+									tokens[i + 1].value ==
+									keywordData.default.expect[j][1]
+								)
 									i++;
 								else
 									return [
 										false,
-										errorCode(0, keywordData.default.expect[j][1]),
+										errorCode(
+											0,
+											keywordData.default.expect[j][1]
+										),
 									];
 								continue;
 							default:
 								i++;
 								continue;
 						}
-					} else return [false, errorCode(1, keywordData.default.expect[j][0])];
+					} else
+						return [
+							false,
+							errorCode(1, keywordData.default.expect[j][0]),
+						];
 				}
 				continue;
 			case "number":
@@ -122,7 +157,10 @@ export default async function typeCheck(tokens: Token[]) {
 					case "number":
 						continue;
 					default:
-						return [false, errorCode(1, "Variable, String, Or Number")];
+						return [
+							false,
+							errorCode(1, "Variable, String, Or Number"),
+						];
 				}
 			case "array_open":
 				lookingForArrayClose++;
@@ -142,7 +180,10 @@ export default async function typeCheck(tokens: Token[]) {
 						case "number":
 							continue;
 						default:
-							return [false, errorCode(1, "Variable, String, Or Number")];
+							return [
+								false,
+								errorCode(1, "Variable, String, Or Number"),
+							];
 					}
 				}
 
@@ -159,7 +200,10 @@ export default async function typeCheck(tokens: Token[]) {
 					default:
 						return [
 							false,
-							errorCode(1, "Comma, Operator, Paren Close, Or Newline"),
+							errorCode(
+								1,
+								"Comma, Operator, Paren Close, Or Newline"
+							),
 						];
 				}
 			case "paren_close":
@@ -167,8 +211,10 @@ export default async function typeCheck(tokens: Token[]) {
 				if (lookingForParenClose > 0) lookingForParenClose--;
 				else return [false, errorCode(5)];
 				if (tokens[i - 1].type != "paren_open") args++;
-				if (maxArgs != 0) if (args > maxArgs) return [false, errorCode(12)];
-				if (minArgs != 0) if (args < minArgs) return [false, errorCode(11)];
+				if (maxArgs != 0)
+					if (args > maxArgs) return [false, errorCode(12)];
+				if (minArgs != 0)
+					if (args < minArgs) return [false, errorCode(11)];
 				args = 0;
 				switch (tokens[i + 1].type) {
 					case "newline":
@@ -189,7 +235,8 @@ export default async function typeCheck(tokens: Token[]) {
 								if (tokens[i + 1].type == "array_close") {
 									i++;
 									continue;
-								} else return [false, errorCode(1, "array_close")];
+								} else
+									return [false, errorCode(1, "array_close")];
 							}
 							continue;
 						default:
@@ -198,32 +245,42 @@ export default async function typeCheck(tokens: Token[]) {
 				else return [false, errorCode(1, "type-assignment")];
 			case "newline":
 				if (lookingForParenClose > 0) return [false, errorCode(9)];
-				else if (lookingForArrayClose > 0) return [false, errorCode(10)];
+				else if (lookingForArrayClose > 0)
+					return [false, errorCode(10)];
 				line++;
 				continue;
 			case "operator":
 				switch (tokens[i].value) {
 					case "+":
 						if (tokens[i - 1].type == "word") {
-							let findVar = (f: any) => f.varName == tokens[i - 1].value;
+							let findVar = (f: any) =>
+								f.varName == tokens[i - 1].value;
 							if (tokens[i + 1].type == "word") {
-								let findVar2 = (f: any) => f.varName == tokens[i + 1].value;
+								let findVar2 = (f: any) =>
+									f.varName == tokens[i + 1].value;
 								if (
-									variables.find(findVar).type == variables.find(findVar2).type
+									variables.find(findVar).type ==
+									variables.find(findVar2).type
 								)
 									continue;
 								else return [false, errorCode(13)];
-							} else if (variables.find(findVar).type == tokens[i + 1].type)
+							} else if (
+								variables.find(findVar).type ==
+								tokens[i + 1].type
+							)
 								continue;
 						} else if (tokens[i + 1].type == "word") {
 							if (
 								tokens[i - 1].type ==
-								variables.find((f) => f.varName == tokens[i - 1].value).type
+								variables.find(
+									(f) => f.varName == tokens[i - 1].value
+								).type
 							)
 								continue;
 							else return [false, errorCode(13)];
 						} else {
-							if (tokens[i - 1].type == tokens[i + 1].type) continue;
+							if (tokens[i - 1].type == tokens[i + 1].type)
+								continue;
 							else return [false, errorCode(13)];
 						}
 					default:

@@ -1,5 +1,5 @@
 let helloWorld = ["hello, " + "world"]
-let userinput = ""
+let userinput = helloWorld[0]
 input(userinput)
 function SayAThing(str: string[])
 	for(i = 0, 5)
