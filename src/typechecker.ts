@@ -1,8 +1,9 @@
 import { Token } from "./tokenClass";
 
 export default async function typeCheck(tokens: Token[]) {
-	let variables: { varName: string; type: string }[] = [];
-	let functions: { funcName: string; args: number }[] = [];
+	let functions: { funcName: string; args: number; argTypes: string[] }[] =
+		[];
+	let variableTypes: { varName: string; type: string }[] = [];
 	let insideFunctionAssignment = false;
 	let lookingForParenClose = 0;
 	let lookingForArrayClose = 0;
@@ -22,6 +23,7 @@ export default async function typeCheck(tokens: Token[]) {
 							functions.push({
 								funcName: tokens[i + 1].value,
 								args: 0,
+								argTypes: [],
 							});
 							insideFunctionAssignment = true;
 						} else return [false, errorCode(1, "word")];
@@ -37,9 +39,9 @@ export default async function typeCheck(tokens: Token[]) {
 							case "word": {
 								let findVar = (f: any) =>
 									f.varName == tokens[i + 3].value;
-								let Var = variables.find(findVar);
+								let Var = variableTypes.find(findVar);
 								if (Var.type.includes("[]"))
-									variables.push({
+									variableTypes.push({
 										varName: tokens[i + 1].value,
 										type: Var.type.substring(
 											0,
@@ -47,21 +49,24 @@ export default async function typeCheck(tokens: Token[]) {
 										),
 									});
 								else
-									variables.push({
+									variableTypes.push({
 										varName: tokens[i + 1].value,
 										type: Var.type,
 									});
+								break;
 							}
 							case "array_open":
-								variables.push({
+								variableTypes.push({
 									varName: tokens[i + 1].value,
 									type: `${tokens[i + 4].type}[]`,
 								});
+								break;
 							default:
-								variables.push({
+								variableTypes.push({
 									varName: tokens[i + 1].value,
 									type: `${tokens[i + 3].type}`,
 								});
+								break;
 						}
 						break;
 				}
@@ -229,15 +234,20 @@ export default async function typeCheck(tokens: Token[]) {
 						case "string":
 						case "number":
 							functions[functions.length - 1].args++;
+							let type = `${tokens[i + 1].value}`;
 							i++;
 							if (tokens[i + 1].type == "array_open") {
 								i++;
 								if (tokens[i + 1].type == "array_close") {
 									i++;
+									functions[
+										functions.length - 1
+									].argTypes.push(type + "[]");
 									continue;
 								} else
 									return [false, errorCode(1, "array_close")];
 							}
+							functions[functions.length - 1].argTypes.push(type);
 							continue;
 						default:
 							return [false, errorCode()];
@@ -259,20 +269,20 @@ export default async function typeCheck(tokens: Token[]) {
 								let findVar2 = (f: any) =>
 									f.varName == tokens[i + 1].value;
 								if (
-									variables.find(findVar).type ==
-									variables.find(findVar2).type
+									variableTypes.find(findVar).type ==
+									variableTypes.find(findVar2).type
 								)
 									continue;
 								else return [false, errorCode(13)];
 							} else if (
-								variables.find(findVar).type ==
+								variableTypes.find(findVar).type ==
 								tokens[i + 1].type
 							)
 								continue;
 						} else if (tokens[i + 1].type == "word") {
 							if (
 								tokens[i - 1].type ==
-								variables.find(
+								variableTypes.find(
 									(f) => f.varName == tokens[i - 1].value
 								).type
 							)
@@ -320,5 +330,6 @@ export default async function typeCheck(tokens: Token[]) {
 			}
 		}
 	}
+	console.log(functions, variableTypes);
 	return [true, ""];
 }
