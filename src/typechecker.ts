@@ -1,6 +1,8 @@
 import { Token } from "./tokenClass";
 
-export default async function typeCheck(tokens: Token[]) {
+export default async function typeCheck(
+	tokens: Token[]
+): Promise<[boolean, string]> {
 	let functions: { funcName: string; args: string[]; argTypes: string[] }[] =
 		[];
 	let variableTypes: { varName: string; type: string }[] = [];
@@ -33,24 +35,19 @@ export default async function typeCheck(tokens: Token[]) {
 						insideForAssignment = true;
 						break;
 					case "call":
-						let findFunc = (f: any) =>
-							f.funcName == tokens[i + 2].value;
+						let findFunc = (f: any) => f.funcName == tokens[i + 2].value;
 						minArgs = 1 + functions.find(findFunc).args.length;
 						maxArgs = 1 + functions.find(findFunc).args.length;
 						break;
 					case "let":
 						switch (tokens[i + 3].type) {
 							case "word": {
-								let findVar = (f: any) =>
-									f.varName == tokens[i + 3].value;
+								let findVar = (f: any) => f.varName == tokens[i + 3].value;
 								let Var = variableTypes.find(findVar);
 								if (Var.type.includes("[]"))
 									variableTypes.push({
 										varName: tokens[i + 1].value,
-										type: Var.type.substring(
-											0,
-											Var.type.length - 2
-										),
+										type: Var.type.substring(0, Var.type.length - 2),
 									});
 								else
 									variableTypes.push({
@@ -74,45 +71,29 @@ export default async function typeCheck(tokens: Token[]) {
 						}
 						break;
 				}
-				minArgs = keywordData.default.minArgs
-					? keywordData.default.minArgs
-					: 0;
-				maxArgs = keywordData.default.maxArgs
-					? keywordData.default.maxArgs
-					: 0;
+				minArgs = keywordData.default.minArgs ? keywordData.default.minArgs : 0;
+				maxArgs = keywordData.default.maxArgs ? keywordData.default.maxArgs : 0;
 				for (let j = 0; j < keywordData.default.expect.length; j++) {
-					if (
-						tokens[i + 1].type == keywordData.default.expect[j][0]
-					) {
+					if (tokens[i + 1].type == keywordData.default.expect[j][0]) {
 						switch (keywordData.default.expect[j][0]) {
 							case "paren_open":
 								lookingForParenClose++;
 								i++;
 								continue;
 							case "operator":
-								if (
-									tokens[i + 1].value ==
-									keywordData.default.expect[j][1]
-								)
+								if (tokens[i + 1].value == keywordData.default.expect[j][1])
 									i++;
 								else
 									return [
 										false,
-										errorCode(
-											0,
-											keywordData.default.expect[j][1]
-										),
+										errorCode(0, keywordData.default.expect[j][1]),
 									];
 								continue;
 							default:
 								i++;
 								continue;
 						}
-					} else
-						return [
-							false,
-							errorCode(1, keywordData.default.expect[j][0]),
-						];
+					} else return [false, errorCode(1, keywordData.default.expect[j][0])];
 				}
 				continue;
 			case "number":
@@ -133,8 +114,7 @@ export default async function typeCheck(tokens: Token[]) {
 				if (
 					!insideFunctionAssignment &&
 					!insideForAssignment &&
-					getVarType(tokens[i].value, variableTypes, functions) ==
-						undefined
+					getVarType(tokens[i].value, variableTypes, functions) == undefined
 				)
 					return [false, errorCode(14)];
 				switch (tokens[i + 1].type) {
@@ -163,6 +143,7 @@ export default async function typeCheck(tokens: Token[]) {
 						return [false, errorCode(1, "Newline Or Comma")];
 				}
 			case "comma":
+				if (insideForAssignment) insideForAssignment = false;
 				if (lookingForArrayClose == 0)
 					if (lookingForParenClose == 0) return [false, errorCode(7)];
 					else args++;
@@ -173,10 +154,7 @@ export default async function typeCheck(tokens: Token[]) {
 					case "number":
 						continue;
 					default:
-						return [
-							false,
-							errorCode(1, "Variable, String, Or Number"),
-						];
+						return [false, errorCode(1, "Variable, String, Or Number")];
 				}
 			case "array_open":
 				lookingForArrayClose++;
@@ -196,10 +174,7 @@ export default async function typeCheck(tokens: Token[]) {
 						case "number":
 							continue;
 						default:
-							return [
-								false,
-								errorCode(1, "Variable, String, Or Number"),
-							];
+							return [false, errorCode(1, "Variable, String, Or Number")];
 					}
 				}
 
@@ -216,10 +191,7 @@ export default async function typeCheck(tokens: Token[]) {
 					default:
 						return [
 							false,
-							errorCode(
-								1,
-								"Comma, Operator, Paren Close, Or Newline"
-							),
+							errorCode(1, "Comma, Operator, Paren Close, Or Newline"),
 						];
 				}
 			case "paren_close":
@@ -228,10 +200,8 @@ export default async function typeCheck(tokens: Token[]) {
 				if (lookingForParenClose > 0) lookingForParenClose--;
 				else return [false, errorCode(5)];
 				if (tokens[i - 1].type != "paren_open") args++;
-				if (maxArgs != 0)
-					if (args > maxArgs) return [false, errorCode(12)];
-				if (minArgs != 0)
-					if (args < minArgs) return [false, errorCode(11)];
+				if (maxArgs != 0) if (args > maxArgs) return [false, errorCode(12)];
+				if (minArgs != 0) if (args < minArgs) return [false, errorCode(11)];
 				args = 0;
 				switch (tokens[i + 1].type) {
 					case "newline":
@@ -245,21 +215,16 @@ export default async function typeCheck(tokens: Token[]) {
 					switch (tokens[i + 1].value) {
 						case "string":
 						case "number":
-							functions[functions.length - 1].args.push(
-								tokens[i - 1].value
-							);
+							functions[functions.length - 1].args.push(tokens[i - 1].value);
 							let type = `${tokens[i + 1].value}`;
 							i++;
 							if (tokens[i + 1].type == "array_open") {
 								i++;
 								if (tokens[i + 1].type == "array_close") {
 									i++;
-									functions[
-										functions.length - 1
-									].argTypes.push(type + "[]");
+									functions[functions.length - 1].argTypes.push(type + "[]");
 									continue;
-								} else
-									return [false, errorCode(1, "array_close")];
+								} else return [false, errorCode(1, "array_close")];
 							}
 							functions[functions.length - 1].argTypes.push(type);
 							continue;
@@ -269,8 +234,7 @@ export default async function typeCheck(tokens: Token[]) {
 				else return [false, errorCode(1, "type-assignment")];
 			case "newline":
 				if (lookingForParenClose > 0) return [false, errorCode(9)];
-				else if (lookingForArrayClose > 0)
-					return [false, errorCode(10)];
+				else if (lookingForArrayClose > 0) return [false, errorCode(10)];
 				line++;
 				continue;
 			case "operator":
@@ -293,8 +257,7 @@ export default async function typeCheck(tokens: Token[]) {
 										if (varType == var2Type) continue;
 										else return [false, errorCode(13)];
 									default:
-										if (varType == tokens[i + 1].type)
-											continue;
+										if (varType == tokens[i + 1].type) continue;
 										else return [false, errorCode(13)];
 								}
 							default:
@@ -305,15 +268,10 @@ export default async function typeCheck(tokens: Token[]) {
 											variableTypes,
 											functions
 										);
-										if (tokens[i - 1].type == varType)
-											continue;
+										if (tokens[i - 1].type == varType) continue;
 										else return [false, errorCode(13)];
 									default:
-										if (
-											tokens[i - 1].type ==
-											tokens[i + 1].type
-										)
-											continue;
+										if (tokens[i - 1].type == tokens[i + 1].type) continue;
 										else return [false, errorCode(13)];
 								}
 						}
@@ -323,7 +281,7 @@ export default async function typeCheck(tokens: Token[]) {
 			default:
 				return [false, errorCode()];
 		}
-		function errorCode(code?: number, expected?: string) {
+		function errorCode(code?: number, expected?: string): string {
 			switch (code) {
 				case 0:
 					throw `Wrong Operator On Line: ${line}, Expected "${expected}" After ${tokens[i].type}: "${tokens[i].value}"`;
