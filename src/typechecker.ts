@@ -1,11 +1,11 @@
-import { Token } from "./tokenClass";
+import {Token} from "./tokenClass";
 
 export default async function typeCheck(
 	tokens: Token[]
-): Promise<[boolean, string]> {
-	let functions: { funcName: string; args: string[]; argTypes: string[] }[] =
+) {
+	let functions: {funcName: string; args: string[]; argTypes: string[]}[] =
 		[];
-	let variableTypes: { varName: string; type: string }[] = [];
+	let variableTypes: {varName: string; type: string}[] = [];
 	let insideFunctionAssignment = false;
 	let insideForAssignment = false;
 	let lookingForParenClose = 0;
@@ -29,7 +29,7 @@ export default async function typeCheck(
 								argTypes: [],
 							});
 							insideFunctionAssignment = true;
-						} else return [false, errorCode(1, "word")];
+						} else errorCode(1, "word");
 						break;
 					case "for":
 						insideForAssignment = true;
@@ -84,16 +84,13 @@ export default async function typeCheck(
 								if (tokens[i + 1].value == keywordData.default.expect[j][1])
 									i++;
 								else
-									return [
-										false,
-										errorCode(0, keywordData.default.expect[j][1]),
-									];
+									errorCode(0, keywordData.default.expect[j][1])
 								continue;
 							default:
 								i++;
 								continue;
 						}
-					} else return [false, errorCode(1, keywordData.default.expect[j][0])];
+					} else errorCode(1, keywordData.default.expect[j][0]);
 				}
 				continue;
 			case "number":
@@ -101,14 +98,14 @@ export default async function typeCheck(
 				switch (tokens[i + 1].type) {
 					case "operator":
 						if (tokens[i + 1].value == "+") continue;
-						else return [false, errorCode(0, "+")];
+						else errorCode(0, "+");
 					case "array_close":
 					case "paren_close":
 					case "comma":
 					case "newline":
 						continue;
 					default:
-						return [false, errorCode(1, "Newline Or Comma")];
+						errorCode(1, "Newline Or Comma");
 				}
 			case "word":
 				if (
@@ -116,11 +113,11 @@ export default async function typeCheck(
 					!insideForAssignment &&
 					getVarType(tokens[i].value, variableTypes, functions) == undefined
 				)
-					return [false, errorCode(14)];
+					errorCode(14);
 				switch (tokens[i + 1].type) {
 					case "type-assignment":
 						if (insideFunctionAssignment) continue;
-						else return [false, errorCode(6)];
+						else errorCode(6);
 					case "operator":
 						if (tokens[i + 1].value == "=") {
 							i++;
@@ -128,11 +125,11 @@ export default async function typeCheck(
 								if (tokens[i + 1].value == "=") {
 									i++;
 									continue;
-								} else return [false, errorCode(0, "=")];
-							else return [false, errorCode(1, "Operator")];
+								} else errorCode(0, "=");
+							else errorCode(1, "Operator");
 						}
 						if (tokens[i + 1].value == "+") continue;
-						else return [false, errorCode(0, "+")];
+						else errorCode(0, "+");
 					case "array_open":
 					case "array_close":
 					case "paren_close":
@@ -140,21 +137,21 @@ export default async function typeCheck(
 					case "newline":
 						continue;
 					default:
-						return [false, errorCode(1, "Newline Or Comma")];
+						errorCode(1, "Newline Or Comma");
 				}
 			case "comma":
 				if (insideForAssignment) insideForAssignment = false;
 				if (lookingForArrayClose == 0)
-					if (lookingForParenClose == 0) return [false, errorCode(7)];
+					if (lookingForParenClose == 0) errorCode(7);
 					else args++;
-				else if (indexing == false) return [false, errorCode(12)];
+				else if (indexing == false) errorCode(12);
 				switch (tokens[i + 1].type) {
 					case "word":
 					case "string":
 					case "number":
 						continue;
 					default:
-						return [false, errorCode(1, "Variable, String, Or Number")];
+						errorCode(1, "Variable, String, Or Number");
 				}
 			case "array_open":
 				lookingForArrayClose++;
@@ -165,7 +162,7 @@ export default async function typeCheck(
 						case "word":
 							continue;
 						default:
-							return [false, errorCode(1, "Number Or Variable")];
+							errorCode(1, "Number Or Variable");
 					}
 				} else {
 					switch (tokens[i + 1].type) {
@@ -174,14 +171,14 @@ export default async function typeCheck(
 						case "number":
 							continue;
 						default:
-							return [false, errorCode(1, "Variable, String, Or Number")];
+							errorCode(1, "Variable, String, Or Number");
 					}
 				}
 
 			case "array_close":
 				indexing = false;
 				if (lookingForArrayClose > 0) lookingForArrayClose--;
-				else return [false, errorCode(4)];
+				else errorCode(4);
 				switch (tokens[i + 1].type) {
 					case "operator":
 					case "paren_close":
@@ -189,26 +186,23 @@ export default async function typeCheck(
 					case "comma":
 						continue;
 					default:
-						return [
-							false,
-							errorCode(1, "Comma, Operator, Paren Close, Or Newline"),
-						];
+						errorCode(1, "Comma, Operator, Paren Close, Or Newline")
 				}
 			case "paren_close":
 				if (insideFunctionAssignment) insideFunctionAssignment = false;
 				if (insideForAssignment) insideFunctionAssignment = false;
 				if (lookingForParenClose > 0) lookingForParenClose--;
-				else return [false, errorCode(5)];
+				else errorCode(5);
 				if (tokens[i - 1].type != "paren_open") args++;
-				if (maxArgs != 0) if (args > maxArgs) return [false, errorCode(12)];
-				if (minArgs != 0) if (args < minArgs) return [false, errorCode(11)];
+				if (maxArgs != 0) if (args > maxArgs) errorCode(12);
+				if (minArgs != 0) if (args < minArgs) errorCode(11);
 				args = 0;
 				switch (tokens[i + 1].type) {
 					case "newline":
 					case undefined:
 						continue;
 					default:
-						return [false, errorCode(1, "Newline Or Empty Space")];
+						errorCode(1, "Newline Or Empty Space");
 				}
 			case "type-assignment":
 				if (tokens[i + 1].type == "word")
@@ -224,17 +218,17 @@ export default async function typeCheck(
 									i++;
 									functions[functions.length - 1].argTypes.push(type + "[]");
 									continue;
-								} else return [false, errorCode(1, "array_close")];
+								} else errorCode(1, "array_close");
 							}
 							functions[functions.length - 1].argTypes.push(type);
 							continue;
 						default:
-							return [false, errorCode()];
+							errorCode();
 					}
-				else return [false, errorCode(1, "type-assignment")];
+				else errorCode(1, "type-assignment");
 			case "newline":
-				if (lookingForParenClose > 0) return [false, errorCode(9)];
-				else if (lookingForArrayClose > 0) return [false, errorCode(10)];
+				if (lookingForParenClose > 0) errorCode(9);
+				else if (lookingForArrayClose > 0) errorCode(10);
 				line++;
 				continue;
 			case "operator":
@@ -255,10 +249,10 @@ export default async function typeCheck(
 											functions
 										);
 										if (varType == var2Type) continue;
-										else return [false, errorCode(13)];
+										else errorCode(13);
 									default:
 										if (varType == tokens[i + 1].type) continue;
-										else return [false, errorCode(13)];
+										else errorCode(13);
 								}
 							default:
 								switch (tokens[i + 1].type) {
@@ -269,17 +263,17 @@ export default async function typeCheck(
 											functions
 										);
 										if (tokens[i - 1].type == varType) continue;
-										else return [false, errorCode(13)];
+										else errorCode(13);
 									default:
 										if (tokens[i - 1].type == tokens[i + 1].type) continue;
-										else return [false, errorCode(13)];
+										else errorCode(13);
 								}
 						}
 					default:
-						return [false, errorCode()];
+						errorCode();
 				}
 			default:
-				return [false, errorCode()];
+				errorCode();
 		}
 		function errorCode(code?: number, expected?: string): string {
 			switch (code) {
@@ -316,13 +310,12 @@ export default async function typeCheck(
 	}
 	console.log("funcTypes:", functions);
 	console.log("varTypes:", variableTypes);
-	return [true, ""];
 }
 
 function getVarType(
 	variable: string,
-	variables: { varName: string; type: string }[],
-	functions: { funcName: string; args: string[]; argTypes: string[] }[]
+	variables: {varName: string; type: string}[],
+	functions: {funcName: string; args: string[]; argTypes: string[]}[]
 ): string {
 	let func = functions.find((f: any) => f.args.includes(variable));
 	let Var = variables.find((f: any) => f.varName == variable);

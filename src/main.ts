@@ -19,7 +19,7 @@ if (process.argv[2] != undefined) {
 		(i) => i.replace(".ts", "")
 	);
 	const susTokens = tokenizer(susFile, viableChars, viableNums, defKeywords);
-	typeCheck(susTokens);
+	let [noError, errorCode] = await typeCheck(susTokens);
 	// Compile To Go So It Can Go To Binary
 	goFile.push("package main");
 	goFile.push('import ("fmt"; "reflect"; "time"); var _ = []any{reflect.Int, fmt.Print, time.Second}');
