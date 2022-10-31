@@ -11,10 +11,8 @@ export default async function typeCheck(
 	let lookingForParenClose = 0;
 	let lookingForArrayClose = 0;
 	let indexing = false;
-	let minArgs = 0;
-	let maxArgs = 0;
-	let args = 0;
 	let line = 1;
+	let args = {min: 0, max: 0, cur: 0};
 	for (let i = 0; i < tokens.length; i++) {
 		console.log(i, tokens[i], tokens[i + 1]);
 		switch (tokens[i].type) {
@@ -36,8 +34,8 @@ export default async function typeCheck(
 						break;
 					case "call":
 						let findFunc = (f: any) => f.funcName == tokens[i + 2].value;
-						minArgs = 1 + functions.find(findFunc).args.length;
-						maxArgs = 1 + functions.find(findFunc).args.length;
+						args.min = 1 + functions.find(findFunc).args.length;
+						args.max = 1 + functions.find(findFunc).args.length;
 						break;
 					case "let":
 						switch (tokens[i + 3].type) {
@@ -71,8 +69,8 @@ export default async function typeCheck(
 						}
 						break;
 				}
-				minArgs = keywordData.default.minArgs ? keywordData.default.minArgs : 0;
-				maxArgs = keywordData.default.maxArgs ? keywordData.default.maxArgs : 0;
+				args.min = keywordData.default.minArgs ? keywordData.default.minArgs : 0;
+				args.min = keywordData.default.maxArgs ? keywordData.default.maxArgs : 0;
 				for (let j = 0; j < keywordData.default.expect.length; j++) {
 					if (tokens[i + 1].type == keywordData.default.expect[j][0]) {
 						switch (keywordData.default.expect[j][0]) {
@@ -143,7 +141,7 @@ export default async function typeCheck(
 				if (insideForAssignment) insideForAssignment = false;
 				if (lookingForArrayClose == 0)
 					if (lookingForParenClose == 0) errorCode(7);
-					else args++;
+					else args.cur++;
 				else if (indexing == false) errorCode(12);
 				switch (tokens[i + 1].type) {
 					case "word":
@@ -193,10 +191,10 @@ export default async function typeCheck(
 				if (insideForAssignment) insideFunctionAssignment = false;
 				if (lookingForParenClose > 0) lookingForParenClose--;
 				else errorCode(5);
-				if (tokens[i - 1].type != "paren_open") args++;
-				if (maxArgs != 0) if (args > maxArgs) errorCode(12);
-				if (minArgs != 0) if (args < minArgs) errorCode(11);
-				args = 0;
+				if (tokens[i - 1].type != "paren_open") args.cur++;
+				if (args.max != 0) if (args.cur > args.max) errorCode(12);
+				if (args.min != 0) if (args.cur < args.min) errorCode(11);
+				args.cur = 0;
 				switch (tokens[i + 1].type) {
 					case "newline":
 					case undefined:
