@@ -1,42 +1,38 @@
-import {Token} from "./tokenClass";
+import { Token } from "./tokenClass";
+
+interface funcType {
+	funcName: string;
+	args: string[];
+	argTypes: string[];
+	inside: boolean;
+}
+interface varType {
+	varName: string;
+	type: string;
+}
+interface forType {
+	nest: number;
+	varName: string;
+}
 
 export default async function typeCheck(
 	tokens: Token[]
-) {
-	let functions: {funcName: string; args: string[]; argTypes: string[]}[] =
-		[];
-	let variableTypes: {varName: string; type: string}[] = [];
-	let insideFunctionAssignment = false;
-	let insideForAssignment = false;
-	let lookingForParenClose = 0;
-	let lookingForArrayClose = 0;
+): Promise<[funcType[], varType[]]> {
+	let functions: funcType[] = [];
+	let variableTypes: varType[] = [];
+	let forLoopVars: forType[] = [];
+	let assignments = { functionAssignment: false, forAssignment: false };
+	let lookingFor = { Paren_Close: 0, Array_Close: 0 };
 	let indexing = false;
+	let nest: string[] = [];
 	let line = 1;
-	let args = {min: 0, max: 0, cur: 0};
+	let args = { min: 0, max: 0, cur: 0 };
 	for (let i = 0; i < tokens.length; i++) {
 		console.log(i, tokens[i], tokens[i + 1]);
 		switch (tokens[i].type) {
 			case "keyword":
 				let keywordData = await import(`./keywords/${tokens[i].value}`);
 				switch (tokens[i].value) {
-					case "function":
-						if (tokens[i + 1]) {
-							functions.push({
-								funcName: tokens[i + 1].value,
-								args: [],
-								argTypes: [],
-							});
-							insideFunctionAssignment = true;
-						} else errorCode(1, "word");
-						break;
-					case "for":
-						insideForAssignment = true;
-						break;
-					case "call":
-						let findFunc = (f: any) => f.funcName == tokens[i + 2].value;
-						args.min = 1 + functions.find(findFunc).args.length;
-						args.max = 1 + functions.find(findFunc).args.length;
-						break;
 					case "let":
 						switch (tokens[i + 3].type) {
 							case "word": {
@@ -68,21 +64,69 @@ export default async function typeCheck(
 								break;
 						}
 						break;
+					case "function":
+						if (tokens[i + 1]) {
+							functions.push({
+								funcName: tokens[i + 1].value,
+								args: [],
+								argTypes: [],
+								inside: true,
+							});
+							assignments.functionAssignment = true;
+							nest.push("function");
+						} else errorCode(1, "word");
+						break;
+					case "for":
+						nest.push("for");
+						assignments.forAssignment = true;
+						forLoopVars.push({
+							nest: nest.length,
+							varName: tokens[i + 2].value,
+						});
+						break;
+					case "call":
+						let findFunc = (f: any) => f.funcName == tokens[i + 2].value;
+						args.min = 1 + functions.find(findFunc).args.length;
+						args.max = 1 + functions.find(findFunc).args.length;
+						break;
+					case "if":
+						nest.push("if");
+						break;
+					case "end":
+						let nestLength = nest.length;
+						if (nestLength != 0)
+							switch (nest[nestLength - 1]) {
+								case "if":
+									nest.pop();
+									break;
+								case "for":
+									nest.pop();
+									forLoopVars.pop();
+									break;
+								case "function":
+									nest.pop();
+									functions[functions.length - 1].inside = false;
+									break;
+							}
+						break;
 				}
-				args.min = keywordData.default.minArgs ? keywordData.default.minArgs : 0;
-				args.min = keywordData.default.maxArgs ? keywordData.default.maxArgs : 0;
+				args.min = keywordData.default.minArgs
+					? keywordData.default.minArgs
+					: 0;
+				args.min = keywordData.default.maxArgs
+					? keywordData.default.maxArgs
+					: 0;
 				for (let j = 0; j < keywordData.default.expect.length; j++) {
 					if (tokens[i + 1].type == keywordData.default.expect[j][0]) {
 						switch (keywordData.default.expect[j][0]) {
 							case "paren_open":
-								lookingForParenClose++;
+								lookingFor.Paren_Close++;
 								i++;
 								continue;
 							case "operator":
 								if (tokens[i + 1].value == keywordData.default.expect[j][1])
 									i++;
-								else
-									errorCode(0, keywordData.default.expect[j][1])
+								else errorCode(0, keywordData.default.expect[j][1]);
 								continue;
 							default:
 								i++;
@@ -107,14 +151,15 @@ export default async function typeCheck(
 				}
 			case "word":
 				if (
-					!insideFunctionAssignment &&
-					!insideForAssignment &&
-					getVarType(tokens[i].value, variableTypes, functions) == undefined
+					!assignments.functionAssignment &&
+					!assignments.forAssignment &&
+					getVarType(tokens[i].value, variableTypes, functions, forLoopVars) ==
+						undefined
 				)
 					errorCode(14);
 				switch (tokens[i + 1].type) {
 					case "type-assignment":
-						if (insideFunctionAssignment) continue;
+						if (assignments.functionAssignment) continue;
 						else errorCode(6);
 					case "operator":
 						if (tokens[i + 1].value == "=") {
@@ -138,9 +183,9 @@ export default async function typeCheck(
 						errorCode(1, "Newline Or Comma");
 				}
 			case "comma":
-				if (insideForAssignment) insideForAssignment = false;
-				if (lookingForArrayClose == 0)
-					if (lookingForParenClose == 0) errorCode(7);
+				if (assignments.forAssignment) assignments.forAssignment = false;
+				if (lookingFor.Array_Close == 0)
+					if (lookingFor.Paren_Close == 0) errorCode(7);
 					else args.cur++;
 				else if (indexing == false) errorCode(12);
 				switch (tokens[i + 1].type) {
@@ -152,7 +197,7 @@ export default async function typeCheck(
 						errorCode(1, "Variable, String, Or Number");
 				}
 			case "array_open":
-				lookingForArrayClose++;
+				lookingFor.Array_Close++;
 				if (tokens[i - 1].type == "word") {
 					indexing = true;
 					switch (tokens[i + 1].type) {
@@ -175,7 +220,7 @@ export default async function typeCheck(
 
 			case "array_close":
 				indexing = false;
-				if (lookingForArrayClose > 0) lookingForArrayClose--;
+				if (lookingFor.Array_Close > 0) lookingFor.Array_Close--;
 				else errorCode(4);
 				switch (tokens[i + 1].type) {
 					case "operator":
@@ -184,12 +229,13 @@ export default async function typeCheck(
 					case "comma":
 						continue;
 					default:
-						errorCode(1, "Comma, Operator, Paren Close, Or Newline")
+						errorCode(1, "Comma, Operator, Paren Close, Or Newline");
 				}
 			case "paren_close":
-				if (insideFunctionAssignment) insideFunctionAssignment = false;
-				if (insideForAssignment) insideFunctionAssignment = false;
-				if (lookingForParenClose > 0) lookingForParenClose--;
+				if (assignments.functionAssignment)
+					assignments.functionAssignment = false;
+				else if (assignments.forAssignment) assignments.forAssignment = false;
+				if (lookingFor.Paren_Close > 0) lookingFor.Paren_Close--;
 				else errorCode(5);
 				if (tokens[i - 1].type != "paren_open") args.cur++;
 				if (args.max != 0) if (args.cur > args.max) errorCode(12);
@@ -225,8 +271,8 @@ export default async function typeCheck(
 					}
 				else errorCode(1, "type-assignment");
 			case "newline":
-				if (lookingForParenClose > 0) errorCode(9);
-				else if (lookingForArrayClose > 0) errorCode(10);
+				if (lookingFor.Paren_Close > 0) errorCode(9);
+				else if (lookingFor.Array_Close > 0) errorCode(10);
 				line++;
 				continue;
 			case "operator":
@@ -237,14 +283,16 @@ export default async function typeCheck(
 								let varType = getVarType(
 									tokens[i - 1].value,
 									variableTypes,
-									functions
+									functions,
+									forLoopVars
 								);
 								switch (tokens[i + 1].type) {
 									case "word":
 										let var2Type = getVarType(
 											tokens[i + 1].value,
 											variableTypes,
-											functions
+											functions,
+											forLoopVars
 										);
 										if (varType == var2Type) continue;
 										else errorCode(13);
@@ -258,7 +306,8 @@ export default async function typeCheck(
 										let varType = getVarType(
 											tokens[i + 1].value,
 											variableTypes,
-											functions
+											functions,
+											forLoopVars
 										);
 										if (tokens[i - 1].type == varType) continue;
 										else errorCode(13);
@@ -308,15 +357,20 @@ export default async function typeCheck(
 	}
 	console.log("funcTypes:", functions);
 	console.log("varTypes:", variableTypes);
+	return [functions, variableTypes];
 }
 
 function getVarType(
 	variable: string,
-	variables: {varName: string; type: string}[],
-	functions: {funcName: string; args: string[]; argTypes: string[]}[]
+	variables: varType[],
+	functions: funcType[],
+	forLoopVars: forType[]
 ): string {
-	let func = functions.find((f: any) => f.args.includes(variable));
 	let Var = variables.find((f: any) => f.varName == variable);
-	if (func) return func.argTypes[func.args.indexOf(variable)];
-	else return Var ? Var.type : undefined;
+	let func = functions.find((f: any) => f.args.includes(variable) && f.inside);
+	let For = forLoopVars.find((f: any) => f.varName == variable);
+	if (Var) return Var.type;
+	else if (func) return func.argTypes[func.args.indexOf(variable)];
+	else if (For) return "number";
+	else return undefined;
 }
