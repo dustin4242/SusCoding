@@ -187,7 +187,7 @@ export default async function typeCheck(
 				if (lookingFor.Array_Close == 0)
 					if (lookingFor.Paren_Close == 0) errorCode(7);
 					else args.cur++;
-				else if (indexing == false) errorCode(12);
+				else if (indexing == true) errorCode(12);
 				switch (tokens[i + 1].type) {
 					case "word":
 					case "string":
@@ -202,7 +202,17 @@ export default async function typeCheck(
 					indexing = true;
 					switch (tokens[i + 1].type) {
 						case "number":
+							continue;
 						case "word":
+							if (
+								getVarType(
+									tokens[i + 1].value,
+									variableTypes,
+									functions,
+									forLoopVars
+								) != "number"
+							)
+								errorCode(1, "number");
 							continue;
 						default:
 							errorCode(1, "Number Or Variable");
@@ -217,7 +227,6 @@ export default async function typeCheck(
 							errorCode(1, "Variable, String, Or Number");
 					}
 				}
-
 			case "array_close":
 				indexing = false;
 				if (lookingFor.Array_Close > 0) lookingFor.Array_Close--;
