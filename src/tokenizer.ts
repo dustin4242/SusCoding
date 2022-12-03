@@ -1,4 +1,4 @@
-import { Token } from "./tokenClass";
+import Token from "./tokenClass";
 
 export default function tokenizer(
 	fileString: string,
@@ -74,7 +74,7 @@ export default function tokenizer(
 				if (fileString[pos + 1] != '"') {
 					pos++;
 					column++;
-					tokenValue += fileString[pos];
+					tokenValue += `"${fileString[pos]}`;
 					//*Iterate until the entire token is built
 					while (fileString[pos + 1] != '"' && pos < fileString.length) {
 						pos++;
@@ -84,7 +84,7 @@ export default function tokenizer(
 				}
 				pos++;
 				column++;
-				tokens.push(new Token("string", tokenValue));
+				tokens.push(new Token("string", tokenValue + `"`));
 				continue;
 			default:
 				if (viableChars.includes(char)) {
