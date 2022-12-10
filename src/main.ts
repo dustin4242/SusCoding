@@ -1,5 +1,5 @@
 #!/bin/bun
-import { readdirSync, readFileSync, writeFileSync } from "fs";
+import {readdirSync, readFileSync, writeFileSync} from "fs";
 import tokenizer from "./tokenizer";
 import typeCheck from "./typechecker";
 import path from "path";

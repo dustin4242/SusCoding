@@ -13,12 +13,12 @@ export default async function typeCheck(
 	let functions: funcType[] = [];
 	let variableTypes: varType[] = [];
 	let forLoopVars: forType[] = [];
-	let assignments = { functionAssignment: false, forAssignment: false };
-	let lookingFor = { Paren_Close: 0, Array_Close: 0 };
+	let assignments = {functionAssignment: false, forAssignment: false, varAssignment: false};
+	let lookingFor = {Paren_Close: 0, Array_Close: 0};
 	let indexing = false;
 	let nest: string[] = [];
 	let line = 1;
-	let args = { min: 0, max: 0, cur: 0 };
+	let args = {min: 0, max: 0, cur: 0};
 	for (let i = 0; i < tokens.length; i++) {
 		switch (tokens[i].type) {
 			case "keyword":
@@ -145,7 +145,7 @@ export default async function typeCheck(
 					!assignments.functionAssignment &&
 					!assignments.forAssignment &&
 					getVarType(tokens[i].value, variableTypes, functions, forLoopVars) ==
-						undefined
+					undefined
 				)
 					errorCode(14);
 				switch (tokens[i + 1].type) {
@@ -160,10 +160,19 @@ export default async function typeCheck(
 									i++;
 									continue;
 								} else errorCode(0, "=");
+							else if (assignments.varAssignment != true) {
+								assignments.varAssignment = true
+							}
 							else errorCode(1, "Operator");
 						}
-						if (tokens[i + 1].value == "+") continue;
-						else errorCode(0, "+");
+						let varType = getVarType(tokens[i].value, variableTypes, functions, forLoopVars)
+						if (varType == "string") {
+							if (tokens[i + 1].value == "+") continue;
+							else errorCode(0, "+");
+						} else if (varType == "number") {
+							if (["+", "-", "/", "*"].indexOf(tokens[i + 1].value) > -1) continue;
+							else errorCode(0, "+, -, * or /");
+						}
 					case "array_open":
 					case "array_close":
 					case "paren_close":
@@ -228,8 +237,12 @@ export default async function typeCheck(
 					case "newline":
 					case "comma":
 						continue;
+					case "array_close":
+						if (lookingFor.Array_Close > 0)
+							continue;
+						else errorCode(1, "Comma, Operator, Paren Close, Or Newline");
 					default:
-						errorCode(1, "Comma, Operator, Paren Close, Or Newline");
+						errorCode(1, "Comma, Operator, Paren Close, Array Close, Or Newline");
 				}
 			case "paren_close":
 				if (assignments.functionAssignment)
@@ -273,10 +286,57 @@ export default async function typeCheck(
 			case "newline":
 				if (lookingFor.Paren_Close > 0) errorCode(9);
 				else if (lookingFor.Array_Close > 0) errorCode(10);
+				assignments.varAssignment = false;
 				line++;
 				continue;
 			case "operator":
 				switch (tokens[i].value) {
+					case "*":
+					case "/":
+					case "-":
+						switch (tokens[i - 1].type) {
+							case "word":
+								let varType = getVarType(
+									tokens[i - 1].value,
+									variableTypes,
+									functions,
+									forLoopVars
+								);
+								if (varType == "number")
+									switch (tokens[i + 1].type) {
+										case "word":
+											let var2Type = getVarType(
+												tokens[i + 1].value,
+												variableTypes,
+												functions,
+												forLoopVars
+											);
+											if (varType == var2Type) continue;
+											else errorCode(13);
+										case "number":
+											if (varType == tokens[i + 1].type) continue;
+											else errorCode(13);
+									}
+								else errorCode(0, "+ or ==")
+							case "number":
+								switch (tokens[i + 1].type) {
+									case "word":
+										let varType = getVarType(
+											tokens[i + 1].value,
+											variableTypes,
+											functions,
+											forLoopVars
+										);
+										if (tokens[i - 1].type == varType) continue;
+										else errorCode(13);
+									default:
+										if (tokens[i - 1].type == tokens[i + 1].type) continue;
+										else errorCode(13);
+								}
+							default:
+								errorCode(0, "+ or ==")
+						}
+						continue;
 					case "+":
 						switch (tokens[i - 1].type) {
 							case "word":

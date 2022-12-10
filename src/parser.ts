@@ -10,6 +10,11 @@ export default async function parser(
 	for (let i = 0; i < susTokens.length; i++) {
 		switch (susTokens[i].type) {
 			case "word":
+			case "comma":
+			case "number":
+			case "string":
+			case "operator":
+			case "array_close":
 				finalFileArr.push(susTokens[i].value);
 				continue;
 			case "keyword":
@@ -23,6 +28,7 @@ export default async function parser(
 						continue;
 					case "return":
 						while (susTokens[i].value != "\n") {
+							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -34,6 +40,7 @@ export default async function parser(
 						finalFileArr.push("if ");
 						i += 2;
 						while (susTokens[i].value != ")") {
+							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -43,6 +50,7 @@ export default async function parser(
 						finalFileArr.push("else if ");
 						i += 2;
 						while (susTokens[i].value != ")") {
+							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -55,6 +63,7 @@ export default async function parser(
 						finalFileArr.push("fmt.Print(");
 						i += 2;
 						while (susTokens[i].value != ")") {
+							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -65,6 +74,7 @@ export default async function parser(
 						finalFileArr.push(`for ${forVar} := `);
 						i += 4;
 						while (susTokens[i].value != ",") {
+							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -90,22 +100,42 @@ export default async function parser(
 							i++;
 						}
 						finalFileArr.push(" any {");
-						console.log(func);
+						continue;
+					case "call":
+						finalFileArr.push(`${susTokens[i + 2]}(`)
+						i += 3;
+						while (susTokens[i].type != "paren_close") {
+							callCheck()
+							finalFileArr.push(susTokens[i].value);
+							i++;
+						}
 						continue;
 					default:
 						console.log(finalFileArr);
 						how(0, line, susTokens[i]);
 				}
 			case "array_open":
-				finalFileArr.push("[");
+				let initTokenType = susTokens[i - 1].type
+				console.log(initTokenType)
+				if (initTokenType != "word")
+					finalFileArr.push("[]any{");
+				else finalFileArr.push("[")
 				let arrayContent = "";
-				while (susTokens[i].type != "array_close") {
+				let ignore = 0;
+				i++;
+				while (true) {
+					if (ignore == 0)
+						if (susTokens[i].type == "array_close") break;
+					if (susTokens[i].type == "array_open") ignore++;
+					if (susTokens[i].type == "array_close") ignore--;
+					callCheck()
 					arrayContent += susTokens[i].value;
 					i++;
 				}
 				finalFileArr.push(arrayContent);
-				finalFileArr.push("]");
-				i++;
+				if (initTokenType != "word")
+					finalFileArr.push("}");
+				else finalFileArr.push("]")
 				continue;
 			case "newline":
 				finalFileArr.push("\n");
@@ -116,7 +146,7 @@ export default async function parser(
 				how(0, line, susTokens[i]);
 		}
 	}
-	return [];
+	return finalFileArr;
 }
 
 function callCheck() {
