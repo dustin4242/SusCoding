@@ -8,7 +8,10 @@ export default async function parser(
 	let finalFileArr: string[] = [];
 	let line = 1;
 	for (let i = 0; i < susTokens.length; i++) {
+		let iter = 0
 		switch (susTokens[i].type) {
+			case "paren_close":
+				continue;
 			case "word":
 			case "comma":
 			case "number":
@@ -39,22 +42,22 @@ export default async function parser(
 					case "if":
 						finalFileArr.push("if ");
 						i += 2;
-						while (susTokens[i].value != ")") {
-							callCheck()
-							finalFileArr.push(susTokens[i].value);
-							i++;
+						while (susTokens[i + iter].value != ")") {
+							iter++;
 						}
+						finalFileArr.push(...await parser(susTokens.splice(i, iter), funcTypes))
 						finalFileArr.push(" {");
+						iter = 0
 						continue;
 					case "elif":
 						finalFileArr.push("else if ");
 						i += 2;
-						while (susTokens[i].value != ")") {
-							callCheck()
-							finalFileArr.push(susTokens[i].value);
-							i++;
+						while (susTokens[i + iter].value != ")") {
+							iter++;
 						}
+						finalFileArr.push(...await parser(susTokens.splice(i, iter), funcTypes))
 						finalFileArr.push(" {");
+						iter = 0
 						continue;
 					case "else":
 						finalFileArr.push("else {");
@@ -115,9 +118,9 @@ export default async function parser(
 						how(0, line, susTokens[i]);
 				}
 			case "array_open":
-				let initTokenType = susTokens[i - 1].type
-				console.log(initTokenType)
-				if (initTokenType != "word")
+				let initToken = susTokens[i - 1]
+				console.log(initToken.type)
+				if (initToken.type != "word")
 					finalFileArr.push("[]any{");
 				else finalFileArr.push("[")
 				let arrayContent = "";
@@ -133,7 +136,7 @@ export default async function parser(
 					i++;
 				}
 				finalFileArr.push(arrayContent);
-				if (initTokenType != "word")
+				if (initToken.type != "word")
 					finalFileArr.push("}");
 				else finalFileArr.push("]")
 				continue;
