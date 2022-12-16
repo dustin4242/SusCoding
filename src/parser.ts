@@ -31,7 +31,6 @@ export default async function parser(
 						continue;
 					case "return":
 						while (susTokens[i].value != "\n") {
-							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -50,7 +49,7 @@ export default async function parser(
 						iter = 0
 						continue;
 					case "elif":
-						finalFileArr.push("else if ");
+						finalFileArr.push("} else if ");
 						i += 2;
 						while (susTokens[i + iter].value != ")") {
 							iter++;
@@ -60,13 +59,12 @@ export default async function parser(
 						iter = 0
 						continue;
 					case "else":
-						finalFileArr.push("else {");
+						finalFileArr.push("} else {");
 						continue;
 					case "print":
 						finalFileArr.push("fmt.Print(");
 						i += 2;
 						while (susTokens[i].value != ")") {
-							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -77,7 +75,6 @@ export default async function parser(
 						finalFileArr.push(`for ${forVar} := `);
 						i += 4;
 						while (susTokens[i].value != ",") {
-							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -108,7 +105,6 @@ export default async function parser(
 						finalFileArr.push(`${susTokens[i + 2]}(`)
 						i += 3;
 						while (susTokens[i].type != "paren_close") {
-							callCheck()
 							finalFileArr.push(susTokens[i].value);
 							i++;
 						}
@@ -119,7 +115,6 @@ export default async function parser(
 				}
 			case "array_open":
 				let initToken = susTokens[i - 1]
-				console.log(initToken.type)
 				if (initToken.type != "word")
 					finalFileArr.push("[]any{");
 				else finalFileArr.push("[")
@@ -131,7 +126,6 @@ export default async function parser(
 						if (susTokens[i].type == "array_close") break;
 					if (susTokens[i].type == "array_open") ignore++;
 					if (susTokens[i].type == "array_close") ignore--;
-					callCheck()
 					arrayContent += susTokens[i].value;
 					i++;
 				}
@@ -150,10 +144,6 @@ export default async function parser(
 		}
 	}
 	return finalFileArr;
-}
-
-function callCheck() {
-	//TODO: Implement For Checking Calls In If, For, And Call Keywords
 }
 
 function how(error: number, line: number, token: Token) {

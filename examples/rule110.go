@@ -29,11 +29,11 @@ for pos := 0; pos < automataLength-1; pos++ {
 var analyze = []any{initArray[pos],initArray[pos+1],initArray[pos+2]}
 if analyze==[]any{deadByte,deadByte,deadByte} {
 newArray=newArray+dead
-else if analyze==[]any{aliveByte,deadByte,deadByte} {
+} else if analyze==[]any{aliveByte,deadByte,deadByte} {
 newArray=newArray+dead
-else if analyze==[]any{aliveByte,aliveByte,aliveByte} {
+} else if analyze==[]any{aliveByte,aliveByte,aliveByte} {
 newArray=newArray+dead
-else {
+} else {
 newArray=newArray+alive
 }
 }
