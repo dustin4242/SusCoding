@@ -1,10 +1,11 @@
-let helloWorld = ["hello, " + "world"]
+let helloWorld = ["hello, "]
+let amount = 5
 function SayAThing(str: string[])
-	for(i = 0, 5)
+	for(i = 0, amount + 1 - 1 * 1 / 1)
 		if(i == 3)
-			print(str[0], str[0], helloWorld, "\n")
-		elif(i == 4)
-			return 0
+			print(str[0], str[2 - 1], helloWorld, "\n")
+		elif(i == 4 - 2)
+			push(helloWorld, " world")
 		else
 			continue
 		end

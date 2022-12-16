@@ -1,29 +1,29 @@
 const screenWidth = 100
 const screenHeight = 30
 
-const aliveString = "#"
-const deadString = " "
+const alive = "#"
+const dead = " "
 
-let aliveByte = aliveString[0]
-let deadByte = deadString[0]
+let aliveByte = alive[0]
+let deadByte = dead[0]
 
-let lifeArray = ["0"]
-let placeholder = deadString
+let lifeArray = [dead]
+let placeholder = dead
 for(i = 0, screenWidth)
-	placeholder = placeholder + deadString
+	placeholder = placeholder + dead
 end
 for(i = 0, screenHeight)
 	push(lifeArray, placeholder)
 end
 
-lifeArray[1] = aliveString + deadString + aliveString + deadString + aliveString + deadString + deadString + aliveString + deadString
-lifeArray[2] = deadString + deadString + deadString + aliveString + deadString + aliveString + aliveString + aliveString + aliveString
-lifeArray[3] = deadString + aliveString + aliveString + aliveString + deadString + deadString + aliveString + aliveString + aliveString
+lifeArray[1] = alive + dead + alive + dead + alive + dead + dead + alive + dead
+lifeArray[2] = dead + dead + dead + alive + dead + alive + alive + alive + alive
+lifeArray[3] = dead + alive + alive + alive + dead + dead + alive + alive + alive
 for(i = 1, 4)
 	for(j = 0, screenWidth - 12)
-		lifeArray[i] = lifeArray[i] + deadString
+		lifeArray[i] = lifeArray[i] + dead
 	end
-	lifeArray[i] = lifeArray[i] + aliveString + aliveString + aliveString + deadString
+	lifeArray[i] = lifeArray[i] + alive + alive + alive + dead
 end
 
 for(iter = 0, 1000)
@@ -33,7 +33,7 @@ end
 print("\u001b[29A")
 let newLifeArray = ["0"]
 for(y = 1, screenHeight + 1)
-	let newLine = deadString
+	let newLine = dead
 	for(x = 1, screenWidth + 1)
 		let leftNeighbor = x - 1
 		let rightNeighbor = x + 1
@@ -71,17 +71,17 @@ for(y = 1, screenHeight + 1)
 		
 		if(lifeArray[y][x] == aliveByte)
 			if(aliveNeighbors == 2)
-				newLine = newLine + aliveString
+				newLine = newLine + alive
 			elif(aliveNeighbors == 3)
-				newLine = newLine + aliveString
+				newLine = newLine + alive
 			else
-				newLine = newLine + deadString
+				newLine = newLine + dead
 			end
 		elif(lifeArray[y][x] == deadByte)
 			if(aliveNeighbors == 3)
-				newLine = newLine + aliveString
+				newLine = newLine + alive
 			else
-				newLine = newLine + deadString
+				newLine = newLine + dead
 			end
 		end
 	end
