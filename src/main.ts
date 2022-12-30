@@ -13,19 +13,19 @@ if (process.argv[2] != undefined) {
 	let viableChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_.";
 	let viableNums = "0123456789.:";
 	let goFile: string[] = [];
-	let defKeywords = readdirSync(path.resolve(__dirname, "./keywords")).map(
+	let defKeywords = readdirSync(path.resolve(__dirname, "./keywordDefs")).map(
 		(i) => i.replace(".ts", "")
 	);
 	const susTokens = tokenizer(susFile, viableChars, viableNums, defKeywords);
-	let [funcTypes] = await typeCheck(susTokens);
-	let finalFile = await parser(susTokens, funcTypes);
+	await typeCheck(susTokens);
+	let finalFile = await parser(susTokens);
 	// Compile To Go So It Can Go To Binary
 	goFile.push("package main");
 	goFile.push(
 		'import ("fmt"; "reflect"; "time"); var _ = []any{reflect.Int, fmt.Print, time.Second}'
 	);
 	goFile.push("func main() {");
-	goFile.push(finalFile.join(""));
+	goFile.push(finalFile.filter((v) => v != "").join("\n"));
 	goFile.push("}");
 	writeFileSync(
 		`./${process.argv[2].replace(".sus", "")}.go`,

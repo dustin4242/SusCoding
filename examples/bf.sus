@@ -1,7 +1,7 @@
 // Shortest Hello World Example Program (Often Has Bugs)
 let program = "+[>>>->-[>->----<<<]>>]>.---.>+..+++.>>.<.>>---.<<<.+++.------.<-.>>+."
 
-const arrayLength = 100
+let arrayLength = 100
 let array = [0]
 for(i = 0, arrayLength - 1)
 	push(array, 0)
@@ -13,7 +13,7 @@ let fuckInstructions = "><+-.,[]"
 let isLooping = 0
 let innerLoops = 0
 let loopStack = [1]
-loopStack = loopStack[:0]
+loopStack = loopStack[0]
 
 for(i = 0, call(len, program))
 	let char = program[i]

@@ -1,4 +1,4 @@
-import Token from "./tokenClass";
+import Token from "./types/tokenClass";
 
 export default function tokenizer(
 	fileString: string,

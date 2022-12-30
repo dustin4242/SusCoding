@@ -1,6 +1,6 @@
-import Token from "./tokenClass";
-import funcType from "./funcTypeClass";
-import varType from "./varTypeClass";
+import Token from "./types/tokenClass";
+import funcType from "./types/funcTypeClass";
+import varType from "./types/varTypeClass";
 
 interface forType {
 	nest: number;
@@ -9,7 +9,7 @@ interface forType {
 
 export default async function typeCheck(
 	tokens: Token[]
-): Promise<[funcType[]]> {
+) {
 	let functions: funcType[] = [];
 	let variableTypes: varType[] = [];
 	let forLoopVars: forType[] = [];
@@ -22,7 +22,7 @@ export default async function typeCheck(
 	for (let i = 0; i < tokens.length; i++) {
 		switch (tokens[i].type) {
 			case "keyword":
-				let keywordData = await import(`./keywords/${tokens[i].value}`);
+				let keywordData = await import(`./keywordDefs/${tokens[i].value}`);
 				switch (tokens[i].value) {
 					case "let":
 						switch (tokens[i + 3].type) {
@@ -415,7 +415,6 @@ export default async function typeCheck(
 			}
 		}
 	}
-	return [functions];
 }
 
 function getVarType(
