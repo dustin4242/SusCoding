@@ -127,6 +127,19 @@ export default async function typeCheck(
 				}
 				continue;
 			case "number":
+				switch (tokens[i + 1].type) {
+					case "operator":
+						if (["+", "-", "/", "*"].indexOf(tokens[i + 1].value) > -1) continue;
+						else errorCode(0, "+, -, * or /");
+					case "array_close":
+					case "paren_close":
+					case "comma":
+					case "newline":
+						continue;
+					default:
+						errorCode(1, "Newline Or Comma");
+
+				}
 			case "string":
 				switch (tokens[i + 1].type) {
 					case "operator":
