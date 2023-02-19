@@ -1,8 +1,8 @@
-let automataLength = 126
+const automataLength = 126
 
 // In this implementation you can change the numbers to any character
-let dead = " "
-let alive = "1"
+const dead = " "
+const alive = "1"
 
 // Fill a string with dead cells and stick a alive one in the middle
 let initAut = dead

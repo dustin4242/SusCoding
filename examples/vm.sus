@@ -62,6 +62,10 @@ memory[143] = 46
 memory[144] = 0
 // ^ Hello World Ascii Codes + Misc
 
+let inputStr = " "
+input(inputStr)
+print(inputStr, "\n")
+
 // Iterates through memory forever
 for(i = 0, memLength)
 	if(memory[i] == 0)

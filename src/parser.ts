@@ -1,7 +1,7 @@
-import {readdirSync} from "fs";
+import { readdirSync } from "fs";
 import path from "path";
-import doubleAssign from "./keywordParsers/doubleAssign";
-import Token from "./types/tokenClass";
+import doubleAssign from "./doubleAssign";
+import { Token } from "./tokenClass";
 
 export default async function parser(tokens: Token[]) {
 	let parsedInstructions: string[] = [];
@@ -10,23 +10,18 @@ export default async function parser(tokens: Token[]) {
 	for (let pos = 0; pos < tokens.length; pos++) {
 		let curInstruction = "";
 		let defKeywords = readdirSync(
-			path.resolve(__dirname, "./keywordParsers")
+			path.resolve(__dirname, "./keywords")
 		).map((i) => i.replace(".ts", ""));
 		switch (tokens[pos].type) {
 			case "keyword": {
 				switch (defKeywords.includes(tokens[pos].value)) {
 					case true:
 						const tokenKey = await import(
-							`./keywordParsers/${tokens[pos].value}.ts`
+							`./keywords/${tokens[pos].value}.ts`
 						);
-						let lineTokens = []; //All the tokens on this line
-						lineTokens.push(tokens[pos]);
-						while (tokens[pos + 1] && tokens[pos + 1].type != "newline") {
-							pos++;
-							lineTokens.push(tokens[pos]);
-						}
-						curInstruction = await tokenKey.default(
-							lineTokens,
+						[pos, curInstruction] = await tokenKey.default(
+							tokens,
+							pos,
 							line
 						);
 						break;
@@ -37,21 +32,13 @@ export default async function parser(tokens: Token[]) {
 				break;
 			}
 			case "word": {
-				let lineTokens = []; //All the tokens on this line
-				lineTokens.push(tokens[pos]);
-				while (tokens[pos + 1] && tokens[pos + 1].type != "newline") {
-					pos++;
-					lineTokens.push(tokens[pos]);
-				}
-				curInstruction = doubleAssign(lineTokens, line);
+				[pos, curInstruction] = doubleAssign(tokens, pos, line);
 				break;
 			}
 			case "newline": {
 				line++;
 				break;
 			}
-			default:
-				throw `How tf bro X_X: type: ${tokens[pos].type}, value: ${tokens[pos].value}`
 		}
 		parsedInstructions.push(curInstruction);
 	}

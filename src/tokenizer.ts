@@ -1,4 +1,4 @@
-import Token from "./types/tokenClass";
+import {Token} from "./tokenClass";
 
 export default function tokenizer(
 	fileString: string,
@@ -68,23 +68,21 @@ export default function tokenizer(
 				column++;
 				tokens.push(new Token("array_close", char));
 				continue;
-			case '"':
+			case "\"":
 				//Make a string to put the token value into
 				let tokenValue = "";
-				if (fileString[pos + 1] != '"') {
+				pos++;
+				column++;
+				tokenValue += fileString[pos];
+				//*Iterate until the entire token is built
+				while (fileString[pos + 1] != '"' && pos < fileString.length) {
 					pos++;
 					column++;
-					tokenValue += `"${fileString[pos]}`;
-					//*Iterate until the entire token is built
-					while (fileString[pos + 1] != '"' && pos < fileString.length) {
-						pos++;
-						column++;
-						tokenValue += fileString[pos];
-					}
+					tokenValue += fileString[pos];
 				}
 				pos++;
 				column++;
-				tokens.push(new Token("string", tokenValue + `"`));
+				tokens.push(new Token("string", tokenValue));
 				continue;
 			default:
 				if (viableChars.includes(char)) {
@@ -101,7 +99,9 @@ export default function tokenizer(
 					}
 					tokens.push(
 						new Token(
-							defKeywords.includes(tokenValue) ? "keyword" : "word",
+							defKeywords.includes(tokenValue)
+								? "keyword"
+								: "word",
 							tokenValue
 						)
 					);
